@@ -5,14 +5,15 @@ interface TextButtonProps {
     text: string;
     color: string;
     size: number;
+    fontWeight?: string;
     style?: object;
 }
 
-export default function TextButton({ onPress, text, color, size, style, ...props }: TextButtonProps) {
+export default function TextButton({ onPress, text, color, size, fontWeight, style, ...props }: TextButtonProps) {
     return (
         <View style={style}>
             <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed} {...props}>
-                <Text style={[styles.text, { color: color, fontSize: size }]}>
+                <Text style={[styles.text, { color: color, fontSize: size }, fontWeight && { fontWeight: fontWeight as any }]}>
                     {text}
                 </Text>
             </Pressable>

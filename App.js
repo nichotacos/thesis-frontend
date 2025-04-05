@@ -2,23 +2,44 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import OnboardingScreen from './screens/OnboardingScreen';
-import { useState } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import HomeScreen from './screens/HomeScreen';
+import LoginScreen from './screens/auth/LoginScreen';
+
+const Stack = createNativeStackNavigator();
+const BottomTabs = createBottomTabNavigator();
+
+function BottomTabNavigator() {
+  return (
+    <BottomTabs.Navigator>
+      <BottomTabs.Screen name="Home" component={HomeScreen} />
+      <BottomTabs.Screen name="Settings" component={HomeScreen} />
+    </BottomTabs.Navigator>
+  );
+}
+
+
 
 export default function App() {
-  const [index, setIndex] = useState(0);
-
-  const handleNext = () => {
-    setIndex(prevIndex => prevIndex + 1);
-  };
-
-  const handleSkip = () => {
-    console.log("Onboarding skipped");
-    // You might navigate to the main app screen here
-  };
 
   return (
     <SafeAreaView style={style.container}>
-      <OnboardingScreen onNext={handleNext} onSkip={handleSkip} />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Onboarding"
+            component={OnboardingScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+          />
+          <Stack.Screen name="Home" component={HomeScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </SafeAreaView>
   );
 }

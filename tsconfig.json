@@ -1,6 +1,12 @@
 {
   "compilerOptions": {
-    "jsx": "react-native"
+    "jsx": "react-native",
+    "types": [
+      "react",
+      "react-native"
+    ],
+    "moduleResolution": "nodenext",
+    "module": "NodeNext",
   },
   "extends": "expo/tsconfig.base"
 }

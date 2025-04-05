@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, Image, StyleSheet, View, Dimensions, ImageSourcePropType } from "react-native";
+import { Text, Image, StyleSheet, View, Dimensions, ImageSourcePropType } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 import Svg, { Path } from "react-native-svg";
 import { GlobalStyles } from "../constants/styles";
@@ -7,10 +7,7 @@ import CircularButton from "../components/UI/CircularButton";
 import TextButton from "../components/UI/TextButton";
 import WideButton from "../components/UI/WideButton";
 import { useState } from "react";
-
-type OnboardingScreenProps = {
-    onDone: () => void;
-};
+import { useNavigation } from "@react-navigation/native";
 
 const ImageComponent = ({ source }: { source: ImageSourcePropType }) => {
     return (
@@ -53,13 +50,16 @@ const SubtitleComponent = ({ subtitle }: { subtitle: string }) => {
     )
 }
 
-export default function OnboardingScreen({ onDone }: OnboardingScreenProps) {
+export default function OnboardingScreen() {
     const [currentPage, setCurrentPage] = useState(0);
+    const navigation = useNavigation();
 
     return (
         <Onboarding
             skipToPage={2}
-            onDone={onDone}
+            onDone={() => {
+                navigation.navigate("LoginScreen");
+            }}
             bottomBarHeight={150}
             bottomBarColor={GlobalStyles.colors.primary}
             pageIndexCallback={(page) => {

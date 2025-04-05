@@ -4,8 +4,11 @@ import Input from "../../components/UI/Input";
 import { useState } from "react";
 import WideButton from "../../components/UI/WideButton";
 import TextButton from "../../components/UI/TextButton";
+import { useNavigation } from "@react-navigation/native";
 
 export default function LoginScreen(params) {
+    const navigation = useNavigation();
+
     const [loginData, setLoginData] = useState({
         username: "",
         password: ""
@@ -81,7 +84,7 @@ export default function LoginScreen(params) {
                     <Text style={styles.registerText}>Belum punya akun?</Text>
                     <TextButton
                         onPress={() => {
-                            console.log("Daftar button pressed");
+                            navigation.navigate("RegisterScreen")
                         }}
                         text="Daftar"
                         color={GlobalStyles.colors.primary}
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
         width: "80%",
         flex: 1,
         flexDirection: "column",
-        marginBottom: 32,
+        marginBottom: 48,
         justifyContent: "space-between",
     },
     titleContainer: {

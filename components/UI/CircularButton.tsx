@@ -11,7 +11,15 @@ interface CircularButtonProps {
 
 export default function CircularButton({ onPress, icon, size, color, ...props }: CircularButtonProps) {
     return (
-        <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed} {...props}>
+        <Pressable
+            onPress={onPress}
+            style={({ pressed }) => pressed && styles.pressed}
+            android_ripple={{
+                color: GlobalStyles.colors.accent,
+                borderless: true,
+            }}
+            {...props}
+        >
             <View style={styles.button}>
                 <Ionicons
                     name={icon as keyof typeof Ionicons.glyphMap}
@@ -32,5 +40,5 @@ const styles = StyleSheet.create({
     },
     pressed: {
         opacity: 0.75,
-    }
+    },
 })

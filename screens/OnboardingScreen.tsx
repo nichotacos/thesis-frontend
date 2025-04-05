@@ -120,7 +120,7 @@ export default function OnboardingScreen({ onDone }: OnboardingScreenProps) {
                         marginRight: 24,
                         backgroundColor: GlobalStyles.colors.accent,
                         borderRadius: 50,
-                        paddingVertical: 12,
+                        paddingVertical: 16,
                         paddingHorizontal: 24,
                         width: Dimensions.get("screen").width - 48,
                     }}

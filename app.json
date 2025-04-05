@@ -31,7 +31,10 @@
           "fonts": [
             "./assets/fonts/Inter_24pt-Bold.ttf",
             "./assets/fonts/Inter_24pt-Regular.ttf",
-            "./assets/fonts/Inter_24pt-Medium.ttf"
+            "./assets/fonts/Inter_24pt-Medium.ttf",
+            "./assets/fonts/OpenSans-Bold.ttf",
+            "./assets/fonts/OpenSans-Regular.ttf",
+            "./assets/fonts/OpenSans-Medium.ttf"
           ]
         }
       ]

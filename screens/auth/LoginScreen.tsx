@@ -67,7 +67,7 @@ export default function LoginScreen(params) {
                     </View>
                     <WideButton
                         onPress={() => {
-                            console.log("Login button pressed");
+                            navigation.popTo("Home")
                         }}
                         text="Masuk"
                         color={GlobalStyles.colors.whiteFont}

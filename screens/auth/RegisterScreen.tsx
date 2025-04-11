@@ -56,7 +56,7 @@ export default function RegisterScreen(params) {
                             onChangeText={handleInputChange.bind(this, "full_name")}
                             textInputConfig={{
                                 keyboardType: "default",
-                                autoCapitalize: "none",
+                                autoCapitalize: "words",
                                 autoCorrect: false,
                             }}
                         />
@@ -69,6 +69,7 @@ export default function RegisterScreen(params) {
                                 keyboardType: "email-address",
                                 autoCapitalize: "none",
                                 autoCorrect: false,
+                                inputMode: "email",
                             }}
                         />
                         <Input

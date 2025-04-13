@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/auth/LoginScreen';
 import RegisterScreen from './screens/auth/RegisterScreen';
+import LevelScreen from './screens/learning/LevelScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -47,6 +48,11 @@ export default function App() {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="LevelScreen"
+            component={LevelScreen}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

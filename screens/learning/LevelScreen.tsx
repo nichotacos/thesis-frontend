@@ -14,7 +14,6 @@ export default function LevelScreen({
 }: LevelScreenProps) {
     return (
         <View style={styles.container}>
-            <Text>Level Screen</Text>
             <View style={styles.content}>
                 <LevelStamp
                     imageSource={require('../../assets/gamification/bali-stamp.png')}
@@ -34,7 +33,7 @@ export default function LevelScreen({
                 <LevelStamp
                     imageSource={require('../../assets/gamification/bali-stamp.png')}
                     name="Jakarta"
-                    style={{ top: 260, right: 20 }}
+                    style={{ top: 235, right: 20 }}
                 />
 
                 <Svg viewBox="0 0 620 1200" width="100%" height="100%" style={{ borderWidth: 1, position: "absolute", top: 210, left: 20 }}>
@@ -54,7 +53,7 @@ export default function LevelScreen({
                 <LevelStamp
                     imageSource={require('../../assets/gamification/bali-stamp.png')}
                     name="Bali"
-                    style={{ top: 465, left: 20 }}
+                    style={{ top: 440, left: 20 }}
                 />
             </View>
         </View>

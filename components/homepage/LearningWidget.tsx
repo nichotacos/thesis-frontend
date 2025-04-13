@@ -8,6 +8,7 @@ interface LearningWidgetProps {
     userLatestModule?: number;
     userLatestModuleName?: string;
     isDictionary: boolean;
+    onPress: () => void;
 }
 
 export default function LearningWidget({
@@ -16,6 +17,7 @@ export default function LearningWidget({
     userLatestModule,
     userLatestModuleName,
     isDictionary,
+    onPress,
 }: LearningWidgetProps) {
     return (
         <View
@@ -61,7 +63,7 @@ export default function LearningWidget({
             </View>
             {isDictionary ? (
                 <View style={styles.outerProgressBar}>
-                    <View style={[styles.innerProgressBar, { width: '50%' }]} >
+                    <View style={[styles.innerProgressBar, { width: '20%' }]} >
                         <Text style={styles.progressText}>
                             20%
                         </Text>
@@ -73,11 +75,11 @@ export default function LearningWidget({
                         text="Lanjut Belajar"
                         color={GlobalStyles.colors.whiteFont}
                         size={20}
-                        onPress={() => { }}
+                        onPress={onPress}
                         style={{
                             backgroundColor: GlobalStyles.colors.lighterPrimary,
                             paddingVertical: 12,
-                            borderRadius: 16,
+                            borderRadius: 50,
                             marginTop: 8,
                         }}
                     />

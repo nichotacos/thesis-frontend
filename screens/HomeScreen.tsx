@@ -32,7 +32,7 @@ export default function HomeScreen() {
                     userLatestModuleName="Hati-Hati di Jalan"
                     isDictionary={false}
                     onPress={() => {
-                        navigation.push("LevelScreen")
+                        navigation.jumpTo("LevelScreen")
                     }}
                 />
             </View>

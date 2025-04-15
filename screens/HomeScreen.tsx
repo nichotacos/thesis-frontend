@@ -20,12 +20,7 @@ export default function HomeScreen() {
                 totalStreak={5}
             />
             <Text style={styles.headerText}>Latihan Harian</Text>
-            <View>
-                <LearningWidget
-                    wordsLearned={100}
-                    isDictionary={true}
-                    onPress={() => { }}
-                />
+            <View style={styles.widgetsContainer}>
                 <LearningWidget
                     userSkillLevel="Jakarta"
                     userLatestModule={2}
@@ -34,6 +29,11 @@ export default function HomeScreen() {
                     onPress={() => {
                         navigation.jumpTo("LevelScreen")
                     }}
+                />
+                <LearningWidget
+                    wordsLearned={100}
+                    isDictionary={true}
+                    onPress={() => { }}
                 />
             </View>
         </ScrollView>
@@ -54,4 +54,7 @@ const styles = StyleSheet.create({
         fontFamily: "Inter-Bold",
         marginVertical: 12
     },
+    widgetsContainer: {
+        marginBottom: 46,
+    }
 })

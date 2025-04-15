@@ -1,10 +1,44 @@
-import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '@env';
+import { apiClient } from './apiClient';
 
-export const apiClient = axios.create({
-    baseURL: `${process.env.API_URL}`,
-    headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-    },
-    timeout: 10000,
-});
+let authToken: string | null = null;
+
+export const setAuthToken = (token: string) => {
+    authToken = token;
+    AsyncStorage.setItem('authToken', token).catch((error) => {
+        console.error('Error saving auth token to AsyncStorage:', error);
+    });
+}
+
+export const getAuthToken = () => {
+    return authToken;
+}
+
+export const clearAuthToken = () => {
+    authToken = null;
+}
+
+export const loginUser = async (username: string, password: string) => {
+    try {
+        const response = await apiClient.post(`/auth/login`, {
+            username,
+            password
+        });
+
+        console.log('Login response:', response.data);
+
+        if (response.status === 404) {
+            console.error('User not found:', response.data.message);
+        }
+
+        if (response.status === 400) {
+            console.error('Invalid credentials:', response.data.message);
+        }
+
+        return response.data;
+    } catch (error) {
+        // return { data: null, error: error.message };
+        throw error;
+    }
+}

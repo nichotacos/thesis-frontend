@@ -11,7 +11,8 @@ export type User = {
     totalGems: number;
     lastLogin?: Date;
     profilePicture?: string;
-    currentLevel?: string;
+    currentLevel?: number;
+    currentLearnLevel?: string;
     currentModule?: string;
     createdAt?: Date;
     updatedAt?: Date;

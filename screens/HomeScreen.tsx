@@ -4,17 +4,20 @@ import UserIdentity from "../components/homepage/UserIdentity";
 import StreakContainer from "../components/homepage/StreakContainer";
 import LearningWidget from "../components/homepage/LearningWidget";
 import { useNavigation } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { User } from '../types/User'
 
 export default function HomeScreen() {
     const navigation = useNavigation();
+    const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContainer}>
             <UserIdentity
                 profilePicture="https://example.com/profile.jpg"
-                userFullName="Nicholas Yang"
-                userLevel={4}
-                totalGems={100}
+                userFullName={userData.userFullName}
+                userLevel={userData.currentLevel}
+                totalGems={userData.totalGems}
             />
             <StreakContainer
                 totalStreak={5}
@@ -55,6 +58,6 @@ const styles = StyleSheet.create({
         marginVertical: 12
     },
     widgetsContainer: {
-        marginBottom: 46,
+        marginBottom: 128,
     }
 })

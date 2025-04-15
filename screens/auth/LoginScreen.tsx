@@ -5,11 +5,18 @@ import { useState } from "react";
 import WideButton from "../../components/UI/WideButton";
 import TextButton from "../../components/UI/TextButton";
 import { useNavigation } from "@react-navigation/native";
+import { LoginPayload } from "../../api/auth.types";
+import { loginUser } from "../../api/auth.api";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/userSlice";
 
 export default function LoginScreen(params) {
     const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const [loginData, setLoginData] = useState({
+    const [loginData, setLoginData] = useState<LoginPayload>({
         username: "",
         password: ""
     });
@@ -19,6 +26,36 @@ export default function LoginScreen(params) {
             ...prevState,
             [name]: value
         }))
+    }
+
+    async function handleSubmit(loginData: LoginPayload) {
+        console.log("Login button pressed")
+        console.log(loginData);
+
+        try {
+            setIsLoading(true);
+            const data = await loginUser(loginData.username, loginData.password);
+            console.log('data di login', data);
+
+            dispatch(login({
+                userInfo: data.user,
+                token: data.accessToken,
+            }));
+
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                // If error comes from axios with a structured response
+                setError(error.response.data.message);
+            } else if (error.message) {
+                // If error is a standard Error object
+                setError(error.message);
+            } else {
+                // Fallback error message
+                setError('Login failed. Please try again.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -60,15 +97,20 @@ export default function LoginScreen(params) {
                             }}
                         />
                     </View>
+                    {error && (
+                        <View style={styles.errorContainer}>
+                            <Text style={styles.errorText}>
+                                {error}
+                            </Text>
+                        </View>
+                    )}
                     <View style={styles.forgotPasswordContainer}>
                         <Text style={styles.forgotPasswordText}>
-                            Lupa password?
+                            Lupa kata sandi?
                         </Text>
                     </View>
                     <WideButton
-                        onPress={() => {
-                            navigation.popTo("Home")
-                        }}
+                        onPress={handleSubmit.bind(this, loginData)}
                         text="Masuk"
                         color={GlobalStyles.colors.whiteFont}
                         size={24}
@@ -83,9 +125,7 @@ export default function LoginScreen(params) {
                 <View style={styles.registerContainer}>
                     <Text style={styles.registerText}>Belum punya akun?</Text>
                     <TextButton
-                        onPress={() => {
-                            navigation.navigate("RegisterScreen")
-                        }}
+                        onPress={handleSubmit.bind(this, loginData)}
                         text="Daftar"
                         color={GlobalStyles.colors.primary}
                         size={16}
@@ -153,5 +193,18 @@ const styles = StyleSheet.create({
     registerText: {
         fontSize: 16,
         fontFamily: "Inter-Regular",
-    }
+    },
+    errorContainer: {
+        padding: 12,
+        backgroundColor: '#ffeeee',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#ffcccc',
+    },
+    errorText: {
+        color: '#cc0000',
+        fontSize: 14,
+        fontFamily: "OpenSans-Regular",
+        textAlign: 'center',
+    },
 })

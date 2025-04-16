@@ -20,12 +20,12 @@ export default function HomeScreen() {
                 totalGems={userData.totalGems}
             />
             <StreakContainer
-                totalStreak={5}
+                totalStreak={userData.totalStreak}
             />
             <Text style={styles.headerText}>Ayo Belajar!</Text>
             <View style={styles.widgetsContainer}>
                 <LearningWidget
-                    userSkillLevel="Jakarta"
+                    userSkillLevel="Bali"
                     userLatestModule={2}
                     userLatestModuleName="Hati-Hati di Jalan"
                     isDictionary={false}

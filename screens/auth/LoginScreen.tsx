@@ -125,7 +125,9 @@ export default function LoginScreen(params) {
                 <View style={styles.registerContainer}>
                     <Text style={styles.registerText}>Belum punya akun?</Text>
                     <TextButton
-                        onPress={handleSubmit.bind(this, loginData)}
+                        onPress={() => {
+                            navigation.navigate("RegisterScreen")
+                        }}
                         text="Daftar"
                         color={GlobalStyles.colors.primary}
                         size={16}

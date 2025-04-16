@@ -31,7 +31,7 @@ export default function LevelScreen({
                 </Svg>
 
                 <LevelStamp
-                    imageSource={require('../../assets/gamification/bali-stamp.png')}
+                    imageSource={require('../../assets/gamification/jakarta-stamp.png')}
                     name="Jakarta"
                     style={{ top: 235, right: 20 }}
                 />
@@ -51,8 +51,8 @@ export default function LevelScreen({
                 </Svg>
 
                 <LevelStamp
-                    imageSource={require('../../assets/gamification/bali-stamp.png')}
-                    name="Bali"
+                    imageSource={require('../../assets/gamification/surabaya-stamp.png')}
+                    name="Surabaya"
                     style={{ top: 440, left: 20 }}
                 />
             </View>

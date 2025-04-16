@@ -22,7 +22,7 @@ export default function HomeScreen() {
             <StreakContainer
                 totalStreak={5}
             />
-            <Text style={styles.headerText}>Latihan Harian</Text>
+            <Text style={styles.headerText}>Ayo Belajar!</Text>
             <View style={styles.widgetsContainer}>
                 <LearningWidget
                     userSkillLevel="Jakarta"
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 24,
         fontFamily: "Inter-Bold",
-        marginVertical: 12
+        marginVertical: 16
     },
     widgetsContainer: {
         marginBottom: 128,

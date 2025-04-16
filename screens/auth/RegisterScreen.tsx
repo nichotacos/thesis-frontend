@@ -6,21 +6,35 @@ import WideButton from "../../components/UI/WideButton";
 import TextButton from "../../components/UI/TextButton";
 import { useNavigation } from "@react-navigation/native";
 
+interface RegisterPayload {
+    full_name: string;
+    username: string;
+    email: string;
+    password: string;
+    passwordConfirmation: string;
+}
+
 export default function RegisterScreen(params) {
     const navigation = useNavigation();
 
-    const [loginData, setLoginData] = useState({
+    const [registerData, setRegisterData] = useState<RegisterPayload>({
         full_name: "",
         username: "",
         email: "",
         password: "",
+        passwordConfirmation: "",
     });
 
     function handleInputChange(name: string, value: string) {
-        setLoginData((prevState) => ({
+        setRegisterData((prevState) => ({
             ...prevState,
             [name]: value
         }))
+    }
+
+    function handleSubmit(data: RegisterPayload) {
+        console.log("Register button pressed")
+        console.log(data);
     }
 
     return (
@@ -39,20 +53,9 @@ export default function RegisterScreen(params) {
                     </View>
                     <View style={styles.inputContainer}>
                         <Input
-                            label="Username"
-                            placeholder="Masukkan username"
-                            value={loginData.username}
-                            onChangeText={handleInputChange.bind(this, "username")}
-                            textInputConfig={{
-                                keyboardType: "default",
-                                autoCapitalize: "none",
-                                autoCorrect: false,
-                            }}
-                        />
-                        <Input
                             label="Nama Lengkap"
                             placeholder="Masukkan nama lengkap"
-                            value={loginData.full_name}
+                            value={registerData.full_name}
                             onChangeText={handleInputChange.bind(this, "full_name")}
                             textInputConfig={{
                                 keyboardType: "default",
@@ -63,7 +66,7 @@ export default function RegisterScreen(params) {
                         <Input
                             label="Email"
                             placeholder="Masukkan email"
-                            value={loginData.email}
+                            value={registerData.email}
                             onChangeText={handleInputChange.bind(this, "email")}
                             textInputConfig={{
                                 keyboardType: "email-address",
@@ -73,10 +76,33 @@ export default function RegisterScreen(params) {
                             }}
                         />
                         <Input
-                            label="Password"
-                            placeholder="Masukkan password"
-                            value={loginData.password}
+                            label="Username"
+                            placeholder="Masukkan username"
+                            value={registerData.username}
+                            onChangeText={handleInputChange.bind(this, "username")}
+                            textInputConfig={{
+                                keyboardType: "default",
+                                autoCapitalize: "none",
+                                autoCorrect: false,
+                            }}
+                        />
+                        <Input
+                            label="Kata Sandi"
+                            placeholder="Masukkan kata sandi"
+                            value={registerData.password}
                             onChangeText={handleInputChange.bind(this, "password")}
+                            secureTextEntry={true}
+                            textInputConfig={{
+                                keyboardType: "default",
+                                autoCapitalize: "none",
+                                autoCorrect: false,
+                            }}
+                        />
+                        <Input
+                            label="Konfirmasi Kata Sandi"
+                            placeholder="Masukkan konfirmasi kata sandi"
+                            value={registerData.passwordConfirmation}
+                            onChangeText={handleInputChange.bind(this, "passwordConfirmation")}
                             secureTextEntry={true}
                             textInputConfig={{
                                 keyboardType: "default",
@@ -86,9 +112,7 @@ export default function RegisterScreen(params) {
                         />
                     </View>
                     <WideButton
-                        onPress={() => {
-                            console.log("Register button pressed");
-                        }}
+                        onPress={handleSubmit.bind(this, registerData)}
                         text="Daftar"
                         color={GlobalStyles.colors.whiteFont}
                         size={24}

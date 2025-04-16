@@ -8,14 +8,14 @@ interface StreakContainerProps {
 
 export default function StreakContainer({ totalStreak }: StreakContainerProps) {
     const streakText = totalStreak > 0 ? `${totalStreak} hari beruntun!` : `Ayo mulai!`;
-    let minimunBoundary = 1;
+    let minimumBoundary = 1;
     let maximumBoundary = 5;
 
     if (totalStreak < 4) {
-        minimunBoundary = 1;
+        minimumBoundary = 1;
         maximumBoundary = 5;
     } else {
-        minimunBoundary = totalStreak - 2;
+        minimumBoundary = totalStreak - 2;
         maximumBoundary = totalStreak + 4;
     }
 
@@ -23,18 +23,18 @@ export default function StreakContainer({ totalStreak }: StreakContainerProps) {
         <View style={styles.container}>
             <Text style={styles.streakText}>{streakText}</Text>
             <View style={styles.dateList}>
-                {Array.from({ length: maximumBoundary - minimunBoundary - 1 }, (_, i) => (
+                {Array.from({ length: (maximumBoundary == 5 ? maximumBoundary : maximumBoundary - minimumBoundary - 1) }, (_, i) => (
                     <View key={i} style={[
                         styles.gemsContainer,
-                        i + minimunBoundary < totalStreak && { backgroundColor: GlobalStyles.colors.accent },
-                        i + minimunBoundary === totalStreak && { backgroundColor: GlobalStyles.colors.lighterPrimary, borderColor: 'white', borderWidth: 2 },
-                        i + minimunBoundary > totalStreak && { backgroundColor: GlobalStyles.colors.lighterPrimary, opacity: 0.4 }
+                        i + minimumBoundary < totalStreak && { backgroundColor: GlobalStyles.colors.accent },
+                        i + minimumBoundary === totalStreak && { backgroundColor: GlobalStyles.colors.lighterPrimary, borderColor: 'white', borderWidth: 2 },
+                        i + minimumBoundary > totalStreak && { backgroundColor: GlobalStyles.colors.lighterPrimary, opacity: 0.4 }
                     ]}>
                         <Image
                             source={require("../../assets/gamification/gems.png")}
                             style={styles.gemsImage}
                         />
-                        <Text style={styles.streakText}>{i + minimunBoundary}</Text>
+                        <Text style={styles.streakText}>{i + minimumBoundary}</Text>
                     </View>
                 ))}
             </View>

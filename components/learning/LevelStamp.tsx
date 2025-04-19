@@ -5,19 +5,22 @@ interface LevelStampProps {
     name: string;
     imageSource: ImageSourcePropType;
     style: object;
+    onPress: () => void;
 }
 
 export default function LevelStamp({
     name,
     imageSource,
-    style
+    style,
+    onPress
 }: LevelStampProps) {
     return (
         <View style={[styles.container, style]}>
             <Pressable
                 android_disableSound={true}
-                onPress={() => {
-                    console.log("Level stamp pressed")
+                onPress={onPress}
+                style={{
+                    zIndex: 1,
                 }}
             >
                 <Image

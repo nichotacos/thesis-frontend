@@ -8,6 +8,7 @@ import { Level } from "../../types/Level";
 import { useSelector } from "react-redux";
 import { User } from "../../types/User";
 import { GlobalContents } from "../../constants/contents";
+import { useNavigation } from "@react-navigation/native";
 
 interface LevelScreenProps {
     route: any;
@@ -19,6 +20,7 @@ export default function LevelScreen({
     const [levels, setLevels] = useState<Level[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
+    const navigation = useNavigation();
 
     const stampPosition = {
         top: 40,
@@ -69,6 +71,11 @@ export default function LevelScreen({
                                 { top: stampPosition.top + 195 * index },
                                 // { opacity: userData.currentLearnLevel.localeCompare(level.actualBipaLevel) ? 1 : 0.5 },
                             ]}
+                            onPress={() => {
+                                navigation.navigate("ModuleScreen", {
+                                    level: level,
+                                })
+                            }}
                         />
                         {/* TODO: Atur path yang sesuai */}
                         {index !== levels.length - 1 && (

@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { GlobalStyles } from './constants/styles';
 import { Provider, useSelector } from 'react-redux'
 import { store } from './store';
+import ModuleScreen from './screens/learning/module/ModuleScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -92,11 +93,20 @@ function RootNavigator() {
   return (
     <Stack.Navigator>
       {isAuthenticated ? (
-        <Stack.Screen
-          name="BottomTabNavigator"
-          component={BottomTabNavigator}
-          options={{ headerShown: false }}
-        />
+        <>
+          <Stack.Screen
+            name="BottomTabNavigator"
+            component={BottomTabNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="ModuleScreen"
+            component={ModuleScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </>
       ) : (
         <>
           <Stack.Screen

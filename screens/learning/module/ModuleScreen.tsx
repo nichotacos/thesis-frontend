@@ -1,9 +1,12 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../../../constants/styles";
 import { useSelector } from "react-redux";
 import { User } from "../../../types/User";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import ModuleStamp from "../../../components/learning/ModuleStamp";
+import { Module } from "../../../types/Module";
+import { apiClient } from "../../../api/apiClient";
 
 interface ModuleScreenProps {
     route: any;
@@ -15,6 +18,28 @@ export default function ModuleScreen({
     const { level } = route.params;
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [modules, setModules] = useState<Module[]>([]);
+
+    useEffect(() => {
+        async function fetchModules() {
+            try {
+                setIsLoading(true);
+                const response = await apiClient.post(
+                    `/module`,
+                    {
+                        levelIds: [level._id]
+                    }
+                );
+                setModules(response.data.data);
+            } catch (error) {
+                console.error('Error fetching modules:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        fetchModules();
+    }, []);
 
     if (!userData || isLoading) {
         return (
@@ -76,6 +101,24 @@ export default function ModuleScreen({
                     />
                 </View>
             </View>
+            <FlatList
+                data={modules}
+                keyExtractor={(item) => item._id}
+                renderItem={({ item, index }) => {
+                    return (
+                        <ModuleStamp
+                            index={index + 1}
+                            name={item.name}
+                            style={{
+                                left: index % 2 === 0 ? 20 : undefined,
+                                right: index % 2 !== 0 ? 20 : undefined,
+                                top: 40 + 195 * index,
+                            }}
+                        />
+                    )
+                }}
+                contentContainerStyle={styles.pathContainer}
+            />
         </View>
     )
 };
@@ -123,5 +166,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: "center",
     },
-
+    pathContainer: {
+        position: "relative",
+        height: 2800
+    }
 })

@@ -21,8 +21,8 @@ export default function QuestionScreen({
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigation = useNavigation();
-    const { playAudio, togglePlayback, isPlaying, duration } = useAudio();
-    const [isSelected, setIsSelected] = useState<boolean>(false);
+    const { playAudio, togglePlayback, isPlaying, duration, isAudioEnded } = useAudio();
+    const [isChecked, setIsChecked] = useState<boolean>(false);
     const [selectedAnswer, setSelectedAnswer] = useState<{
         optionText: string;
         isCorrect: boolean;
@@ -61,9 +61,9 @@ export default function QuestionScreen({
                 <Text style={styles.audioPlayerText}>
                     Simak audio di bawah ini dan jawab pertanyaan yang diberikan.
                 </Text>
-                {!isPlaying ? (
+                {!isPlaying && isAudioEnded ? (
                     <WideButton
-                        text="Play Audio"
+                        text="Putar Audio"
                         onPress={() => {
                             playAudio(questions[0].media.audioUrl)
                         }}
@@ -123,54 +123,123 @@ export default function QuestionScreen({
                     color='red'
                 />
             </View>
-            {questions.map((question, index) => (
-                <View key={index}>
-                    <AudioPlayer />
-                    <Text style={styles.questionText}>{question.questionText}</Text>
-                    {question.options.map((option, index) => (
-                        <AnswerButton
-                            key={index}
-                            onPress={() => {
-                                setSelectedAnswer(option);
-                            }}
-                            style={{
-                                marginVertical: 8,
-                                paddingVertical: 8,
-                                paddingHorizontal: 24,
-                                backgroundColor: GlobalStyles.colors.accent,
-                                width: "90%",
-                                borderRadius: 16,
-                            }}
-                            isCorrect={option.isCorrect}
-                            answer={option.optionText}
-                            selected={selectedAnswer?.optionText === option.optionText}
-                        />
-                    ))}
-                </View>
-            ))}
+            <View style={{ flex: 1 }}>
+                {questions.map((question, index) => (
+                    <View key={index}>
+                        <AudioPlayer />
+                        <Text style={styles.questionText}>{question.questionText}</Text>
+                        {question.options.map((option, index) => (
+                            <AnswerButton
+                                key={index}
+                                onPress={() => {
+                                    setSelectedAnswer(option);
+                                }}
+                                style={{
+                                    marginVertical: 8,
+                                    paddingVertical: 8,
+                                    paddingHorizontal: 24,
+                                    backgroundColor: GlobalStyles.colors.accent,
+                                    width: "90%",
+                                    borderRadius: 16,
+                                }}
+                                isCorrect={option.isCorrect}
+                                answer={option.optionText}
+                                selected={selectedAnswer?.optionText === option.optionText}
+                                disabled={isChecked}
+                            />
+                        ))}
+                    </View>
+                ))}
+            </View>
             {selectedAnswer !== null && (
-                <View style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    marginBottom: 8
-                }}>
-                    <WideButton
-                        text="Periksa Jawaban"
-                        onPress={() => { }}
-                        color={GlobalStyles.colors.whiteFont}
-                        size={14}
-                        style={{
-                            paddingVertical: 12,
-                            paddingHorizontal: 24,
-                            backgroundColor: GlobalStyles.colors.primary,
-                            borderRadius: 16,
-                            width: "100%",
-                            alignSelf: "flex-end",
-                        }}
-                    />
+                <View style={styles.bottomContainer}>
+                    {isChecked ? (
+                        <>
+                            <Text
+                                style={{
+                                    fontFamily: "Inter-Bold",
+                                    fontSize: 16,
+                                    marginBottom: 16,
+                                    color: selectedAnswer.isCorrect ? 'green' : 'red',
+                                }}
+                            >
+                                {selectedAnswer.isCorrect ? (
+                                    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 0 }}>
+                                        <Ionicons
+                                            name="checkmark-circle-outline"
+                                            size={16}
+                                            color="green"
+                                            style={{ marginRight: 8 }}
+                                        />
+                                        <Text
+                                            style={{
+                                                fontFamily: "Inter-Bold",
+                                                fontSize: 20,
+                                                // color: GlobalStyles.colors.whiteFont,
+                                            }}
+                                        >
+                                            Jawaban Benar!
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 0 }}>
+                                        <Ionicons
+                                            name="close-circle-outline"
+                                            size={16}
+                                            color="red"
+                                            style={{ marginRight: 8 }}
+                                        />
+                                        <Text
+                                            style={{
+                                                fontFamily: "Inter-Bold",
+                                                fontSize: 20,
+                                                // color: GlobalStyles.colors.whiteFont,
+                                            }}
+                                        >
+                                            Jawaban Salah!
+                                        </Text>
+                                    </View>
+                                )}
+                            </Text>
+                            <WideButton
+                                text="Lanjut"
+                                onPress={() => {
+                                    // TODO: logic for going to next question
+                                    setIsChecked(false);
+                                    setSelectedAnswer(null);
+                                }}
+                                color={GlobalStyles.colors.whiteFont}
+                                size={19}
+                                style={{
+                                    paddingVertical: 12,
+                                    paddingHorizontal: 24,
+                                    backgroundColor: GlobalStyles.colors.primary,
+                                    borderRadius: 16,
+                                    width: "100%",
+                                }}
+                            />
+                        </>
+                    ) : (
+                        <WideButton
+                            text="Periksa Jawaban"
+                            onPress={() => {
+                                setIsChecked(true);
+                            }}
+                            color={GlobalStyles.colors.whiteFont}
+                            size={19}
+                            style={{
+                                paddingVertical: 12,
+                                paddingHorizontal: 24,
+                                backgroundColor: GlobalStyles.colors.primary,
+                                borderRadius: 16,
+                                width: "100%",
+                            }}
+                        />
+                    )}
                 </View>
             )}
-        </View>
+
+        </View >
     )
 };
 
@@ -217,7 +286,22 @@ const styles = StyleSheet.create({
     },
     questionText: {
         fontFamily: "Inter-Bold",
-        fontSize: 16,
+        fontSize: 18,
         marginVertical: 16,
-    }
+    },
+    bottomContainer: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: 20,
+        backgroundColor: GlobalStyles.colors.lighterAccent,
+        borderTopLeftRadius: 16,
+        borderTopRightRadius: 16,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 10,
+    },
 })

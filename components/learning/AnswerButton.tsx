@@ -8,6 +8,7 @@ interface AnswerButtonProps {
     onPress: () => void;
     style: object;
     selected: boolean;
+    disabled?: boolean;
 }
 
 export default function AnswerButton({
@@ -15,7 +16,8 @@ export default function AnswerButton({
     isCorrect,
     onPress,
     style,
-    selected
+    selected,
+    disabled
 }: AnswerButtonProps) {
 
     const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -42,6 +44,7 @@ export default function AnswerButton({
             onPress={onPress}
             onPressIn={handlePressIn}
             onPressOut={handlePressOut}
+            disabled={disabled}
         >
             <Animated.View
                 style={[
@@ -88,7 +91,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontFamily: "Inter-Bold",
-        fontSize: 14,
+        fontSize: 16,
     },
     correct: {
         backgroundColor: "#4CAF50",

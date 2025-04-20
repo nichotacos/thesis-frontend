@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import ModuleStamp from "../../../components/learning/ModuleStamp";
 import { Module } from "../../../types/Module";
 import { apiClient } from "../../../api/apiClient";
+import { useNavigation } from "@react-navigation/native";
 
 interface ModuleScreenProps {
     route: any;
@@ -19,6 +20,7 @@ export default function ModuleScreen({
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [modules, setModules] = useState<Module[]>([]);
+    const navigation = useNavigation();
 
     useEffect(() => {
         async function fetchModules() {
@@ -76,7 +78,7 @@ export default function ModuleScreen({
                 </View>
             </View>
             <View style={styles.moduleHeader}>
-                <View>
+                {/* <View>
                     <Ionicons
                         name="chevron-back-outline"
                         size={40}
@@ -85,12 +87,12 @@ export default function ModuleScreen({
                             console.log('prev module');
                         }}
                     />
-                </View>
+                </View> */}
                 <View style={styles.moduleTitleAndDescriptionContainer}>
                     <Text style={styles.moduleTitle}>{level.name}</Text>
                     <Text style={styles.moduleDescription}>{level.description}</Text>
                 </View>
-                <View>
+                {/* <View>
                     <Ionicons
                         name="chevron-forward-outline"
                         size={40}
@@ -99,7 +101,7 @@ export default function ModuleScreen({
                             console.log('next module');
                         }}
                     />
-                </View>
+                </View> */}
             </View>
             <FlatList
                 data={modules}
@@ -112,7 +114,12 @@ export default function ModuleScreen({
                             style={{
                                 left: index % 2 === 0 ? 20 : undefined,
                                 right: index % 2 !== 0 ? 20 : undefined,
-                                top: 40 + 195 * index,
+                                top: 20 + 150 * index,
+                            }}
+                            onPress={() => {
+                                navigation.navigate("QuestionScreen", {
+                                    module: item,
+                                })
                             }}
                         />
                     )
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         marginVertical: 16,
         backgroundColor: GlobalStyles.colors.lightBlue,
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
         paddingVertical: 8
     },
@@ -168,6 +175,7 @@ const styles = StyleSheet.create({
     },
     pathContainer: {
         position: "relative",
-        height: 2800
+        marginHorizontal: 16,
+        height: 2800,
     }
 })

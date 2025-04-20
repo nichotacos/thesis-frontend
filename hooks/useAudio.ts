@@ -6,6 +6,7 @@ export default function useAudio() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [duration, setDuration] = useState<number | null>(null);
     const [position, setPosition] = useState<number | null>(null);
+    const [isAudioEnded, setIsAudioEnded] = useState(false);
 
     // Cleanup on unmount
     useEffect(() => {
@@ -29,6 +30,24 @@ export default function useAudio() {
 
         setSound(newSound);
         setIsPlaying(true);
+        setIsAudioEnded(false);
+
+        newSound.setOnPlaybackStatusUpdate((status) => {
+            if (!status.isLoaded) return;
+
+            if (status.didJustFinish) {
+                setIsAudioEnded(true);
+                setIsPlaying(false);
+            }
+
+            if ('durationMillis' in status && status.durationMillis) {
+                setDuration(status.durationMillis ?? null);
+            }
+
+            setIsPlaying(status.isPlaying ?? false);
+        });
+
+        await newSound.playAsync();
     };
 
     const onPlaybackStatusUpdate = (status: any) => {
@@ -60,5 +79,6 @@ export default function useAudio() {
         isPlaying,
         duration,
         position,
+        isAudioEnded,
     };
 }

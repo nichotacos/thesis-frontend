@@ -14,6 +14,8 @@ import { GlobalStyles } from './constants/styles';
 import { Provider, useSelector } from 'react-redux'
 import { store } from './store';
 import ModuleScreen from './screens/learning/module/ModuleScreen';
+import QuestionScreen from './screens/learning/module/question/QuestionScreen';
+import ResultScreen from './screens/learning/module/question/ResultScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -102,6 +104,20 @@ function RootNavigator() {
           <Stack.Screen
             name="ModuleScreen"
             component={ModuleScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="QuestionScreen"
+            component={QuestionScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="ResultScreen"
+            component={ResultScreen}
             options={{
               headerShown: false,
             }}

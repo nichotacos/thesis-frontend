@@ -7,6 +7,7 @@ export default function useAudio() {
     const [duration, setDuration] = useState<number | null>(null);
     const [position, setPosition] = useState<number | null>(null);
     const [isAudioEnded, setIsAudioEnded] = useState(false);
+    const [currentUri, setCurrentUri] = useState<string | null>(null);
 
     // Cleanup on unmount
     useEffect(() => {
@@ -18,6 +19,13 @@ export default function useAudio() {
     }, [sound]);
 
     const playAudio = async (uri: string) => {
+        const status = sound ? await sound.getStatusAsync() : null;
+
+        if (sound && status?.isLoaded && status?.uri === uri && !status?.isPlaying) {
+            await sound.playAsync();
+            return;
+        }
+
         if (sound) {
             await sound.unloadAsync();
         }

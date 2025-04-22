@@ -124,7 +124,7 @@ export default function ModuleScreen({
                         />
                     )
                 }}
-                contentContainerStyle={styles.pathContainer}
+                contentContainerStyle={[styles.pathContainer, { height: modules.length * 150 + 50 }]}
             />
         </View>
     )
@@ -133,7 +133,8 @@ export default function ModuleScreen({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        paddingTop: 16,
+        paddingHorizontal: 16,
         backgroundColor: GlobalStyles.colors.lightBackground
     },
     header: {
@@ -176,6 +177,5 @@ const styles = StyleSheet.create({
     pathContainer: {
         position: "relative",
         marginHorizontal: 16,
-        height: 2800,
     }
 })

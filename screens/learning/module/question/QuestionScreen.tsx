@@ -22,11 +22,18 @@ export default function QuestionScreen({
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigation = useNavigation();
     const { playAudio, togglePlayback, isPlaying, duration, isAudioEnded } = useAudio();
+    const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
+    const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [isChecked, setIsChecked] = useState<boolean>(false);
     const [selectedAnswer, setSelectedAnswer] = useState<{
         optionText: string;
         isCorrect: boolean;
     } | null>(null);
+    const [userAnswers, setUserAnswers] = useState<{
+        questionId: string;
+        optionText: string;
+        isCorrect: boolean;
+    }[]>([]);
 
     useEffect(() => {
         async function fetchQuestions() {
@@ -37,6 +44,7 @@ export default function QuestionScreen({
                     levelIds: []
                 });
                 setQuestions(response.data.data);
+                setCurrentQuestion(response.data.data[0]);
             } catch (error) {
                 console.error('Error fetching questions:', error);
             } finally {
@@ -47,7 +55,7 @@ export default function QuestionScreen({
         fetchQuestions();
     }, [])
 
-    if (isLoading) {
+    if (isLoading || !questions || !currentQuestion) {
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <Text>Loading...</Text>
@@ -61,7 +69,7 @@ export default function QuestionScreen({
                 <Text style={styles.audioPlayerText}>
                     Simak audio di bawah ini dan jawab pertanyaan yang diberikan.
                 </Text>
-                {!isPlaying && isAudioEnded ? (
+                {!isPlaying || isAudioEnded ? (
                     <WideButton
                         text="Putar Audio"
                         onPress={() => {
@@ -124,32 +132,32 @@ export default function QuestionScreen({
                 />
             </View>
             <View style={{ flex: 1 }}>
-                {questions.map((question, index) => (
-                    <View key={index}>
-                        <AudioPlayer />
-                        <Text style={styles.questionText}>{question.questionText}</Text>
-                        {question.options.map((option, index) => (
-                            <AnswerButton
-                                key={index}
-                                onPress={() => {
-                                    setSelectedAnswer(option);
-                                }}
-                                style={{
-                                    marginVertical: 8,
-                                    paddingVertical: 8,
-                                    paddingHorizontal: 24,
-                                    backgroundColor: GlobalStyles.colors.accent,
-                                    width: "90%",
-                                    borderRadius: 16,
-                                }}
-                                isCorrect={option.isCorrect}
-                                answer={option.optionText}
-                                selected={selectedAnswer?.optionText === option.optionText}
-                                disabled={isChecked}
-                            />
-                        ))}
-                    </View>
-                ))}
+                {/* {questions.map((question, index) => ( */}
+                <View>
+                    <AudioPlayer />
+                    <Text style={styles.questionText}>{currentQuestion.questionText}</Text>
+                    {currentQuestion.options.map((option, index) => (
+                        <AnswerButton
+                            key={index}
+                            onPress={() => {
+                                setSelectedAnswer(option);
+                            }}
+                            style={{
+                                marginVertical: 8,
+                                paddingVertical: 8,
+                                paddingHorizontal: 24,
+                                backgroundColor: GlobalStyles.colors.accent,
+                                width: "90%",
+                                borderRadius: 16,
+                            }}
+                            isCorrect={option.isCorrect}
+                            answer={option.optionText}
+                            selected={selectedAnswer?.optionText === option.optionText}
+                            disabled={isChecked}
+                        />
+                    ))}
+                </View>
+                {/* ))} */}
             </View>
             {selectedAnswer !== null && (
                 <View style={styles.bottomContainer}>
@@ -207,6 +215,17 @@ export default function QuestionScreen({
                                     // TODO: logic for going to next question
                                     setIsChecked(false);
                                     setSelectedAnswer(null);
+                                    if (currentQuestionIndex < questions.length - 1) {
+                                        setCurrentQuestionIndex((prev) => prev + 1);
+                                        setCurrentQuestion(questions[currentQuestionIndex + 1]);
+                                    } else {
+                                        navigation.replace("ResultScreen", {
+                                            correct: userAnswers.filter((answer) => answer.isCorrect).length,
+                                            totalQuestions: userAnswers.length,
+                                            expEarned: userAnswers.filter((answer) => answer.isCorrect).length * 5,
+                                            module: module,
+                                        })
+                                    }
                                 }}
                                 color={GlobalStyles.colors.whiteFont}
                                 size={19}
@@ -224,6 +243,14 @@ export default function QuestionScreen({
                             text="Periksa Jawaban"
                             onPress={() => {
                                 setIsChecked(true);
+                                setUserAnswers((prev) => [
+                                    ...prev,
+                                    {
+                                        questionId: currentQuestion._id,
+                                        optionText: selectedAnswer?.optionText ?? "",
+                                        isCorrect: selectedAnswer?.isCorrect ?? false,
+                                    },
+                                ]);
                             }}
                             color={GlobalStyles.colors.whiteFont}
                             size={19}
@@ -247,6 +274,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        paddingBottom: 0,
         backgroundColor: GlobalStyles.colors.lightBackground
     },
     headerContainer: {

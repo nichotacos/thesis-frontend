@@ -5,6 +5,7 @@ interface LevelStampProps {
     name: string;
     imageSource: ImageSourcePropType;
     style: object;
+    disabled?: boolean;
     onPress: () => void;
 }
 
@@ -12,12 +13,14 @@ export default function LevelStamp({
     name,
     imageSource,
     style,
+    disabled,
     onPress
 }: LevelStampProps) {
     return (
         <View style={[styles.container, style]}>
             <Pressable
                 android_disableSound={true}
+                disabled={disabled}
                 onPress={onPress}
                 style={{
                     zIndex: 1,
@@ -43,7 +46,7 @@ const styles = StyleSheet.create({
         width: 128,
         height: 160,
         overflow: "hidden",
-        marginBottom: 8
+        marginBottom: 4
     },
     text: {
         fontFamily: "Inter-Bold",

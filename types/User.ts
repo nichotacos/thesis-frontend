@@ -1,3 +1,5 @@
+import { Level } from "./Level";
+
 export type User = {
     id: string;
     username: string;
@@ -12,7 +14,7 @@ export type User = {
     lastLogin?: Date;
     profilePicture?: string;
     currentLevel?: number;
-    currentLearnLevel?: string;
+    currentLearnLevel?: Level;
     currentModule?: string;
     createdAt?: Date;
     updatedAt?: Date;

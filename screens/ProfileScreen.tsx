@@ -88,7 +88,7 @@ export default function ProfileScreen({
                         <View style={styles.statisticsItem}>
                             <FontAwesome5 name="book-open" size={24} color="#A60000" style={styles.statisticsIcon} />
                             <View>
-                                <Text style={styles.statisticsItemValue}>{user.currentLearnLevel || "Bali"}</Text>
+                                <Text style={styles.statisticsItemValue}>{user.currentLearnLevel.name || "Bali"}</Text>
                                 <Text style={styles.statisticsItemDescription}>Level saat ini</Text>
                             </View>
                         </View>

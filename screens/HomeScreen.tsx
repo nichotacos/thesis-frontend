@@ -14,7 +14,7 @@ export default function HomeScreen() {
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContainer}>
             <UserIdentity
-                profilePicture="https://example.com/profile.jpg"
+                profilePicture={userData.profilePicture}
                 userFullName={userData.userFullName}
                 userLevel={userData.currentLevel}
                 totalGems={userData.totalGems}

@@ -20,12 +20,6 @@ export default function ProfileScreen({
     const [user, setUser] = useState<Partial<User>>({});
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    useEffect(() => {
-        if (userData) {
-            setUser(userData);
-        }
-    }, [userData]);
-
     function handleAvatarUpload() {
 
     }
@@ -50,22 +44,22 @@ export default function ProfileScreen({
 
                 <View style={styles.profileContainer}>
                     <ProfileAvatar
-                        uri={user.profilePicture || null}
+                        uri={userData.profilePicture || null}
                         size={120}
                         onPress={isEditing ? handleAvatarUpload : undefined}
-                        userFullName={user.userFullName || user.username || "Dummy User"}
+                        userFullName={userData.userFullName || "Dummy User"}
                     />
-                    <Text style={styles.username}>{user.userFullName || "Language Learner"}</Text>
-                    <Text style={styles.email}>{user.username || "learner@example.com"}</Text>
+                    <Text style={styles.username}>{userData.userFullName || "Language Learner"}</Text>
+                    <Text style={styles.email}>{userData.username || "learner@example.com"}</Text>
 
                     <View style={styles.levelContainer}>
-                        <Text style={styles.levelText}>Level {user.currentLevel || 5}</Text>
+                        <Text style={styles.levelText}>Level {userData.currentLevel}</Text>
                         {/* <ProgressBar
                             progress={(user.xp % 100) / 100 || 0.75}
                             color="#A60000"
                             width={200}
                         /> */}
-                        <Text style={styles.xpText}>{user.totalExp || 575} XP</Text>
+                        <Text style={styles.xpText}>{userData.totalExp} XP</Text>
                     </View>
                 </View>
                 <View style={styles.statisticsContainer}>
@@ -74,28 +68,28 @@ export default function ProfileScreen({
                         <View style={styles.statisticsItem}>
                             <FontAwesome5 name="fire" size={24} color="#A60000" style={styles.statisticsIcon} />
                             <View>
-                                <Text style={styles.statisticsItemValue}>{user.totalStreak}</Text>
+                                <Text style={styles.statisticsItemValue}>{userData.totalStreak}</Text>
                                 <Text style={styles.statisticsItemDescription}>Hari beruntun</Text>
                             </View>
                         </View>
                         <View style={styles.statisticsItem}>
                             <FontAwesome6 name="bolt" size={24} color="#ffd900" style={styles.statisticsIcon} />
                             <View>
-                                <Text style={styles.statisticsItemValue}>{user.totalExp}</Text>
+                                <Text style={styles.statisticsItemValue}>{userData.totalExp}</Text>
                                 <Text style={styles.statisticsItemDescription}>XP</Text>
                             </View>
                         </View>
                         <View style={styles.statisticsItem}>
                             <FontAwesome5 name="book-open" size={24} color="#A60000" style={styles.statisticsIcon} />
                             <View>
-                                <Text style={styles.statisticsItemValue}>{user.currentLearnLevel.name || "Bali"}</Text>
+                                <Text style={styles.statisticsItemValue}>{userData.currentLearnLevel.name || "Bali"}</Text>
                                 <Text style={styles.statisticsItemDescription}>Level saat ini</Text>
                             </View>
                         </View>
                         <View style={styles.statisticsItem}>
                             <Ionicons name="medal" size={24} color="#ffd900" style={styles.statisticsIcon} />
                             <View>
-                                <Text style={styles.statisticsItemValue}>{user.totalStreak}</Text>
+                                <Text style={styles.statisticsItemValue}>{userData.totalStreak}</Text>
                                 <Text style={styles.statisticsItemDescription}>3 besar</Text>
                             </View>
                         </View>

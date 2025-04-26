@@ -1,4 +1,5 @@
 import { Level } from "./Level";
+import { Module } from "./Module";
 
 export type User = {
     id: string;
@@ -15,7 +16,7 @@ export type User = {
     profilePicture?: string;
     currentLevel?: number;
     currentLearnLevel?: Level;
-    currentModule?: string;
+    currentModule?: Module;
     createdAt?: Date;
     updatedAt?: Date;
 }

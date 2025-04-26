@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { User } from "../../types/User";
 import { GlobalContents } from "../../constants/contents";
 import { useNavigation } from "@react-navigation/native";
+import { Fontisto } from "@expo/vector-icons";
 
 interface LevelScreenProps {
     route: any;
@@ -52,6 +53,8 @@ export default function LevelScreen({
         )
     }
 
+    console.log('userData:', userData);
+
     return (
         <ScrollView
             style={styles.container}
@@ -69,14 +72,30 @@ export default function LevelScreen({
                             style={[
                                 index % 2 === 0 ? { left: 20 } : { right: 20 },
                                 { top: stampPosition.top + 195 * index },
-                                // { opacity: userData.currentLearnLevel.localeCompare(level.actualBipaLevel) ? 1 : 0.5 },
+                                { opacity: userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel ? 0.5 : 1 },
                             ]}
                             onPress={() => {
                                 navigation.navigate("ModuleScreen", {
                                     level: level,
                                 })
                             }}
+                            disabled={userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel}
                         />
+                        {userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel && (
+                            <Fontisto
+                                name="locked"
+                                size={82}
+                                color="grey"
+                                style={{
+                                    position: "absolute",
+                                    top: stampPosition.top + 195 * index + 35,
+                                    left: index % 2 === 0 ? 50 : undefined,
+                                    right: index % 2 !== 0 ? 50 : undefined,
+                                    zIndex: 2,
+                                    opacity: 0.8,
+                                }}
+                            />
+                        )}
                         {/* TODO: Atur path yang sesuai */}
                         {index !== levels.length - 1 && (
                             <Svg viewBox="0 0 1230 1500" width={680} height={700} style={{
@@ -96,6 +115,7 @@ export default function LevelScreen({
                                         { scaleX: index % 2 !== 0 && -1 },
                                         { translateX: index % 2 !== 0 ? 900 : 0 },
                                     ]}
+                                    opacity={userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel ? 0.5 : 1}
                                 />
                             </Svg>
                         )}
@@ -118,3 +138,10 @@ const styles = StyleSheet.create({
         backgroundColor: GlobalStyles.colors.lightBackground,
     }
 })
+
+// TODO:
+// 1. Tambah deskripsi kecil
+// 2. Tambah backsound instrumental lagu daerah
+// 3. Tambah unsur pressable
+// 4. Perbandingan 2 screen level screen
+// 5. Disable conditional rendering pada level atau modul yang belum dibuka

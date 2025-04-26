@@ -2,6 +2,7 @@ import { Question } from "./Question";
 
 export type Module = {
     _id: string;
+    index: number;
     name: string;
     description: string;
     level: {

@@ -16,6 +16,7 @@ import { store } from './store';
 import ModuleScreen from './screens/learning/module/ModuleScreen';
 import QuestionScreen from './screens/learning/module/question/QuestionScreen';
 import ResultScreen from './screens/learning/module/question/ResultScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -79,6 +80,24 @@ function BottomTabNavigator() {
           // },
           tabBarIcon: ({ color }) => (
             <Ionicons name="school-outline" size={30} color={color} />
+          ),
+          tabBarIconStyle: {
+            marginTop: 6
+          }
+        }}
+      />
+      <BottomTabs.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          tabBarShowLabel: false,
+          // tabBarLabelStyle: {
+          //   fontSize: 14,
+          //   marginTop: 6,
+          //   fontFamily: 'Inter-Medium',
+          // },
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="person-outline" size={30} color={color} />
           ),
           tabBarIconStyle: {
             marginTop: 6

@@ -21,7 +21,7 @@ export default function UserIdentity({
         <View style={styles.innerContainer}>
             <View style={styles.innerContainer}>
                 <Image
-                    source={require("../../assets/default-avatar.jpeg")}
+                    source={{ uri: profilePicture }}
                     style={styles.avatarImage}
                 />
                 <View style={styles.textContainer}>

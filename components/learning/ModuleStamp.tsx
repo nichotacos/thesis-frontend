@@ -23,11 +23,12 @@ export default function ModuleStamp({
                     </Text>
                 </View>
             </View>
-            <View style={styles.moduleNameContainer}>
+            {/* <View style={styles.moduleNameContainer}>
                 <Text style={styles.moduleName}>
                     {name}
                 </Text>
-            </View>
+            </View> */}
+            {/* Hapus nama modul */}
         </Pressable>
     )
 };

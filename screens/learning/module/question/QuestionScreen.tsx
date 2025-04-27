@@ -57,9 +57,14 @@ export default function QuestionScreen({
                     moduleIds: [module._id],
                     levelIds: []
                 });
-                setQuestions(response.data.data);
-                const shuffledAnswers = handleShuffleAnswers(response.data.data[0]);
-                setCurrentQuestion(shuffledAnswers);
+                const fetchedQuestions = response.data.data;
+                // setQuestions(response.data.data);
+                const shuffledAnswers = fetchedQuestions.map((question: Question) => {
+                    return handleShuffleAnswers(question);
+                });
+                console.log('shuffledAnswers:', shuffledAnswers.map((question: Question) => question.options.map((option) => option.optionText)));
+                setQuestions(shuffledAnswers);
+                setCurrentQuestion(shuffledAnswers[0]);
             } catch (error) {
                 console.error('Error fetching questions:', error);
             } finally {

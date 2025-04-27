@@ -2,7 +2,7 @@ import { Level } from "./Level";
 import { Module } from "./Module";
 
 export type User = {
-    id: string;
+    _id: string;
     username: string;
     userFullName: string;
     email: string;

@@ -28,8 +28,31 @@ const BottomTabs = createBottomTabNavigator();
 function BottomTabNavigator() {
   return (
     <BottomTabs.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerShown: false,
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Home') {
+            iconName = focused
+              ? 'home'
+              : 'home-outline';
+          } else if (route.name === 'LevelScreen') {
+            iconName = focused
+              ? 'school'
+              : 'school-outline';
+          } else if (route.name === 'LeaderboardScreen') {
+            iconName = focused
+              ? 'trophy'
+              : 'trophy-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused
+              ? 'person'
+              : 'person-outline';
+          }
+
+          return <Ionicons name={iconName} size={30} color={color} />;
+        },
         tabBarStyle: {
           position: 'absolute',
           bottom: 20,
@@ -47,7 +70,7 @@ function BottomTabNavigator() {
         },
         tabBarActiveTintColor: GlobalStyles.colors.accent,
         tabBarInactiveTintColor: 'black',
-      }}
+      })}
       initialRouteName="Home"
 
     >
@@ -61,11 +84,8 @@ function BottomTabNavigator() {
           //   marginTop: 6,
           //   fontFamily: 'Inter-Medium',
           // },
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="home-outline" size={30} color={color} />
-          ),
           tabBarIconStyle: {
-            marginTop: 6
+            marginTop: 6,
           }
         }}
       />
@@ -79,9 +99,6 @@ function BottomTabNavigator() {
           //   marginTop: 6,
           //   fontFamily: 'Inter-Medium',
           // },
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="school-outline" size={30} color={color} />
-          ),
           tabBarIconStyle: {
             marginTop: 6
           }
@@ -92,9 +109,6 @@ function BottomTabNavigator() {
         component={LeaderboardScreen}
         options={{
           tabBarShowLabel: false,
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="trophy-outline" size={30} color={color} />
-          ),
           tabBarIconStyle: {
             marginTop: 6
           }
@@ -105,14 +119,6 @@ function BottomTabNavigator() {
         component={ProfileScreen}
         options={{
           tabBarShowLabel: false,
-          // tabBarLabelStyle: {
-          //   fontSize: 14,
-          //   marginTop: 6,
-          //   fontFamily: 'Inter-Medium',
-          // },
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="person-outline" size={30} color={color} />
-          ),
           tabBarIconStyle: {
             marginTop: 6
           }

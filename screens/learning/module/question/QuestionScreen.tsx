@@ -35,6 +35,20 @@ export default function QuestionScreen({
         isCorrect: boolean;
     }[]>([]);
 
+    function handleShuffleAnswers(question: Question) {
+        const options = question.options.map((option) => {
+            return {
+                optionText: option.optionText,
+                isCorrect: option.isCorrect,
+            };
+        });
+        const shuffledOptions = options.sort(() => Math.random() - 0.5);
+        return {
+            ...question,
+            options: shuffledOptions,
+        };
+    }
+
     useEffect(() => {
         async function fetchQuestions() {
             try {
@@ -44,7 +58,8 @@ export default function QuestionScreen({
                     levelIds: []
                 });
                 setQuestions(response.data.data);
-                setCurrentQuestion(response.data.data[0]);
+                const shuffledAnswers = handleShuffleAnswers(response.data.data[0]);
+                setCurrentQuestion(shuffledAnswers);
             } catch (error) {
                 console.error('Error fetching questions:', error);
             } finally {
@@ -66,9 +81,6 @@ export default function QuestionScreen({
     function AudioPlayer() {
         return (
             <View style={styles.audioPlayerContainer}>
-                <Text style={styles.audioPlayerText}>
-                    Simak audio di bawah ini dan jawab pertanyaan yang diberikan.
-                </Text>
                 {!isPlaying || isAudioEnded ? (
                     <WideButton
                         text="Putar Audio"
@@ -76,7 +88,7 @@ export default function QuestionScreen({
                             playAudio(questions[0].media.audioUrl)
                         }}
                         color={GlobalStyles.colors.whiteFont}
-                        size={12}
+                        size={16}
                         style={{
                             alignSelf: "center",
                             marginVertical: 12,
@@ -122,7 +134,7 @@ export default function QuestionScreen({
                 />
                 <View style={styles.progressContainer}>
                     <View style={styles.outerProgressBar}>
-                        <View style={styles.innerProgressBar} />
+                        <View style={[styles.innerProgressBar, { width: `${((currentQuestionIndex) / questions.length) * 100}%` }]} />
                     </View>
                 </View>
                 <Ionicons
@@ -175,7 +187,7 @@ export default function QuestionScreen({
                                     <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 0 }}>
                                         <Ionicons
                                             name="checkmark-circle-outline"
-                                            size={16}
+                                            size={20}
                                             color="green"
                                             style={{ marginRight: 8 }}
                                         />
@@ -186,14 +198,14 @@ export default function QuestionScreen({
                                                 // color: GlobalStyles.colors.whiteFont,
                                             }}
                                         >
-                                            Jawaban Benar!
+                                            Jawaban Benar
                                         </Text>
                                     </View>
                                 ) : (
                                     <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 0 }}>
                                         <Ionicons
                                             name="close-circle-outline"
-                                            size={16}
+                                            size={20}
                                             color="red"
                                             style={{ marginRight: 8 }}
                                         />
@@ -204,7 +216,7 @@ export default function QuestionScreen({
                                                 // color: GlobalStyles.colors.whiteFont,
                                             }}
                                         >
-                                            Jawaban Salah!
+                                            Jawaban Salah
                                         </Text>
                                     </View>
                                 )}
@@ -296,7 +308,6 @@ const styles = StyleSheet.create({
         backgroundColor: GlobalStyles.colors.accent,
         height: 6,
         borderRadius: 50,
-        width: '30%',
     },
     audioPlayerContainer: {
         flexDirection: "column",

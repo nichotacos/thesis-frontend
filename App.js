@@ -17,6 +17,7 @@ import ModuleScreen from './screens/learning/module/ModuleScreen';
 import QuestionScreen from './screens/learning/module/question/QuestionScreen';
 import ResultScreen from './screens/learning/module/question/ResultScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import LeaderboardScreen from './screens/LeaderboardScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -80,6 +81,19 @@ function BottomTabNavigator() {
           // },
           tabBarIcon: ({ color }) => (
             <Ionicons name="school-outline" size={30} color={color} />
+          ),
+          tabBarIconStyle: {
+            marginTop: 6
+          }
+        }}
+      />
+      <BottomTabs.Screen
+        name="LeaderboardScreen"
+        component={LeaderboardScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="trophy-outline" size={30} color={color} />
           ),
           tabBarIconStyle: {
             marginTop: 6

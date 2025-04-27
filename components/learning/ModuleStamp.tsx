@@ -6,16 +6,18 @@ interface ModuleStampProps {
     style: object;
     name: string;
     onPress: () => void;
+    disabled: boolean;
 }
 
 export default function ModuleStamp({
     index,
     style,
     name,
-    onPress
+    onPress,
+    disabled,
 }: ModuleStampProps) {
     return (
-        <Pressable style={[styles.mainContainer, style]} onPress={onPress}>
+        <Pressable style={[styles.mainContainer, style]} onPress={onPress} disabled={disabled}>
             <View style={[styles.outerContainer]}>
                 <View style={styles.innerContainer}>
                     <Text style={styles.text}>

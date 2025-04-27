@@ -107,6 +107,7 @@ export default function ModuleScreen({
                                         module: item,
                                     })
                                 }}
+                                disabled={userData.currentModule.index < item.index}
                             />
                             {((userData.currentModule.index < item.index)) && (
                                 <Fontisto

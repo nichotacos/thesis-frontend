@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import AnswerButton from "../../../../components/learning/AnswerButton";
 import useAudio from "../../../../hooks/useAudio";
 import { formatMillis } from "../../../../utils/formatMillisAudio";
+import playCheckAnswerSound from "../../../../utils/playCheckAnswerSound";
 
 interface QuestionScreenProps {
     route: any;
@@ -81,6 +82,19 @@ export default function QuestionScreen({
                 <Text>Loading...</Text>
             </View>
         )
+    }
+
+    async function handleCheckAnswer() {
+        setIsChecked(true);
+        setUserAnswers((prev) => [
+            ...prev,
+            {
+                questionId: currentQuestion._id,
+                optionText: selectedAnswer?.optionText ?? "",
+                isCorrect: selectedAnswer?.isCorrect ?? false,
+            },
+        ]);
+        await playCheckAnswerSound(selectedAnswer.isCorrect);
     }
 
     function AudioPlayer() {
@@ -258,17 +272,7 @@ export default function QuestionScreen({
                     ) : (
                         <WideButton
                             text="Periksa Jawaban"
-                            onPress={() => {
-                                setIsChecked(true);
-                                setUserAnswers((prev) => [
-                                    ...prev,
-                                    {
-                                        questionId: currentQuestion._id,
-                                        optionText: selectedAnswer?.optionText ?? "",
-                                        isCorrect: selectedAnswer?.isCorrect ?? false,
-                                    },
-                                ]);
-                            }}
+                            onPress={handleCheckAnswer}
                             color={GlobalStyles.colors.whiteFont}
                             size={19}
                             style={{
@@ -282,7 +286,6 @@ export default function QuestionScreen({
                     )}
                 </View>
             )}
-
         </View >
     )
 };

@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useEffect } from "react"
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated, Image, Dimensions, Share } from "react-native"
+import { View, Text, StyleSheet, ScrollView, Animated, Dimensions, Share, Pressable } from "react-native"
 // import { LinearGradient } from "expo-linear-gradient"
 import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"
 import { GlobalStyles } from "../../../../constants/styles"
@@ -160,18 +160,20 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                 </View>
 
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity
+                    <Pressable
                         style={[styles.button, styles.nextButton]}
-                        onPress={() => navigation?.navigate("ModuleList")}
+                        onPress={() => navigation?.popTo("ModuleScreen", {
+                            level: module.level,
+                        })}
                     >
                         <Text style={styles.buttonText}>Lanjut ke modul berikutnya</Text>
                         <AntDesign name="arrowright" size={20} color="#fff" />
-                    </TouchableOpacity>
+                    </Pressable>
 
-                    <TouchableOpacity style={[styles.button, styles.retryButton]} onPress={() => navigation?.replace("QuestionScreen", { module })}>
+                    <Pressable style={[styles.button, styles.retryButton]} onPress={() => navigation?.replace("QuestionScreen", { module })}>
                         <Text style={styles.buttonText}>Ulangi</Text>
                         <Ionicons name="refresh" size={20} color="#fff" />
-                    </TouchableOpacity>
+                    </Pressable>
 
                     {/* <TouchableOpacity style={[styles.button, styles.shareButton]} onPress={shareResults}>
                         <Text style={styles.buttonText}>Share</Text>

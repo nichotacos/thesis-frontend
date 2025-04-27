@@ -63,7 +63,6 @@ export default function QuestionScreen({
                 const shuffledAnswers = fetchedQuestions.map((question: Question) => {
                     return handleShuffleAnswers(question);
                 });
-                console.log('shuffledAnswers:', shuffledAnswers.map((question: Question) => question.options.map((option) => option.optionText)));
                 setQuestions(shuffledAnswers);
                 setCurrentQuestion(shuffledAnswers[0]);
             } catch (error) {
@@ -156,11 +155,20 @@ export default function QuestionScreen({
                         <View style={[styles.innerProgressBar, { width: `${((currentQuestionIndex) / questions.length) * 100}%` }]} />
                     </View>
                 </View>
-                <Ionicons
-                    name="heart"
-                    size={42}
-                    color='red'
-                />
+                <View style={styles.heartContainer}>
+                    <Ionicons
+                        name="heart"
+                        size={42}
+                        color='red'
+                    />
+                    <Text style={{
+                        fontFamily: "Inter-Bold",
+                        fontSize: 20,
+                        marginHorizontal: 2,
+                    }}>
+                        5
+                    </Text>
+                </View>
             </View>
             <View style={{ flex: 1 }}>
                 {/* {questions.map((question, index) => ( */}
@@ -351,4 +359,10 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         elevation: 10,
     },
+    heartContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: 4,
+    }
 })

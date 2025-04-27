@@ -74,7 +74,7 @@ export default function LearningWidget({
                     <WideButton
                         text="Lanjut Belajar"
                         color={GlobalStyles.colors.whiteFont}
-                        size={20}
+                        size={18}
                         onPress={onPress}
                         style={{
                             backgroundColor: GlobalStyles.colors.lighterPrimary,
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
         // you can style this if needed
     },
     text: {
-        fontSize: 22,
+        fontSize: 20,
         fontFamily: "Inter-Bold",
         color: GlobalStyles.colors.whiteFont,
     },
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
         backgroundColor: GlobalStyles.colors.lighterAccent2,
     },
     progressText: {
-        fontSize: 24,
+        fontSize: 20,
         fontFamily: "Inter-Bold",
         color: GlobalStyles.colors.accent,
         textAlign: "center",

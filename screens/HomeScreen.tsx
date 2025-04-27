@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     headerText: {
-        fontSize: 24,
+        fontSize: 22,
         fontFamily: "Inter-Bold",
         marginVertical: 16
     },

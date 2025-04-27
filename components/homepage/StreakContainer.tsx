@@ -42,7 +42,7 @@ export default function StreakContainer({ totalStreak }: StreakContainerProps) {
                 onPress={() => { }}
                 text="Ambil Hadiahmu!"
                 color={GlobalStyles.colors.whiteFont}
-                size={16}
+                size={18}
                 style={{
                     backgroundColor: GlobalStyles.colors.accent,
                     marginTop: 8,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     },
     streakText: {
         fontFamily: "Inter-Bold",
-        fontSize: 20,
+        fontSize: 22,
         color: GlobalStyles.colors.whiteFont,
     },
     dateList: {

@@ -102,7 +102,16 @@ export default function LeaderboardScreen() {
                         renderItem={({ item, index }) => {
                             if (index < 3) return null;
                             return (
-                                <View style={{ flexDirection: "row", alignItems: "center", paddingVertical: 8, borderBottomColor: GlobalStyles.colors.primary, borderBottomWidth: 1 }}>
+                                <View style={[
+                                    {
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        paddingVertical: 12,
+                                        borderBottomColor: GlobalStyles.colors.primary,
+                                        borderBottomWidth: 1,
+                                        paddingHorizontal: 4,
+                                    },
+                                ]}>
                                     <Text style={{ fontSize: 18, fontFamily: "Inter-Bold", color: 'black', marginRight: 16 }}>{index + 1}</Text>
                                     <Image
                                         source={{ uri: item.profilePicture }}

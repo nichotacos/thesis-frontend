@@ -76,7 +76,7 @@ export default function ModuleScreen({
                             overflow: "hidden",
                         }}
                     />
-                    <Text style={styles.gemsOrStreakText}>{userData.totalStreak}</Text>
+                    <Text style={styles.gemsOrStreakText}>{userData.streak.streakCount}</Text>
                 </View>
             </View>
             <View style={styles.moduleHeader}>

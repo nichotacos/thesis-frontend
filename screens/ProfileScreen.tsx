@@ -68,7 +68,7 @@ export default function ProfileScreen({
                         <View style={styles.statisticsItem}>
                             <FontAwesome5 name="fire" size={24} color="#A60000" style={styles.statisticsIcon} />
                             <View>
-                                <Text style={styles.statisticsItemValue}>{userData.totalStreak}</Text>
+                                <Text style={styles.statisticsItemValue}>{userData.streak.highestStreak}</Text>
                                 <Text style={styles.statisticsItemDescription}>Hari beruntun</Text>
                             </View>
                         </View>
@@ -89,7 +89,7 @@ export default function ProfileScreen({
                         <View style={styles.statisticsItem}>
                             <Ionicons name="medal" size={24} color="#ffd900" style={styles.statisticsIcon} />
                             <View>
-                                <Text style={styles.statisticsItemValue}>{userData.totalStreak}</Text>
+                                <Text style={styles.statisticsItemValue}>{userData.streak.highestStreak}</Text>
                                 <Text style={styles.statisticsItemDescription}>3 besar</Text>
                             </View>
                         </View>

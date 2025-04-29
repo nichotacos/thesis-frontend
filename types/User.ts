@@ -10,27 +10,30 @@ export type User = {
     weeklyExp: number;
     dailyExp: number;
     totalGems: number;
-    lastLogin?: Date;
+    lastLogin?: string;
     profilePicture?: string;
     currentLevel?: number;
     currentLearnLevel?: Level;
     currentModule?: Module;
     hearts?: {
         current: number;
-        lostAt: Date[];
+        lostAt: string[];
     };
     streak: {
         streakCount: number,
         highestStreak: number,
-        lastActivity: Date,
+        lastActivity: string,
     };
     completedModules: {
         module: string;
         correctCount: number;
         totalAnswers: number;
         score: number;
-        completedAt: Date;
+        completedAt: string;
     }[];
-    createdAt?: Date;
-    updatedAt?: Date;
+    isAbleToClaimDailyReward: boolean;
+    lastDailyRewardClaim?: string;
+    hasClaimedDailyReward: boolean;
+    createdAt?: string;
+    updatedAt?: string;
 }

@@ -31,9 +31,28 @@ const userSlice = createSlice({
             if (state.userInfo) {
                 state.userInfo.hearts.current = Math.max(0, state.userInfo.hearts.current - action.payload);
             }
+        },
+        addExp(state, action: PayloadAction<number>) {
+            if (state.userInfo) {
+                state.userInfo.totalExp = (state.userInfo.totalExp || 0) + action.payload;
+                state.userInfo.weeklyExp = (state.userInfo.weeklyExp || 0) + action.payload;
+                state.userInfo.dailyExp = (state.userInfo.dailyExp || 0) + action.payload;
+            }
+        },
+        completeModule(state, action: PayloadAction<{ moduleId: string, exp: number, correctCount: number, score: number, totalAnswer: number }>) {
+            if (state.userInfo) {
+                const newCompletedModule = {
+                    module: action.payload.moduleId,
+                    correctCount: action.payload.correctCount,
+                    totalAnswers: action.payload.totalAnswer,
+                    score: action.payload.score,
+                    completedAt: new Date(),
+                }
+                state.userInfo.completedModules?.push(newCompletedModule);
+            }
         }
     }
 });
 
-export const { login, logout, decrementHp } = userSlice.actions;
+export const { login, logout, decrementHp, addExp } = userSlice.actions;
 export const userReducer = userSlice.reducer;

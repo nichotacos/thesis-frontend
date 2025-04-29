@@ -23,7 +23,14 @@ export type User = {
         streakCount: number,
         highestStreak: number,
         lastActivity: Date,
-    }
+    };
+    completedModules: {
+        module: string;
+        correctCount: number;
+        totalAnswers: number;
+        score: number;
+        completedAt: Date;
+    }[];
     createdAt?: Date;
     updatedAt?: Date;
 }

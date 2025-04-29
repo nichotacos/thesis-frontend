@@ -9,8 +9,6 @@ export type User = {
     totalExp: number;
     weeklyExp: number;
     dailyExp: number;
-    totalStreak: number;
-    highestStreak: number;
     totalGems: number;
     lastLogin?: Date;
     profilePicture?: string;
@@ -20,6 +18,11 @@ export type User = {
     hearts?: {
         current: number;
         lostAt: Date[];
+    };
+    streak: {
+        streakCount: number,
+        highestStreak: number,
+        lastActivity: Date,
     }
     createdAt?: Date;
     updatedAt?: Date;

@@ -27,8 +27,13 @@ const userSlice = createSlice({
             state.userInfo = null;
             state.token = null;
         },
+        decrementHp(state, action: PayloadAction<number>) {
+            if (state.userInfo) {
+                state.userInfo.hearts.current = Math.max(0, state.userInfo.hearts.current - action.payload);
+            }
+        }
     }
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, decrementHp } = userSlice.actions;
 export const userReducer = userSlice.reducer;

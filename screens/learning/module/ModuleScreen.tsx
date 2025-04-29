@@ -35,7 +35,6 @@ export default function ModuleScreen({
                     }
                 );
                 setModules(response.data.data);
-                console.log('modules:', response.data.data);
             } catch (error) {
                 console.error('Error fetching modules:', error);
             } finally {
@@ -98,7 +97,7 @@ export default function ModuleScreen({
                                 style={{
                                     left: index % 2 === 0 ? 20 : undefined,
                                     right: index % 2 !== 0 ? 20 : undefined,
-                                    top: 20 + 150 * index,
+                                    top: 20 + 120 * index,
                                     opacity: userData.currentModule.index < item.index ? 0.5 : 1,
                                     zIndex: 1,
                                 }}
@@ -116,7 +115,7 @@ export default function ModuleScreen({
                                     color="grey"
                                     style={{
                                         position: "absolute",
-                                        top: 20 + 150 * index + 20,
+                                        top: 20 + 120 * index + 20,
                                         left: index % 2 === 0 ? 49 : undefined,
                                         right: index % 2 !== 0 ? 48 : undefined,
                                         zIndex: 2,
@@ -131,7 +130,7 @@ export default function ModuleScreen({
                                     viewBox="0 0 100 100"
                                     style={{
                                         position: "absolute",
-                                        top: 18 + 150 * index,
+                                        top: 18 + 120 * index,
                                         left: index % 2 === 0 && 129,
                                         right: index % 2 !== 0 && 119
                                     }}
@@ -148,11 +147,11 @@ export default function ModuleScreen({
                                     <Svg
                                         viewBox="0 0 1230 1500"
                                         width={380}
-                                        height={300}
+                                        height={255}
                                         style={{
                                             position: "absolute",
-                                            top: 60 + 150 * index,
-                                            left: index % 2 === 0 && 32,
+                                            top: 60 + 120 * index,
+                                            left: index % 2 === 0 && 25,
                                         }}
                                     >
                                         <G
@@ -194,7 +193,7 @@ export default function ModuleScreen({
                                         viewBox="0 0 100 100"
                                         style={{
                                             position: "absolute",
-                                            top: 18 + 150 * index,
+                                            top: 18 + 120 * index,
                                             left: index % 2 === 0 && 129,
                                         }}
                                     >
@@ -211,11 +210,11 @@ export default function ModuleScreen({
                                     <Svg
                                         viewBox="0 0 1230 1500"
                                         width={380}
-                                        height={300}
+                                        height={255}
                                         style={{
                                             position: "absolute",
-                                            top: 60 + 150 * index,
-                                            right: index % 2 !== 0 && -65,
+                                            top: 60 + 120 * index,
+                                            right: index % 2 !== 0 && -58,
                                         }}
                                     >
                                         <G
@@ -257,7 +256,7 @@ export default function ModuleScreen({
                                         viewBox="0 0 100 100"
                                         style={{
                                             position: "absolute",
-                                            top: 18 + 150 * index,
+                                            top: 18 + 120 * index,
                                             right: index % 2 !== 0 && 119,
                                         }}
                                     >
@@ -273,7 +272,7 @@ export default function ModuleScreen({
                         </View>
                     )
                 }}
-                contentContainerStyle={[styles.pathContainer, { height: modules.length * 150 + 50 }]}
+                contentContainerStyle={[styles.pathContainer, { height: modules.length * 120 + 50 }]}
             />
         </View>
     )

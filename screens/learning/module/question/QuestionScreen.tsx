@@ -10,6 +10,8 @@ import AnswerButton from "../../../../components/learning/AnswerButton";
 import useAudio from "../../../../hooks/useAudio";
 import { formatMillis } from "../../../../utils/formatMillisAudio";
 import playCheckAnswerSound from "../../../../utils/playCheckAnswerSound";
+import { useSelector } from "react-redux";
+import { User } from "../../../../types/User";
 
 interface QuestionScreenProps {
     route: any;
@@ -19,6 +21,7 @@ export default function QuestionScreen({
     route
 }: QuestionScreenProps) {
     const { module } = route.params;
+    const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigation = useNavigation();
@@ -75,7 +78,7 @@ export default function QuestionScreen({
         fetchQuestions();
     }, [])
 
-    if (isLoading || !questions || !currentQuestion) {
+    if (isLoading || !questions || !currentQuestion || !userData) {
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                 <Text>Loading...</Text>
@@ -166,7 +169,7 @@ export default function QuestionScreen({
                         fontSize: 20,
                         marginHorizontal: 2,
                     }}>
-                        5
+                        {userData.hearts.current}
                     </Text>
                 </View>
             </View>

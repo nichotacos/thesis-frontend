@@ -17,6 +17,10 @@ export type User = {
     currentLevel?: number;
     currentLearnLevel?: Level;
     currentModule?: Module;
+    hearts?: {
+        current: number;
+        lostAt: Date[];
+    }
     createdAt?: Date;
     updatedAt?: Date;
 }

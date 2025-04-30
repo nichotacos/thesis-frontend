@@ -10,8 +10,12 @@ import AnswerButton from "../../../../components/learning/AnswerButton";
 import useAudio from "../../../../hooks/useAudio";
 import { formatMillis } from "../../../../utils/formatMillisAudio";
 import playCheckAnswerSound from "../../../../utils/playCheckAnswerSound";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { User } from "../../../../types/User";
+import loseHp from "../../../../api/gamifications/loseHp";
+import { decrementHp, completeModule as completeModuleReducer } from "../../../../store/userSlice";
+import addUserExp from "../../../../api/gamifications/addUserExp";
+import completeModule from "../../../../api/gamifications/completeModule";
 
 interface QuestionScreenProps {
     route: any;
@@ -22,6 +26,7 @@ export default function QuestionScreen({
 }: QuestionScreenProps) {
     const { module } = route.params;
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
+    const dispatch = useDispatch();
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigation = useNavigation();
@@ -96,7 +101,59 @@ export default function QuestionScreen({
                 isCorrect: selectedAnswer?.isCorrect ?? false,
             },
         ]);
+        if (selectedAnswer.isCorrect === false) {
+            try {
+                await loseHp(userData._id);
+                dispatch(decrementHp(1));
+            } catch (error) {
+                console.error("Failed to reduce HP:", error);
+            }
+        }
         await playCheckAnswerSound(selectedAnswer.isCorrect);
+    }
+
+    async function handleSubmitAnswer() {
+        try {
+            await addUserExp(userData._id, userAnswers.filter((answer) => answer.isCorrect).length * 5);
+        } catch (error) {
+            console.error("Error submitting answer:", error);
+        }
+    }
+
+    async function handleNextQuestionOrResult() {
+        setIsChecked(false);
+        setSelectedAnswer(null);
+        if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex((prev) => prev + 1);
+            setCurrentQuestion(questions[currentQuestionIndex + 1]);
+        } else {
+            try {
+                dispatch(completeModuleReducer({
+                    moduleId: module._id,
+                    exp: userAnswers.filter((answer) => answer.isCorrect).length * 5,
+                    correctCount: userAnswers.filter((answer) => answer.isCorrect).length,
+                    score: userAnswers.filter((answer) => answer.isCorrect).length * 5,
+                    totalAnswer: questions.length,
+                }));
+
+                await completeModule({
+                    moduleId: module._id,
+                    userId: userData._id,
+                    correctCount: userAnswers.filter((answer) => answer.isCorrect).length,
+                    score: userAnswers.filter((answer) => answer.isCorrect).length * 5,
+                    totalAnswer: userAnswers.length,
+                });
+
+                navigation.replace("ResultScreen", {
+                    correct: userAnswers.filter((answer) => answer.isCorrect).length,
+                    totalQuestions: userAnswers.length,
+                    expEarned: userAnswers.filter((answer) => answer.isCorrect).length * 5,
+                    module: module,
+                });
+            } catch (error) {
+                console.error("Error completing module:", error);
+            }
+        }
     }
 
     function AudioPlayer() {
@@ -253,22 +310,7 @@ export default function QuestionScreen({
                             </Text>
                             <WideButton
                                 text="Lanjut"
-                                onPress={() => {
-                                    // TODO: logic for going to next question
-                                    setIsChecked(false);
-                                    setSelectedAnswer(null);
-                                    if (currentQuestionIndex < questions.length - 1) {
-                                        setCurrentQuestionIndex((prev) => prev + 1);
-                                        setCurrentQuestion(questions[currentQuestionIndex + 1]);
-                                    } else {
-                                        navigation.replace("ResultScreen", {
-                                            correct: userAnswers.filter((answer) => answer.isCorrect).length,
-                                            totalQuestions: userAnswers.length,
-                                            expEarned: userAnswers.filter((answer) => answer.isCorrect).length * 5,
-                                            module: module,
-                                        })
-                                    }
-                                }}
+                                onPress={handleNextQuestionOrResult}
                                 color={GlobalStyles.colors.whiteFont}
                                 size={19}
                                 style={{

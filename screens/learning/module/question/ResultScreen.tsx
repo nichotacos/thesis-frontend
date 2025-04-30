@@ -6,6 +6,8 @@ import { View, Text, StyleSheet, ScrollView, Animated, Dimensions, Share, Pressa
 // import { LinearGradient } from "expo-linear-gradient"
 import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"
 import { GlobalStyles } from "../../../../constants/styles"
+import { useSelector } from "react-redux"
+import { User } from "../../../../types/User"
 
 // Types for our props and state
 interface ResultScreenProps {
@@ -27,6 +29,8 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
     navigation,
     route,
 }) => {
+    const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo)
+
     // Animation values
     const scoreAnim = new Animated.Value(0)
     const starScale = new Animated.Value(0)
@@ -70,7 +74,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
     const shareResults = async () => {
         try {
             await Share.share({
-                message: `I just scored ${score}% on the "${module.name}" module in my language learning app!`,
+                message: `Saya baru saya mendapatkan skor ${score}% di modul "${module.name}" !`,
             })
         } catch (error) {
             console.log(error)
@@ -144,7 +148,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                     </View>
                     <View style={styles.statItem}>
                         <MaterialCommunityIcons name="fire" size={24} color="#FF5722" />
-                        <Text style={styles.statText}>{1} hari beruntun</Text>
+                        <Text style={styles.statText}>{userData.streak.streakCount} hari beruntun</Text>
                     </View>
                 </View>
 
@@ -175,10 +179,10 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                         <Ionicons name="refresh" size={20} color="#fff" />
                     </Pressable>
 
-                    {/* <TouchableOpacity style={[styles.button, styles.shareButton]} onPress={shareResults}>
-                        <Text style={styles.buttonText}>Share</Text>
+                    <Pressable style={[styles.button, styles.shareButton]} onPress={shareResults}>
+                        <Text style={styles.buttonText}>Bagikan</Text>
                         <Ionicons name="share-social" size={20} color="#fff" />
-                    </TouchableOpacity> */}
+                    </Pressable>
                 </View>
 
                 {/* {score >= 80 && (

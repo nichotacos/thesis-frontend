@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../types/User';
+import getDayDifference from '../utils/getDayDifference';
 
 interface UserState {
     isAuthenticated: boolean;
@@ -53,6 +54,19 @@ const userSlice = createSlice({
                 state.userInfo.totalExp = (state.userInfo.totalExp || 0) + action.payload.exp;
                 state.userInfo.weeklyExp = (state.userInfo.weeklyExp || 0) + action.payload.exp;
                 state.userInfo.dailyExp = (state.userInfo.dailyExp || 0) + action.payload.exp;
+
+                const compareDate = getDayDifference(new Date(), new Date(state.userInfo.streak.lastActivity));
+                if (compareDate === 1) {
+                    state.userInfo.streak.streakCount += 1;
+                    state.userInfo.streak.lastActivity = new Date().toISOString();
+                } else if (compareDate > 1) {
+                    state.userInfo.streak.streakCount = 1;
+                    state.userInfo.streak.lastActivity = new Date().toISOString();
+                }
+
+                if (state.userInfo.streak.streakCount > state.userInfo.streak.highestStreak) {
+                    state.userInfo.streak.highestStreak = state.userInfo.streak.streakCount;
+                }
 
                 if (!state.userInfo.isAbleToClaimDailyReward) {
                     state.userInfo.isAbleToClaimDailyReward = true;

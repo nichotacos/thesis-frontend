@@ -46,13 +46,29 @@ const userSlice = createSlice({
                     correctCount: action.payload.correctCount,
                     totalAnswers: action.payload.totalAnswer,
                     score: action.payload.score,
-                    completedAt: new Date(),
+                    completedAt: new Date().toISOString(),
                 }
                 state.userInfo.completedModules?.push(newCompletedModule);
+
+                state.userInfo.totalExp = (state.userInfo.totalExp || 0) + action.payload.exp;
+                state.userInfo.weeklyExp = (state.userInfo.weeklyExp || 0) + action.payload.exp;
+                state.userInfo.dailyExp = (state.userInfo.dailyExp || 0) + action.payload.exp;
+
+                if (!state.userInfo.isAbleToClaimDailyReward) {
+                    state.userInfo.isAbleToClaimDailyReward = true;
+                }
+            }
+        },
+        claimDailyReward(state, action: PayloadAction<{ gems: number }>) {
+            if (state.userInfo) {
+                state.userInfo.totalGems = (state.userInfo.totalGems || 0) + action.payload.gems;
+                state.userInfo.isAbleToClaimDailyReward = false;
+                state.userInfo.lastDailyRewardClaim = new Date().toISOString();
+                state.userInfo.hasClaimedDailyReward = true;
             }
         }
     }
 });
 
-export const { login, logout, decrementHp, addExp } = userSlice.actions;
+export const { login, logout, decrementHp, addExp, completeModule, claimDailyReward } = userSlice.actions;
 export const userReducer = userSlice.reducer;

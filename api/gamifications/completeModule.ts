@@ -5,7 +5,7 @@ interface CompleteModuleProps {
     userId: string;
     correctCount: number;
     score: number;
-    totalAnswer: number;
+    totalAnswers: number;
 }
 
 export default async function completeModule({
@@ -13,7 +13,7 @@ export default async function completeModule({
     userId,
     correctCount,
     score,
-    totalAnswer,
+    totalAnswers,
 }: CompleteModuleProps) {
     try {
         console.log('request data:', {
@@ -21,14 +21,14 @@ export default async function completeModule({
             userId,
             correctCount,
             score,
-            totalAnswer,
+            totalAnswers,
         })
         const response = await apiClient.post('/module/complete', {
             moduleId,
             userId,
             correctCount,
             score,
-            totalAnswer,
+            totalAnswers,
         });
         return response.data;
     } catch (error) {

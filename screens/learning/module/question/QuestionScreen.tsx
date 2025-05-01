@@ -132,7 +132,7 @@ export default function QuestionScreen({
                     moduleId: module._id,
                     exp: userAnswers.filter((answer) => answer.isCorrect).length * 5,
                     correctCount: userAnswers.filter((answer) => answer.isCorrect).length,
-                    score: userAnswers.filter((answer) => answer.isCorrect).length * 5,
+                    score: Math.floor((userAnswers.filter((answer) => answer.isCorrect).length / questions.length) * 100),
                     totalAnswer: questions.length,
                 }));
 
@@ -140,8 +140,8 @@ export default function QuestionScreen({
                     moduleId: module._id,
                     userId: userData._id,
                     correctCount: userAnswers.filter((answer) => answer.isCorrect).length,
-                    score: userAnswers.filter((answer) => answer.isCorrect).length * 5,
-                    totalAnswer: userAnswers.length,
+                    score: Math.floor((userAnswers.filter((answer) => answer.isCorrect).length / questions.length) * 100),
+                    totalAnswers: questions.length,
                 });
 
                 navigation.replace("ResultScreen", {

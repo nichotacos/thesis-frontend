@@ -180,10 +180,10 @@ export default function QuestionScreen({
                     />
                 ) : (
                     <WideButton
-                        text="Pause Audio"
+                        text="Jeda Audio"
                         onPress={togglePlayback}
                         color={GlobalStyles.colors.whiteFont}
-                        size={12}
+                        size={16}
                         style={{
                             alignSelf: "center",
                             marginVertical: 12,

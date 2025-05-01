@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         flex: 1,
-        paddingHorizontal: 16,
+        paddingHorizontal: 20,
         backgroundColor: GlobalStyles.colors.lightBackground,
         borderTopLeftRadius: 36,
         borderTopRightRadius: 36,

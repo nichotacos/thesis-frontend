@@ -69,7 +69,7 @@ function BottomTabNavigator() {
           shadowRadius: 5,
         },
         tabBarActiveTintColor: GlobalStyles.colors.accent,
-        tabBarInactiveTintColor: 'black',
+        tabBarInactiveTintColor: '#FFFFF0',
       })}
       initialRouteName="Home"
 
@@ -110,7 +110,7 @@ function BottomTabNavigator() {
         options={{
           tabBarShowLabel: false,
           tabBarIconStyle: {
-            marginTop: 6
+            marginTop: 6,
           }
         }}
       />
@@ -120,7 +120,8 @@ function BottomTabNavigator() {
         options={{
           tabBarShowLabel: false,
           tabBarIconStyle: {
-            marginTop: 6
+            marginTop: 6,
+            color: 'white'
           }
         }}
       />

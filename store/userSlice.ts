@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../types/User';
 import getDayDifference from '../utils/getDayDifference';
+import { Level } from '../types/Level';
 
 interface UserState {
     isAuthenticated: boolean;
@@ -40,16 +41,38 @@ const userSlice = createSlice({
                 state.userInfo.dailyExp = (state.userInfo.dailyExp || 0) + action.payload;
             }
         },
-        completeModule(state, action: PayloadAction<{ moduleId: string, exp: number, correctCount: number, score: number, totalAnswer: number }>) {
+        completeModule(state, action: PayloadAction<{
+            moduleId: string,
+            exp: number,
+            correctCount: number,
+            score: number,
+            totalAnswers: number,
+            isLastModule: boolean,
+            nextLevel?: Level,
+            nextLevelFirstModule?: string,
+        }>) {
             if (state.userInfo) {
-                const newCompletedModule = {
-                    module: action.payload.moduleId,
-                    correctCount: action.payload.correctCount,
-                    totalAnswers: action.payload.totalAnswer,
-                    score: action.payload.score,
-                    completedAt: new Date().toISOString(),
+                const alreadyCompleted = state.userInfo.completedModules?.find((m) => m.module === action.payload.moduleId);
+
+                if (alreadyCompleted) {
+                    if (action.payload.score > alreadyCompleted.score) {
+                        alreadyCompleted.correctCount = action.payload.correctCount;
+                        alreadyCompleted.score = action.payload.score;
+                    }
+
+                    alreadyCompleted.completedAt = new Date().toISOString();
+                    alreadyCompleted.totalAnswers = action.payload.totalAnswers;
+                } else {
+                    const newCompletedModule = {
+                        module: action.payload.moduleId,
+                        correctCount: action.payload.correctCount,
+                        totalAnswers: action.payload.totalAnswers,
+                        score: action.payload.score,
+                        completedAt: new Date().toISOString(),
+                    }
+
+                    state.userInfo.completedModules?.push(newCompletedModule);
                 }
-                state.userInfo.completedModules?.push(newCompletedModule);
 
                 state.userInfo.totalExp = (state.userInfo.totalExp || 0) + action.payload.exp;
                 state.userInfo.weeklyExp = (state.userInfo.weeklyExp || 0) + action.payload.exp;
@@ -70,6 +93,13 @@ const userSlice = createSlice({
 
                 if (!state.userInfo.isAbleToClaimDailyReward) {
                     state.userInfo.isAbleToClaimDailyReward = true;
+                }
+
+                console.log('action.payload.isLastModule', action.payload.isLastModule);
+                console.log('action.payload.nextLevel', action.payload.nextLevel);
+
+                if (action.payload.isLastModule) {
+                    state.userInfo.currentLearnLevel = action.payload.nextLevel
                 }
             }
         },

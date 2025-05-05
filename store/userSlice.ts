@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../types/User';
 import getDayDifference from '../utils/getDayDifference';
 import { Level } from '../types/Level';
+import { Achievement } from '../types/Achievement';
 
 interface UserState {
     isAuthenticated: boolean;
@@ -109,6 +110,20 @@ const userSlice = createSlice({
                 state.userInfo.isAbleToClaimDailyReward = false;
                 state.userInfo.lastDailyRewardClaim = new Date().toISOString();
                 state.userInfo.hasClaimedDailyReward = true;
+            }
+        },
+        grantAchievement(state, action: PayloadAction<{ achievement: Achievement }>) {
+            if (state.userInfo) {
+                const alreadyUnlocked = state.userInfo.achievements?.find((a) => a.achievement._id === action.payload.achievement._id);
+
+                if (!alreadyUnlocked) {
+                    const newAchievement = {
+                        achievement: action.payload.achievement,
+                        unlockedAt: new Date().toISOString(),
+                    }
+
+                    state.userInfo.achievements?.push(newAchievement);
+                }
             }
         }
     }

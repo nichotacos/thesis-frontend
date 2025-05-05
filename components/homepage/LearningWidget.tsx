@@ -24,42 +24,44 @@ export default function LearningWidget({
             style={[
                 styles.container,
                 isDictionary
-                    ? { backgroundColor: GlobalStyles.colors.accent }
+                    ? { backgroundColor: GlobalStyles.colors.primary }
                     : { backgroundColor: GlobalStyles.colors.primary },
             ]}
         >
-            <View style={styles.imageRow}>
-                <View style={[styles.imageContainer, isDictionary ? { backgroundColor: GlobalStyles.colors.lighterAccent } : { backgroundColor: GlobalStyles.colors.lighterPrimary }]}>
-                    <Image
-                        source={
-                            isDictionary
-                                ? require("../../assets/icons/dictionary.png")
-                                : require("../../assets/icons/studying-person.png")
-                        }
-                        style={styles.image}
-                    />
+            <View style={styles.textAndImageContainer}>
+                <View style={styles.imageRow}>
+                    <View style={[styles.imageContainer, isDictionary ? { backgroundColor: GlobalStyles.colors.lighterPrimary } : { backgroundColor: GlobalStyles.colors.lighterPrimary }]}>
+                        <Image
+                            source={
+                                isDictionary
+                                    ? require("../../assets/icons/dictionary.png")
+                                    : require("../../assets/icons/studying-person.png")
+                            }
+                            style={styles.image}
+                        />
+                    </View>
                 </View>
-            </View>
-            <View style={styles.textContainer}>
-                {isDictionary ? (
-                    <>
-                        <Text style={styles.text}>
-                            Kamus
-                        </Text>
-                        <Text style={styles.text}>
-                            Kosa Kata
-                        </Text>
-                    </>
-                ) : (
-                    <>
-                        <Text style={styles.text}>
-                            {`${userSkillLevel} `}
-                        </Text>
-                        <Text style={styles.text}>
-                            {`Modul ${userLatestModule} - ${userLatestModuleName}   `}
-                        </Text>
-                    </>
-                )}
+                <View style={styles.textContainer}>
+                    {isDictionary ? (
+                        <>
+                            <Text style={styles.text}>
+                                Kamus
+                            </Text>
+                            <Text style={styles.text}>
+                                Kosa Kata
+                            </Text>
+                        </>
+                    ) : (
+                        <>
+                            <Text style={styles.text}>
+                                {`${userSkillLevel} `}
+                            </Text>
+                            <Text style={styles.text}>
+                                {`Modul ${userLatestModule} - ${userLatestModuleName}   `}
+                            </Text>
+                        </>
+                    )}
+                </View>
             </View>
             {isDictionary ? (
                 <View style={styles.outerProgressBar}>
@@ -92,11 +94,17 @@ export default function LearningWidget({
 
 const styles = StyleSheet.create({
     container: {
-        flexWrap: "wrap",
+        flexDirection: 'column',
         paddingHorizontal: 20,
         paddingVertical: 16,
         borderRadius: 32,
         marginBottom: 16,
+    },
+    textAndImageContainer: {
+        flexDirection: "row-reverse",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 12,
     },
     imageRow: {
         flexDirection: "row",
@@ -126,7 +134,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 56,
         borderRadius: 50,
-        backgroundColor: GlobalStyles.colors.lighterAccent,
+        backgroundColor: GlobalStyles.colors.lighterPrimary,
         marginTop: 8
     },
     innerProgressBar: {

@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
+import { AntDesign } from "@expo/vector-icons";
 
 interface ModuleStampProps {
     index: number;
@@ -7,6 +8,7 @@ interface ModuleStampProps {
     name: string;
     onPress: () => void;
     disabled: boolean;
+    score?: number;
 }
 
 export default function ModuleStamp({
@@ -15,9 +17,16 @@ export default function ModuleStamp({
     name,
     onPress,
     disabled,
+    score
 }: ModuleStampProps) {
+
     return (
         <Pressable style={[styles.mainContainer, style]} onPress={onPress} disabled={disabled}>
+            <View style={[styles.starsContainer, { display: disabled ? "none" : "flex" }]}>
+                <AntDesign name="star" size={28} color={score > 0 ? '#FFD700' : 'gray'} style={{ transform: [{ rotate: "-15deg" }], position: 'absolute', left: -30, top: 8 }} />
+                <AntDesign name="star" size={28} color={score > 60 ? '#FFD700' : 'gray'} />
+                <AntDesign name="star" size={28} color={score > 80 ? '#FFD700' : 'gray'} style={{ transform: [{ rotate: "15deg" }], position: 'absolute', right: -30, top: 8 }} />
+            </View>
             <View style={[styles.outerContainer]}>
                 <View style={styles.innerContainer}>
                     <Text style={styles.text}>
@@ -25,12 +34,6 @@ export default function ModuleStamp({
                     </Text>
                 </View>
             </View>
-            {/* <View style={styles.moduleNameContainer}>
-                <Text style={styles.moduleName}>
-                    {name}
-                </Text>
-            </View> */}
-            {/* Hapus nama modul */}
         </Pressable>
     )
 };
@@ -74,5 +77,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 8,
         lineHeight: 22,
+    },
+    starsContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 8,
     }
 })

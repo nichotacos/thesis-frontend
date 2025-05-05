@@ -36,8 +36,8 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
     const starScale = new Animated.Value(0)
     const fadeAnim = new Animated.Value(0)
 
-    const { correct, totalQuestions, module } = route.params
-    const score = Number((correct / totalQuestions * 100).toFixed(0))
+    const { correct, totalQuestions, module, nextLevel } = route.params
+    const score = Math.round((correct / totalQuestions) * 100);
 
     useEffect(() => {
         // Sequence of animations
@@ -174,7 +174,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                         <AntDesign name="arrowright" size={20} color="#fff" />
                     </Pressable>
 
-                    <Pressable style={[styles.button, styles.retryButton]} onPress={() => navigation?.replace("QuestionScreen", { module })}>
+                    <Pressable style={[styles.button, styles.retryButton]} onPress={() => navigation?.replace("QuestionScreen", { module, nextLevel })}>
                         <Text style={styles.buttonText}>Ulangi</Text>
                         <Ionicons name="refresh" size={20} color="#fff" />
                     </Pressable>

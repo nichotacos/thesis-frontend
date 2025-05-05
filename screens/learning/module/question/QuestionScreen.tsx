@@ -24,7 +24,7 @@ interface QuestionScreenProps {
 export default function QuestionScreen({
     route
 }: QuestionScreenProps) {
-    const { module } = route.params;
+    const { module, isLastModule, nextLevel } = route.params;
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
     const dispatch = useDispatch();
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -43,6 +43,13 @@ export default function QuestionScreen({
         optionText: string;
         isCorrect: boolean;
     }[]>([]);
+
+    console.log("params", {
+        module,
+        isLastModule,
+        nextLevel,
+    });
+
 
     function handleShuffleAnswers(question: Question) {
         const options = question.options.map((option) => {
@@ -128,12 +135,32 @@ export default function QuestionScreen({
             setCurrentQuestion(questions[currentQuestionIndex + 1]);
         } else {
             try {
+                let nextLevelFirstModule = '';
+                if (isLastModule) {
+                    const getNextLevelModules = await apiClient.post('/module', {
+                        levelIds: [nextLevel._id],
+                    });
+                    nextLevelFirstModule = getNextLevelModules.data.data[0];
+                }
+                console.log("dispatch value", {
+                    moduleId: module._id,
+                    exp: userAnswers.filter((answer) => answer.isCorrect).length * 5,
+                    correctCount: userAnswers.filter((answer) => answer.isCorrect).length,
+                    score: Math.floor((userAnswers.filter((answer) => answer.isCorrect).length / questions.length) * 100),
+                    totalAnswers: questions.length,
+                    isLastModule: isLastModule,
+                    nextLevel: isLastModule ? nextLevel : undefined,
+                    nextLevelFirstModule: isLastModule ? nextLevelFirstModule : undefined,
+                })
                 dispatch(completeModuleReducer({
                     moduleId: module._id,
                     exp: userAnswers.filter((answer) => answer.isCorrect).length * 5,
                     correctCount: userAnswers.filter((answer) => answer.isCorrect).length,
                     score: Math.floor((userAnswers.filter((answer) => answer.isCorrect).length / questions.length) * 100),
-                    totalAnswer: questions.length,
+                    totalAnswers: questions.length,
+                    isLastModule: isLastModule,
+                    nextLevel: isLastModule ? nextLevel : undefined,
+                    nextLevelFirstModule: isLastModule ? nextLevelFirstModule : undefined,
                 }));
 
                 await completeModule({
@@ -149,6 +176,7 @@ export default function QuestionScreen({
                     totalQuestions: userAnswers.length,
                     expEarned: userAnswers.filter((answer) => answer.isCorrect).length * 5,
                     module: module,
+                    nextLevel: nextLevel,
                 });
             } catch (error) {
                 console.error("Error completing module:", error);
@@ -411,3 +439,13 @@ const styles = StyleSheet.create({
         padding: 4,
     }
 })
+
+
+//notes
+// fokus design gamifikasi
+// informasikan telah unlock new level
+// dokumentasi istilah gamifikasi
+// penjelasan fitur gamifikasi di awal game (walktrough)
+// up and downs on leaderboard
+// tambahain info gems dan streak di level screen
+// 

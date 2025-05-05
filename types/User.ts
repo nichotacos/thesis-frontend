@@ -1,3 +1,4 @@
+import { Achievement } from "./Achievement";
 import { Level } from "./Level";
 import { Module } from "./Module";
 
@@ -34,6 +35,10 @@ export type User = {
     isAbleToClaimDailyReward: boolean;
     lastDailyRewardClaim?: string;
     hasClaimedDailyReward: boolean;
+    achievements: {
+        achievement: Achievement;
+        unlockedAt: string;
+    }[]
     createdAt?: string;
     updatedAt?: string;
 }

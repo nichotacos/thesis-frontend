@@ -1,15 +1,25 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
 import WideButton from "../UI/WideButton";
+import { User } from "../../types/User";
+import claimDailyReward from "../../api/gamifications/claimDailyReward";
+import { useDispatch } from "react-redux";
+import { claimDailyReward as claimDailyRewardReducer } from "../../store/userSlice";
+import { useState } from "react";
 
 interface StreakContainerProps {
     totalStreak: number;
+    userData: Partial<User>;
 }
 
-export default function StreakContainer({ totalStreak }: StreakContainerProps) {
+const GEMS_AMOUNT = 20;
+
+export default function StreakContainer({ totalStreak, userData }: StreakContainerProps) {
+    const dispatch = useDispatch();
     const streakText = totalStreak > 0 ? `${totalStreak} hari beruntun!` : `Ayo mulai!`;
     let minimumBoundary = 1;
     let maximumBoundary = 5;
+    const [isClaimed, setIsClaimed] = useState(userData.hasClaimedDailyReward);
 
     if (totalStreak < 4) {
         minimumBoundary = 1;
@@ -17,6 +27,16 @@ export default function StreakContainer({ totalStreak }: StreakContainerProps) {
     } else {
         minimumBoundary = totalStreak - 2;
         maximumBoundary = totalStreak + 4;
+    }
+
+    async function handleClaimReward() {
+        try {
+            setIsClaimed(true);
+            dispatch(claimDailyRewardReducer({ gems: GEMS_AMOUNT }))
+            claimDailyReward(userData._id, GEMS_AMOUNT);
+        } catch (error) {
+            console.error("Error claiming daily reward:", error);
+        }
     }
 
     return (
@@ -27,7 +47,7 @@ export default function StreakContainer({ totalStreak }: StreakContainerProps) {
                     <View key={i} style={[
                         styles.gemsContainer,
                         i + minimumBoundary < totalStreak && { backgroundColor: GlobalStyles.colors.accent },
-                        i + minimumBoundary === totalStreak && { backgroundColor: GlobalStyles.colors.lighterPrimary, borderColor: 'white', borderWidth: 2 },
+                        i + minimumBoundary === totalStreak && { backgroundColor: isClaimed ? GlobalStyles.colors.accent : GlobalStyles.colors.lighterPrimary, borderColor: 'white', borderWidth: 2 },
                         i + minimumBoundary > totalStreak && { backgroundColor: GlobalStyles.colors.lighterPrimary, opacity: 0.4 }
                     ]}>
                         <Image
@@ -39,16 +59,20 @@ export default function StreakContainer({ totalStreak }: StreakContainerProps) {
                 ))}
             </View>
             <WideButton
-                onPress={() => { }}
+                onPress={handleClaimReward}
                 text="Ambil Hadiahmu!"
                 color={GlobalStyles.colors.whiteFont}
                 size={18}
-                style={{
-                    backgroundColor: GlobalStyles.colors.accent,
-                    marginTop: 8,
-                    paddingVertical: 12,
-                    borderRadius: 16,
-                }}
+                disabled={!userData.isAbleToClaimDailyReward || userData.hasClaimedDailyReward}
+                style={[
+                    {
+                        backgroundColor: GlobalStyles.colors.accent,
+                        marginTop: 8,
+                        paddingVertical: 12,
+                        borderRadius: 16,
+                    },
+                    userData.isAbleToClaimDailyReward && !userData.hasClaimedDailyReward ? { opacity: 1 } : { opacity: 0.4 }
+                ]}
             />
         </View>
     )

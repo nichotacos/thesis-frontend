@@ -3,7 +3,7 @@ import { GlobalStyles } from "../../../constants/styles";
 import { useSelector } from "react-redux";
 import { User } from "../../../types/User";
 import { useEffect, useState } from "react";
-import { Fontisto, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Fontisto, Ionicons } from "@expo/vector-icons";
 import ModuleStamp from "../../../components/learning/ModuleStamp";
 import { Module } from "../../../types/Module";
 import { apiClient } from "../../../api/apiClient";
@@ -18,11 +18,12 @@ interface ModuleScreenProps {
 export default function ModuleScreen({
     route
 }: ModuleScreenProps) {
-    const { level } = route.params;
+    const { level, nextLevel } = route.params;
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [modules, setModules] = useState<Module[]>([]);
     const navigation = useNavigation();
+    const completedModules = userData.completedModules || [];
 
     useEffect(() => {
         async function fetchModules() {
@@ -35,6 +36,7 @@ export default function ModuleScreen({
                     }
                 );
                 setModules(response.data.data);
+                console.log('Fetched modules:', response.data.data);
             } catch (error) {
                 console.error('Error fetching modules:', error);
             } finally {
@@ -89,6 +91,21 @@ export default function ModuleScreen({
                 data={modules}
                 keyExtractor={(item) => item._id}
                 renderItem={({ item, index }) => {
+                    const completedModules = userData.completedModules.map((m) => m.module);
+                    const isCompleted = completedModules.includes(item._id);
+
+                    const moduleIndex = modules.findIndex((m) => m._id === item._id);
+                    const lastCompletedIndex = Math.max(
+                        ...userData.completedModules.map((m) =>
+                            modules.findIndex((mod) => mod._id === m.module)
+                        ),
+                        -1 // fallback if no modules completed
+                    );
+
+                    const isUnlocked = moduleIndex <= lastCompletedIndex + 1;
+                    const isDisabled = !isUnlocked;
+                    const opacity = isUnlocked ? 1 : 0.5;
+
                     return (
                         <View>
                             <ModuleStamp
@@ -98,24 +115,31 @@ export default function ModuleScreen({
                                     left: index % 2 === 0 ? 20 : undefined,
                                     right: index % 2 !== 0 ? 20 : undefined,
                                     top: 20 + 120 * index,
-                                    opacity: userData.currentModule.index < item.index ? 0.5 : 1,
+                                    opacity,
                                     zIndex: 1,
                                 }}
-                                onPress={() => {
+                                onPress={() =>
                                     navigation.navigate("QuestionScreen", {
                                         module: item,
+                                        isLastModule: index === (modules.length - 1),
+                                        nextLevel: nextLevel,
                                     })
-                                }}
-                                disabled={userData.currentModule.index < item.index}
+                                }
+                                disabled={isDisabled}
+                                score={
+                                    userData.completedModules.find((m) => m.module === item._id)
+                                        ?.score || 0
+                                }
                             />
-                            {((userData.currentModule.index < item.index)) && (
+
+                            {isDisabled && (
                                 <Fontisto
                                     name="locked"
                                     size={52}
                                     color="grey"
                                     style={{
                                         position: "absolute",
-                                        top: 20 + 120 * index + 20,
+                                        top: 20 + 120 * index + 22,
                                         left: index % 2 === 0 ? 49 : undefined,
                                         right: index % 2 !== 0 ? 48 : undefined,
                                         zIndex: 2,

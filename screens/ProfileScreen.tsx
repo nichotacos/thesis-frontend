@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { User } from "../types/User";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -9,6 +9,8 @@ import ProfileAvatar from "../components/UI/ProfileAvatar";
 import { Achievement } from "../types/Achievement";
 import fetchAchievements from "../api/achievements/fetchAchievements";
 import { apiClient } from "../api/apiClient";
+import WideButton from "../components/UI/WideButton";
+import { logout } from "../store/userSlice";
 
 interface ProfileScreenProps {
     route: any;
@@ -23,6 +25,7 @@ export default function ProfileScreen({
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [user, setUser] = useState<Partial<User>>({});
     const [isEditing, setIsEditing] = useState<boolean>(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const getAllAchievements = async () => {
@@ -43,6 +46,14 @@ export default function ProfileScreen({
 
     function handleAvatarUpload() {
 
+    }
+
+    async function handleLogout() {
+        try {
+            dispatch(logout());
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     if (isLoading || !user || !achievements) {
@@ -132,6 +143,21 @@ export default function ProfileScreen({
                         </View>
                     ))}
                 </View>
+                <View style={{ marginTop: 20, marginBottom: 100 }}>
+                    <WideButton
+                        text="Keluar"
+                        color={GlobalStyles.colors.whiteFont}
+                        size={18}
+                        onPress={handleLogout}
+                        style={{
+                            backgroundColor: GlobalStyles.colors.primary,
+                            paddingVertical: 12,
+                            borderRadius: 50,
+                            marginTop: 8,
+                        }}
+                        disabled={false}
+                    />
+                </View>
             </View>
         </ScrollView>
     );
@@ -142,9 +168,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: GlobalStyles.colors.lightBackground,
         padding: 20,
+        paddingBottom: 50,
     },
     header: {
-        position: 'relative',
         paddingTop: 20,
         paddingBottom: 30,
         paddingHorizontal: 20,

@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { User } from "../types/User";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
@@ -6,6 +6,11 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../constants/styles";
 import { Ionicons, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import ProfileAvatar from "../components/UI/ProfileAvatar";
+import { Achievement } from "../types/Achievement";
+import fetchAchievements from "../api/achievements/fetchAchievements";
+import { apiClient } from "../api/apiClient";
+import WideButton from "../components/UI/WideButton";
+import { logout } from "../store/userSlice";
 
 interface ProfileScreenProps {
     route: any;
@@ -15,16 +20,43 @@ export default function ProfileScreen({
     route
 }: ProfileScreenProps) {
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
+    const [achievements, setAchievements] = useState<Achievement[]>([]);
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [user, setUser] = useState<Partial<User>>({});
     const [isEditing, setIsEditing] = useState<boolean>(false);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const getAllAchievements = async () => {
+            try {
+                setIsLoading(true);
+                const response = await apiClient.get('/achievement');
+                console.log('Fetched achievements:', response.data.achievements);
+                setAchievements(response.data.achievements);
+            } catch (error) {
+                console.error('Error fetching achievements:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        getAllAchievements();
+    }, []);
 
     function handleAvatarUpload() {
 
     }
 
-    if (isLoading || !user) {
+    async function handleLogout() {
+        try {
+            dispatch(logout());
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    if (isLoading || !user || !achievements) {
         return (
             <View style={styles.container}>
                 <Text>Loading...</Text>
@@ -95,6 +127,37 @@ export default function ProfileScreen({
                         </View>
                     </View>
                 </View>
+                <View style={styles.achievementContainer}>
+                    <Text style={[styles.statisticsHeader, { marginBottom: 10 }]}>Pencapian</Text>
+                    {achievements.map((achievement) => (
+                        <View key={achievement._id} style={[styles.statisticsItem, { opacity: userData.achievements.some((a) => a.achievement._id === achievement._id) ? 1 : 0.5, marginBottom: 8 }]}>
+                            {achievement.code.includes("MODULE") ? (
+                                <FontAwesome5 name="book" size={24} color="#A60000" style={styles.statisticsIcon} />
+                            ) : (
+                                <FontAwesome5 name="trophy" size={24} color="#A60000" style={styles.statisticsIcon} />
+                            )}
+                            <View>
+                                <Text style={styles.statisticsItemValue}>{achievement.title}</Text>
+                                <Text style={styles.statisticsItemDescription}>{achievement.description}</Text>
+                            </View>
+                        </View>
+                    ))}
+                </View>
+                <View style={{ marginTop: 20, marginBottom: 100 }}>
+                    <WideButton
+                        text="Keluar"
+                        color={GlobalStyles.colors.whiteFont}
+                        size={18}
+                        onPress={handleLogout}
+                        style={{
+                            backgroundColor: GlobalStyles.colors.primary,
+                            paddingVertical: 12,
+                            borderRadius: 50,
+                            marginTop: 8,
+                        }}
+                        disabled={false}
+                    />
+                </View>
             </View>
         </ScrollView>
     );
@@ -105,9 +168,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: GlobalStyles.colors.lightBackground,
         padding: 20,
+        paddingBottom: 50,
     },
     header: {
-        position: 'relative',
         paddingTop: 20,
         paddingBottom: 30,
         paddingHorizontal: 20,
@@ -196,5 +259,8 @@ const styles = StyleSheet.create({
     },
     statisticsIcon: {
         marginRight: 12,
+    },
+    achievementContainer: {
+        marginTop: 12
     }
 })

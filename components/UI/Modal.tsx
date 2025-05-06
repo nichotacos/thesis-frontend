@@ -1,36 +1,25 @@
-import { Button, StyleSheet, View, Modal as RNModal } from "react-native";
+import { Button, StyleSheet, View, Modal as RNModal, Text, Image } from "react-native";
 import LottieView from "lottie-react-native";
 import { useRef } from "react";
+import WideButton from "./WideButton";
+import { GlobalStyles } from "../../constants/styles";
 
 interface ModalProps {
-    children: React.ReactNode;
     isOpen: boolean;
     onRequestClose: () => void;
     type?: "gems" | "level" | "achievement";
+    receivedAmount?: number;
 }
 
-export default function Modal({ children, isOpen, onRequestClose, type, ...rest }) {
+export default function Modal({
+    isOpen,
+    onRequestClose,
+    type,
+    receivedAmount,
+    ...rest
+}: ModalProps) {
     const animation = useRef<LottieView>(null);
-
-    let content = null;
-    const animationSource = type === "gems" ? require("../../assets/lottie/gems.json") : require("../../assets/lottie/level-up.json");
-
-    if (type === "gems" || type === "level") {
-        content = (
-            <View style={styles.modalContainer}>
-                <View style={{ backgroundColor: "white", padding: 20, borderRadius: 10 }}>
-                    <LottieView
-                        autoPlay
-                        ref={animation}
-                        style={{ width: 100, height: 100 }}
-                        source={animationSource}
-                    />
-                    {children}
-                    <Button title="Close" onPress={onRequestClose} />
-                </View>
-            </View>
-        )
-    }
+    const animationSource = type === "gems" ? require("../../assets/lottie/gems.json") : type === "level" ? require("../../assets/lottie/level-up.json") : require("../../assets/lottie/achievement.json");
 
     return (
         <RNModal
@@ -41,7 +30,44 @@ export default function Modal({ children, isOpen, onRequestClose, type, ...rest 
             onRequestClose={onRequestClose}
             {...rest}
         >
-            {content}
+            <View style={styles.modalContainer}>
+                <View style={styles.insideModalContainer}>
+                    <LottieView
+                        autoPlay
+                        ref={animation}
+                        style={{ width: 220, height: 220 }}
+                        source={animationSource}
+                    />
+                    <View>
+                        <Text style={{ fontFamily: "Inter-Bold", fontSize: 18, color: GlobalStyles.colors.primary }}>
+                            {type === "gems" ? `Kamu mendapatkan gems!` : type === "level" ? "Level baru telah dibuka!" : "Kamu mendapat penghargaan baru!"}
+                        </Text>
+                    </View>
+                    <View style={styles.gemsContainer}>
+                        {type === "gems" ? (
+                            <>
+                                <Text style={styles.gemsText}>{`+ ${receivedAmount}`}</Text>
+                                <Image
+                                    source={require("../../assets/gamification/gems.png")}
+                                    style={{ width: 32, height: 32, marginLeft: 5 }}
+                                />
+                            </>
+                        ) : type === "level" ? (
+                            <Text style={styles.gemsText}>Level baru telah dibuka!</Text>
+                        ) : (
+                            <Text style={styles.gemsText}>Penghargaan baru telah dibuka!</Text>
+                        )}
+                    </View>
+                    <WideButton
+                        color="accent"
+                        onPress={onRequestClose}
+                        style={styles.button}
+                        text="Tutup"
+                        size={18}
+                        disabled={false}
+                    />
+                </View>
+            </View>
         </RNModal>
     )
 }
@@ -52,5 +78,32 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    insideModalContainer: {
+        backgroundColor: GlobalStyles.colors.whiteFont,
+        padding: 20,
+        borderRadius: 20,
+        width: "80%",
+        alignItems: "center",
+    },
+    gemsContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        backgroundColor: 'rgba(101, 101, 101, 0.1)',
+        alignItems: "center",
+        padding: 10,
+        borderRadius: 20,
+        marginVertical: 20,
+    },
+    gemsText: {
+        fontFamily: "Inter-Bold",
+        fontSize: 20,
+        color: GlobalStyles.colors.accent
+    },
+    button: {
+        backgroundColor: GlobalStyles.colors.accent,
+        borderRadius: 20,
+        width: "100%",
+        paddingVertical: 10
     }
 })

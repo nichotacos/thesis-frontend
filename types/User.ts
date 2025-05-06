@@ -38,7 +38,8 @@ export type User = {
     achievements: {
         achievement: Achievement;
         unlockedAt: string;
-    }[]
+    }[],
+    previousLeaderboardRank?: number;
     createdAt?: string;
     updatedAt?: string;
 }

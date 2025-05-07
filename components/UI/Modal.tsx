@@ -9,6 +9,8 @@ interface ModalProps {
     onRequestClose: () => void;
     type?: "gems" | "level" | "achievement";
     receivedAmount?: number;
+    unlockedLevel?: string;
+    unlockedAchievement?: string;
 }
 
 export default function Modal({
@@ -16,6 +18,8 @@ export default function Modal({
     onRequestClose,
     type,
     receivedAmount,
+    unlockedLevel,
+    unlockedAchievement,
     ...rest
 }: ModalProps) {
     const animation = useRef<LottieView>(null);
@@ -53,13 +57,13 @@ export default function Modal({
                                 />
                             </>
                         ) : type === "level" ? (
-                            <Text style={styles.gemsText}>Level baru telah dibuka!</Text>
+                            <Text style={styles.gemsText}>{unlockedLevel}</Text>
                         ) : (
-                            <Text style={styles.gemsText}>Penghargaan baru telah dibuka!</Text>
+                            <Text>{unlockedAchievement}</Text>
                         )}
                     </View>
                     <WideButton
-                        color="accent"
+                        color="white"
                         onPress={onRequestClose}
                         style={styles.button}
                         text="Tutup"

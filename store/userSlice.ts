@@ -3,6 +3,7 @@ import { User } from '../types/User';
 import getDayDifference from '../utils/getDayDifference';
 import { Level } from '../types/Level';
 import { Achievement } from '../types/Achievement';
+import { Module } from '../types/Module';
 
 interface UserState {
     isAuthenticated: boolean;
@@ -50,7 +51,7 @@ const userSlice = createSlice({
             totalAnswers: number,
             isLastModule: boolean,
             nextLevel?: Level,
-            nextLevelFirstModule?: string,
+            nextLevelFirstModule?: Module,
         }>) {
             if (state.userInfo) {
                 const alreadyCompleted = state.userInfo.completedModules?.find((m) => m.module === action.payload.moduleId);
@@ -99,9 +100,7 @@ const userSlice = createSlice({
                 console.log('action.payload.isLastModule', action.payload.isLastModule);
                 console.log('action.payload.nextLevel', action.payload.nextLevel);
 
-                if (action.payload.isLastModule) {
-                    state.userInfo.currentLearnLevel = action.payload.nextLevel
-                }
+                state.userInfo.currentModule = action.payload.nextLevelFirstModule
             }
         },
         claimDailyReward(state, action: PayloadAction<{ gems: number }>) {

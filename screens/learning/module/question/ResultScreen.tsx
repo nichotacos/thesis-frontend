@@ -1,13 +1,14 @@
 // "use client"
 
 import type React from "react"
-import { useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 import { View, Text, StyleSheet, ScrollView, Animated, Dimensions, Share, Pressable } from "react-native"
 // import { LinearGradient } from "expo-linear-gradient"
 import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"
 import { GlobalStyles } from "../../../../constants/styles"
 import { useSelector } from "react-redux"
 import { User } from "../../../../types/User"
+import Modal from "../../../../components/UI/Modal"
 
 // Types for our props and state
 interface ResultScreenProps {
@@ -32,15 +33,27 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo)
 
     // Animation values
-    const scoreAnim = new Animated.Value(0)
-    const starScale = new Animated.Value(0)
-    const fadeAnim = new Animated.Value(0)
+    // const scoreAnim = new Animated.Value(0)
+    // const starScale = new Animated.Value(0)
+    // const fadeAnim = new Animated.Value(0)
 
-    const { correct, totalQuestions, module, nextLevel } = route.params
+    const scoreAnim = useRef(new Animated.Value(0)).current
+    const starScale = useRef(new Animated.Value(0)).current
+    const fadeAnim = useRef(new Animated.Value(0)).current
+
+    const { correct, totalQuestions, module, nextLevel, unCompleteFirstModule } = route.params
     const score = Math.round((correct / totalQuestions) * 100);
+
+    const [showModal, setShowModal] = useState(false)
 
     useEffect(() => {
         // Sequence of animations
+        if (unCompleteFirstModule) {
+            setTimeout(() => {
+                setShowModal(true)
+            }, 3000)
+        }
+
         Animated.sequence([
             Animated.timing(fadeAnim, {
                 toValue: 1,
@@ -59,7 +72,9 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                 useNativeDriver: true,
             }),
         ]).start()
-    }, [])
+    }, [unCompleteFirstModule]);
+
+    console.log("show modal", showModal)
 
     // Calculate stars based on score
     const getStars = () => {
@@ -118,82 +133,91 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
 
     return (
         // <LinearGradient colors={["#4c669f", "#3b5998", "#192f6a"]} style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
-                <View style={styles.header}>
-                    <Text style={styles.headerText}>Selesai!</Text>
-                    <Text style={styles.moduleTitle}>{module.name}</Text>
-                </View>
+        <>
+            <Modal
+                isOpen={showModal}
+                onRequestClose={() => setShowModal(false)}
+                type="achievement"
+                receivedAmount={20}
+                unlockedAchievement="Menyelesaikan Modul Pertama"
+            />
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
+                <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
+                    <View style={styles.header}>
+                        <Text style={styles.headerText}>Selesai!</Text>
+                        <Text style={styles.moduleTitle}>{module.name}</Text>
+                    </View>
 
-                <View style={styles.scoreContainer}>
-                    <View style={styles.scoreCircle}>
-                        <Animated.Text style={styles.scoreText}>
-                            {scoreAnim.interpolate({
-                                inputRange: [0, 100],
-                                outputRange: ["0%", "100%"],
+                    <View style={styles.scoreContainer}>
+                        <View style={styles.scoreCircle}>
+                            <Animated.Text style={styles.scoreText}>
+                                {scoreAnim.interpolate({
+                                    inputRange: [0, 100],
+                                    outputRange: ["0%", "100%"],
+                                })}
+                            </Animated.Text>
+                        </View>
+                        {renderStars()}
+                    </View>
+
+                    <View style={styles.statsContainer}>
+                        <View style={styles.statItem}>
+                            <Ionicons name="checkmark-circle" size={24} color={GlobalStyles.colors.success} />
+                            <Text style={styles.statText}>{correct} jawaban benar</Text>
+                        </View>
+                        <View style={styles.statItem}>
+                            <Ionicons name="time-outline" size={24} color={GlobalStyles.colors.classicBlue} />
+                            <Text style={styles.statText}>{formatTime(78)} waktu yang diperlukan</Text>
+                        </View>
+                        <View style={styles.statItem}>
+                            <MaterialCommunityIcons name="fire" size={24} color="#FF5722" />
+                            <Text style={styles.statText}>{userData.streak.streakCount} hari beruntun</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.feedbackContainer}>
+                        <Text style={styles.feedbackTitle}>Hasil</Text>
+                        <Text style={styles.feedbackText}>
+                            {score >= 80
+                                ? "Hebat! Kamu telah menguasai modul ini. Siap untuk tantangan berikutnya?"
+                                : score >= 60
+                                    ? "Kerja bagus! Kamu sudah menunjukkan kemajuan yang baik, tapi masih ada ruang untuk terus berkembang. Tetap semangat! 💼🌟"
+                                    : "Teruslah berlatih! Tinjau kembali modul ini untuk meningkatkan nilaimu. 💪📘"}
+                        </Text>
+                    </View>
+
+                    <View style={styles.buttonContainer}>
+                        <Pressable
+                            style={[styles.button, styles.nextButton]}
+                            onPress={() => navigation?.popTo("ModuleScreen", {
+                                level: module.level,
                             })}
-                        </Animated.Text>
+                        >
+                            <Text style={styles.buttonText}>Lanjut ke modul berikutnya</Text>
+                            <AntDesign name="arrowright" size={20} color="#fff" />
+                        </Pressable>
+
+                        <Pressable style={[styles.button, styles.retryButton]} onPress={() => navigation?.replace("QuestionScreen", { module, nextLevel })}>
+                            <Text style={styles.buttonText}>Ulangi</Text>
+                            <Ionicons name="refresh" size={20} color="#fff" />
+                        </Pressable>
+
+                        <Pressable style={[styles.button, styles.shareButton]} onPress={shareResults}>
+                            <Text style={styles.buttonText}>Bagikan</Text>
+                            <Ionicons name="share-social" size={20} color="#fff" />
+                        </Pressable>
                     </View>
-                    {renderStars()}
-                </View>
 
-                <View style={styles.statsContainer}>
-                    <View style={styles.statItem}>
-                        <Ionicons name="checkmark-circle" size={24} color={GlobalStyles.colors.success} />
-                        <Text style={styles.statText}>{correct} jawaban benar</Text>
-                    </View>
-                    <View style={styles.statItem}>
-                        <Ionicons name="time-outline" size={24} color={GlobalStyles.colors.classicBlue} />
-                        <Text style={styles.statText}>{formatTime(78)} waktu yang diperlukan</Text>
-                    </View>
-                    <View style={styles.statItem}>
-                        <MaterialCommunityIcons name="fire" size={24} color="#FF5722" />
-                        <Text style={styles.statText}>{userData.streak.streakCount} hari beruntun</Text>
-                    </View>
-                </View>
-
-                <View style={styles.feedbackContainer}>
-                    <Text style={styles.feedbackTitle}>Hasil</Text>
-                    <Text style={styles.feedbackText}>
-                        {score >= 80
-                            ? "Hebat! Kamu telah menguasai modul ini. Siap untuk tantangan berikutnya?"
-                            : score >= 60
-                                ? "Kerja bagus! Kamu sudah menunjukkan kemajuan yang baik, tapi masih ada ruang untuk terus berkembang. Tetap semangat! 💼🌟"
-                                : "Teruslah berlatih! Tinjau kembali modul ini untuk meningkatkan nilaimu. 💪📘"}
-                    </Text>
-                </View>
-
-                <View style={styles.buttonContainer}>
-                    <Pressable
-                        style={[styles.button, styles.nextButton]}
-                        onPress={() => navigation?.popTo("ModuleScreen", {
-                            level: module.level,
-                        })}
-                    >
-                        <Text style={styles.buttonText}>Lanjut ke modul berikutnya</Text>
-                        <AntDesign name="arrowright" size={20} color="#fff" />
-                    </Pressable>
-
-                    <Pressable style={[styles.button, styles.retryButton]} onPress={() => navigation?.replace("QuestionScreen", { module, nextLevel })}>
-                        <Text style={styles.buttonText}>Ulangi</Text>
-                        <Ionicons name="refresh" size={20} color="#fff" />
-                    </Pressable>
-
-                    <Pressable style={[styles.button, styles.shareButton]} onPress={shareResults}>
-                        <Text style={styles.buttonText}>Bagikan</Text>
-                        <Ionicons name="share-social" size={20} color="#fff" />
-                    </Pressable>
-                </View>
-
-                {/* {score >= 80 && (
+                    {/* {score >= 80 && (
                     <View style={styles.achievementContainer}>
                         <Image source={{ uri: "https://via.placeholder.com/100" }} style={styles.badge} />
                         <Text style={styles.achievementText}>Achievement Unlocked!</Text>
                         <Text style={styles.achievementDesc}>Master of Greetings</Text>
                     </View>
                 )} */}
-            </Animated.View>
-        </ScrollView>
+                </Animated.View>
+            </ScrollView>
+        </>
         // </LinearGradient>
     )
 }

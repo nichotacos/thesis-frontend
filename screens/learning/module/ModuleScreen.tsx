@@ -80,6 +80,14 @@ export default function ModuleScreen({
                     />
                     <Text style={styles.gemsOrStreakText}>{userData.streak.streakCount}</Text>
                 </View>
+                <View style={styles.gemsOrStreakContainer}>
+                    <Ionicons
+                        name="heart"
+                        size={40}
+                        color='red'
+                    />
+                    <Text style={styles.gemsOrStreakText}>{userData.hearts.current}</Text>
+                </View>
             </View>
             <View style={styles.moduleHeader}>
                 <View style={styles.moduleTitleAndDescriptionContainer}>
@@ -123,6 +131,9 @@ export default function ModuleScreen({
                                         module: item,
                                         isLastModule: index === (modules.length - 1),
                                         nextLevel: nextLevel,
+                                        unCompleteFirstModule: !userData.achievements.find(
+                                            (a) => a.achievement.code === "FIRST_MODULE"
+                                        )
                                     })
                                 }
                                 disabled={isDisabled}

@@ -9,22 +9,25 @@ interface UserState {
     isAuthenticated: boolean;
     userInfo: Partial<User> | null;
     token: string | null;
+    allAchievements: Achievement[];
 }
 
 const initialState: UserState = {
     isAuthenticated: false,
     userInfo: null,
     token: null,
+    allAchievements: [],
 }
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        login(state, action: PayloadAction<{ userInfo: Partial<User>, token: string }>) {
+        login(state, action: PayloadAction<{ userInfo: Partial<User>, token: string, achivements: Achievement[] }>) {
             state.isAuthenticated = true;
             state.userInfo = action.payload.userInfo;
             state.token = action.payload.token;
+            state.allAchievements = action.payload.achivements;
         },
         logout(state) {
             state.isAuthenticated = false;
@@ -111,13 +114,17 @@ const userSlice = createSlice({
                 state.userInfo.hasClaimedDailyReward = true;
             }
         },
-        grantAchievement(state, action: PayloadAction<{ achievement: Achievement }>) {
+        grantAchievement(state, action: PayloadAction<{ achievementId: string }>) {
             if (state.userInfo) {
-                const alreadyUnlocked = state.userInfo.achievements?.find((a) => a.achievement._id === action.payload.achievement._id);
+                const alreadyUnlocked = state.userInfo.achievements?.find((a) => a.achievement._id === action.payload.achievementId);
 
                 if (!alreadyUnlocked) {
+                    const findAchievement = state.allAchievements.find(
+                        (a) => a._id === action.payload.achievementId
+                    )
+
                     const newAchievement = {
-                        achievement: action.payload.achievement,
+                        achievement: findAchievement,
                         unlockedAt: new Date().toISOString(),
                     }
 
@@ -128,5 +135,5 @@ const userSlice = createSlice({
     }
 });
 
-export const { login, logout, decrementHp, addExp, completeModule, claimDailyReward } = userSlice.actions;
+export const { login, logout, decrementHp, addExp, completeModule, claimDailyReward, grantAchievement } = userSlice.actions;
 export const userReducer = userSlice.reducer;

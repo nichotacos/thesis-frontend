@@ -20,29 +20,12 @@ export default function ProfileScreen({
     route
 }: ProfileScreenProps) {
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
-    const [achievements, setAchievements] = useState<Achievement[]>([]);
+    const allAchievements = useSelector((state: { user: { allAchievements: Achievement[] } }) => state.user.allAchievements);
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [user, setUser] = useState<Partial<User>>({});
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        const getAllAchievements = async () => {
-            try {
-                setIsLoading(true);
-                const response = await apiClient.get('/achievement');
-                console.log('Fetched achievements:', response.data.achievements);
-                setAchievements(response.data.achievements);
-            } catch (error) {
-                console.error('Error fetching achievements:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-
-        getAllAchievements();
-    }, []);
 
     function handleAvatarUpload() {
 
@@ -56,7 +39,7 @@ export default function ProfileScreen({
         }
     }
 
-    if (isLoading || !user || !achievements) {
+    if (isLoading || !user || !allAchievements) {
         return (
             <View style={styles.container}>
                 <Text>Loading...</Text>
@@ -129,19 +112,35 @@ export default function ProfileScreen({
                 </View>
                 <View style={styles.achievementContainer}>
                     <Text style={[styles.statisticsHeader, { marginBottom: 10 }]}>Pencapian</Text>
-                    {achievements.map((achievement) => (
-                        <View key={achievement._id} style={[styles.statisticsItem, { opacity: userData.achievements.some((a) => a.achievement._id === achievement._id) ? 1 : 0.5, marginBottom: 8 }]}>
-                            {achievement.code.includes("MODULE") ? (
-                                <FontAwesome5 name="book" size={24} color="#A60000" style={styles.statisticsIcon} />
-                            ) : (
-                                <FontAwesome5 name="trophy" size={24} color="#A60000" style={styles.statisticsIcon} />
-                            )}
-                            <View>
-                                <Text style={styles.statisticsItemValue}>{achievement.title}</Text>
-                                <Text style={styles.statisticsItemDescription}>{achievement.description}</Text>
+                    {[...allAchievements]
+                        .sort((a, b) => {
+                            const isAUnlocked = userData.achievements.some((ach) => ach.achievement._id === a._id);
+                            const isBUnlocked = userData.achievements.some((ach) => ach.achievement._id === b._id);
+                            return (isBUnlocked ? 1 : 0) - (isAUnlocked ? 1 : 0);
+                        })
+                        .map((achievement) => (
+                            <View
+                                key={achievement._id}
+                                style={[
+                                    styles.statisticsItem,
+                                    {
+                                        opacity: userData.achievements.some((a) => a.achievement._id === achievement._id) ? 1 : 0.5,
+                                        marginBottom: 8,
+                                    },
+                                ]}
+                            >
+                                {achievement.code.includes("MODULE") ? (
+                                    <FontAwesome5 name="book" size={24} color="#A60000" style={styles.statisticsIcon} />
+                                ) : (
+                                    <FontAwesome5 name="trophy" size={24} color="#A60000" style={styles.statisticsIcon} />
+                                )}
+                                <View>
+                                    <Text style={styles.statisticsItemValue}>{achievement.title}</Text>
+                                    <Text style={styles.statisticsItemDescription}>{achievement.description}</Text>
+                                </View>
                             </View>
-                        </View>
-                    ))}
+                        ))}
+
                 </View>
                 <View style={{ marginTop: 20, marginBottom: 100 }}>
                     <WideButton

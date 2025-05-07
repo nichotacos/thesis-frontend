@@ -1,10 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
 import Input from "../../components/UI/Input";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import WideButton from "../../components/UI/WideButton";
 import TextButton from "../../components/UI/TextButton";
 import { useNavigation } from "@react-navigation/native";
+import Recaptcha, { RecaptchaRef } from "react-native-recaptcha-that-works";
+import { registerUser } from "../../api/auth.api";
 
 interface RegisterPayload {
     full_name: string;
@@ -16,6 +18,10 @@ interface RegisterPayload {
 
 export default function RegisterScreen(params) {
     const navigation = useNavigation();
+    const recaptcha = useRef<RecaptchaRef | null>(null);
+    const [captchaToken, setCaptchaToken] = useState<string>('');
+    const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const [registerData, setRegisterData] = useState<RegisterPayload>({
         full_name: "",
@@ -25,6 +31,11 @@ export default function RegisterScreen(params) {
         passwordConfirmation: "",
     });
 
+    const onVerifyCaptcha = (token: string) => {
+        console.log("Captcha token:", token);
+        setCaptchaToken(token);
+    }
+
     function handleInputChange(name: string, value: string) {
         setRegisterData((prevState) => ({
             ...prevState,
@@ -32,9 +43,42 @@ export default function RegisterScreen(params) {
         }))
     }
 
-    function handleSubmit(data: RegisterPayload) {
-        console.log("Register button pressed")
-        console.log(data);
+    async function handleSubmit(data: RegisterPayload) {
+        try {
+            setIsLoading(true);
+            const data = await registerUser(
+                registerData.username,
+                registerData.full_name,
+                registerData.email,
+                registerData.password,
+                registerData.passwordConfirmation,
+            );
+
+            navigation.navigate("LoginScreen");
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                // If error comes from axios with a structured response
+                setError(error.response.data.message);
+            } else if (error.message) {
+                // If error is a standard Error object
+                setError(error.message);
+            } else {
+                // Fallback error message
+                setError('Registration failed. Please try again.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const send = () => {
+        console.log('send!');
+        console.log('tung tung sahur', process.env.RECAPTCHA_SITE_KEY);
+        recaptcha.current?.open();
+    }
+
+    const onExpire = () => {
+        console.warn('expired!');
     }
 
     return (
@@ -110,7 +154,27 @@ export default function RegisterScreen(params) {
                                 autoCorrect: false,
                             }}
                         />
+
+                        {/* <Recaptcha
+                            ref={recaptcha}
+                            siteKey={process.env.RECAPTCHA_SITE_KEY}
+                            baseUrl='https://bb58-125-160-96-140.ngrok-free.app'
+                            onVerify={onVerifyCaptcha}
+                            onExpire={onExpire}
+                            onError={(err) => console.error('Recaptcha error:', err)}
+                        />
+
+                        <Button title="Open reCAPTCHA" onPress={send}/> */}
+
+                        {captchaToken && <Text style={{ marginTop: 20 }}>captchaToken: {captchaToken}</Text>}
                     </View>
+                    {error && (
+                        <View style={styles.errorContainer}>
+                            <Text style={styles.errorText}>
+                                {error}
+                            </Text>
+                        </View>
+                    )}
                     <WideButton
                         onPress={handleSubmit.bind(this, registerData)}
                         text="Daftar"
@@ -185,5 +249,19 @@ const styles = StyleSheet.create({
     registerText: {
         fontSize: 16,
         fontFamily: "Inter-Regular",
-    }
+    },
+    errorContainer: {
+        padding: 12,
+        backgroundColor: '#ffeeee',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#ffcccc',
+        marginBottom: 8
+    },
+    errorText: {
+        color: '#cc0000',
+        fontSize: 14,
+        fontFamily: "OpenSans-Regular",
+        textAlign: 'center',
+    },
 })

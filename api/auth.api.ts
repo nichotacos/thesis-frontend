@@ -42,3 +42,18 @@ export const loginUser = async (username: string, password: string) => {
         throw error;
     }
 }
+
+export const registerUser = async (username: string, userFullName: string, email: string, password: string, passwordConfirmation: string) => {
+    try {
+        const response = await apiClient.post('/user', {
+            username,
+            userFullName,
+            email,
+            password,
+            passwordConfirmation,
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

@@ -16,6 +16,9 @@ import loseHp from "../../../../api/gamifications/loseHp";
 import { decrementHp, completeModule as completeModuleReducer } from "../../../../store/userSlice";
 import addUserExp from "../../../../api/gamifications/addUserExp";
 import completeModule from "../../../../api/gamifications/completeModule";
+import { Module } from "../../../../types/Module";
+import { grantAchievement } from "../../../../api/achievements/grantAchievements";
+import { grantAchievement as grantAchievementReducer } from "../../../../store/userSlice";
 
 interface QuestionScreenProps {
     route: any;
@@ -24,7 +27,7 @@ interface QuestionScreenProps {
 export default function QuestionScreen({
     route
 }: QuestionScreenProps) {
-    const { module, isLastModule, nextLevel } = route.params;
+    const { module, isLastModule, nextLevel, unCompleteFirstModule } = route.params;
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
     const dispatch = useDispatch();
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -48,6 +51,7 @@ export default function QuestionScreen({
         module,
         isLastModule,
         nextLevel,
+        unCompleteFirstModule
     });
 
 
@@ -135,12 +139,19 @@ export default function QuestionScreen({
             setCurrentQuestion(questions[currentQuestionIndex + 1]);
         } else {
             try {
-                let nextLevelFirstModule = '';
+                let nextLevelFirstModule: Module | null = null;
+                // Check if the module has been completed then do not update the current module
                 if (isLastModule) {
                     const getNextLevelModules = await apiClient.post('/module', {
                         levelIds: [nextLevel._id],
                     });
                     nextLevelFirstModule = getNextLevelModules.data.data[0];
+                } else {
+                    const getNextLevelModules = await apiClient.post('/module', {
+                        levelIds: [module.level._id],
+                    });
+                    console.log("getNextLevelModules", getNextLevelModules.data);
+                    nextLevelFirstModule = getNextLevelModules.data.data[module.index];
                 }
                 console.log("dispatch value", {
                     moduleId: module._id,
@@ -150,7 +161,7 @@ export default function QuestionScreen({
                     totalAnswers: questions.length,
                     isLastModule: isLastModule,
                     nextLevel: isLastModule ? nextLevel : undefined,
-                    nextLevelFirstModule: isLastModule ? nextLevelFirstModule : undefined,
+                    nextLevelFirstModule: nextLevelFirstModule,
                 })
                 dispatch(completeModuleReducer({
                     moduleId: module._id,
@@ -171,12 +182,20 @@ export default function QuestionScreen({
                     totalAnswers: questions.length,
                 });
 
+                if (unCompleteFirstModule) {
+                    await grantAchievement(userData._id, "FIRST_MODULE");
+                    dispatch(grantAchievementReducer({
+                        achievementCode: "FIRST_MODULE",
+                    }));
+                }
+
                 navigation.replace("ResultScreen", {
                     correct: userAnswers.filter((answer) => answer.isCorrect).length,
                     totalQuestions: userAnswers.length,
                     expEarned: userAnswers.filter((answer) => answer.isCorrect).length * 5,
                     module: module,
                     nextLevel: nextLevel,
+                    unCompleteFirstModule: unCompleteFirstModule,
                 });
             } catch (error) {
                 console.error("Error completing module:", error);

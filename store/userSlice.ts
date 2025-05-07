@@ -114,13 +114,13 @@ const userSlice = createSlice({
                 state.userInfo.hasClaimedDailyReward = true;
             }
         },
-        grantAchievement(state, action: PayloadAction<{ achievementId: string }>) {
+        grantAchievement(state, action: PayloadAction<{ achievementCode: string }>) {
             if (state.userInfo) {
-                const alreadyUnlocked = state.userInfo.achievements?.find((a) => a.achievement._id === action.payload.achievementId);
+                const alreadyUnlocked = state.userInfo.achievements?.find((a) => a.achievement.code === action.payload.achievementCode);
 
                 if (!alreadyUnlocked) {
                     const findAchievement = state.allAchievements.find(
-                        (a) => a._id === action.payload.achievementId
+                        (a) => a.code === action.payload.achievementCode
                     )
 
                     const newAchievement = {

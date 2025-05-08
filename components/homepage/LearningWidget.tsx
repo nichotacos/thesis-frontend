@@ -47,7 +47,7 @@ export default function LearningWidget({
                             <Text style={styles.text}>
                                 Kamus
                             </Text>
-                            <Text style={styles.text}>
+                            <Text style={styles.subtext}>
                                 Kosa Kata
                             </Text>
                         </>
@@ -56,7 +56,7 @@ export default function LearningWidget({
                             <Text style={styles.text}>
                                 {`${userSkillLevel} `}
                             </Text>
-                            <Text style={styles.text}>
+                            <Text style={styles.subtext}>
                                 {`Modul ${userLatestModule} - ${userLatestModuleName}   `}
                             </Text>
                         </>
@@ -129,6 +129,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: "Inter-Bold",
         color: GlobalStyles.colors.whiteFont,
+    },
+    subtext: {
+        fontSize: 16,
+        fontFamily: "Inter-Regular",
+        color: GlobalStyles.colors.whiteFont,
+        marginTop: 4,
     },
     outerProgressBar: {
         width: "100%",

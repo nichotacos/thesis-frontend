@@ -6,10 +6,16 @@ import LearningWidget from "../components/homepage/LearningWidget";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { User } from '../types/User'
+import { useState } from "react";
+import Modal from "../components/UI/Modal";
+import TextButton from "../components/UI/TextButton";
 
 export default function HomeScreen() {
     const navigation = useNavigation();
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    console.log('userData:', userData);
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContainer}>
@@ -20,25 +26,41 @@ export default function HomeScreen() {
                 totalGems={userData.totalGems}
             />
             <StreakContainer
-                totalStreak={userData.totalStreak}
+                totalStreak={userData.streak.streakCount}
+                userData={userData}
             />
             <Text style={styles.headerText}>Ayo Belajar!</Text>
             <View style={styles.widgetsContainer}>
                 <LearningWidget
-                    userSkillLevel="Bali"
-                    userLatestModule={2}
-                    userLatestModuleName="Hati-Hati di Jalan"
+                    userSkillLevel={userData.currentLearnLevel.name}
+                    userLatestModule={userData.currentModule ? userData.currentModule.index : 1}
+                    // userLatestModuleName={userData.currentModule.name}
+                    userLatestModuleName={userData.currentModule ? userData.currentModule.name : "Modul Tidak Ditemukan"}
                     isDictionary={false}
                     onPress={() => {
                         navigation.jumpTo("LevelScreen")
                     }}
                 />
+                {/* <LearningWidget
+                    userSkillLevel={userData.currentLearnLevel.name}
+                    userLatestModule={userData.currentModule ? userData.currentModule.index : 1}
+                    // userLatestModuleName={userData.currentModule.name}
+                    userLatestModuleName={userData.currentModule ? userData.currentModule.name : "Modul Tidak Ditemukan"}
+                    isDictionary={false}
+                    onPress={() => setIsModalOpen(true)}
+                /> */}
                 <LearningWidget
                     wordsLearned={100}
                     isDictionary={true}
                     onPress={() => { }}
                 />
             </View>
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={() => setIsModalOpen(false)}
+                type="level"
+                receivedAmount={20}
+            />
         </ScrollView>
     )
 };
@@ -58,6 +80,6 @@ const styles = StyleSheet.create({
         marginVertical: 16
     },
     widgetsContainer: {
-        marginBottom: 128,
+        marginBottom: 0,
     }
 })

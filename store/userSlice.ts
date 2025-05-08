@@ -109,9 +109,10 @@ const userSlice = createSlice({
                 console.log('action.payload.isLastModule', action.payload.isLastModule);
                 console.log('action.payload.nextLevel', action.payload.nextLevel);
 
+                state.userInfo.currentModule = action.payload.nextLevelFirstModule;
+
                 if (action.payload.isLastModule && action.payload.nextLevel) {
                     state.userInfo.currentLearnLevel = action.payload.nextLevel;
-                    state.userInfo.currentModule = action.payload.nextLevelFirstModule;
                 }
             }
         },

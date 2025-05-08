@@ -83,13 +83,19 @@ const userSlice = createSlice({
                 state.userInfo.weeklyExp = (state.userInfo.weeklyExp || 0) + action.payload.exp;
                 state.userInfo.dailyExp = (state.userInfo.dailyExp || 0) + action.payload.exp;
 
-                const compareDate = getDayDifference(new Date(), new Date(state.userInfo.streak.lastActivity));
-                if (compareDate === 1) {
-                    state.userInfo.streak.streakCount += 1;
-                    state.userInfo.streak.lastActivity = new Date().toISOString();
-                } else if (compareDate > 1) {
+                if (!state.userInfo.streak.lastActivity) {
                     state.userInfo.streak.streakCount = 1;
                     state.userInfo.streak.lastActivity = new Date().toISOString();
+                    state.userInfo.streak.highestStreak = 1;
+                } else {
+                    const compareDate = getDayDifference(new Date(), new Date(state.userInfo.streak.lastActivity));
+                    if (compareDate === 1) {
+                        state.userInfo.streak.streakCount += 1;
+                        state.userInfo.streak.lastActivity = new Date().toISOString();
+                    } else if (compareDate > 1) {
+                        state.userInfo.streak.streakCount = 1;
+                        state.userInfo.streak.lastActivity = new Date().toISOString();
+                    }
                 }
 
                 if (state.userInfo.streak.streakCount > state.userInfo.streak.highestStreak) {
@@ -103,7 +109,10 @@ const userSlice = createSlice({
                 console.log('action.payload.isLastModule', action.payload.isLastModule);
                 console.log('action.payload.nextLevel', action.payload.nextLevel);
 
-                state.userInfo.currentModule = action.payload.nextLevelFirstModule
+                if (action.payload.isLastModule && action.payload.nextLevel) {
+                    state.userInfo.currentLearnLevel = action.payload.nextLevel;
+                    state.userInfo.currentModule = action.payload.nextLevelFirstModule;
+                }
             }
         },
         claimDailyReward(state, action: PayloadAction<{ gems: number }>) {

@@ -4,6 +4,7 @@ import { User } from "../types/User";
 import { GlobalStyles } from "../constants/styles";
 import { useEffect, useState } from "react";
 import { getWeeklyLeaderboard } from "../api/user";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function LeaderboardScreen() {
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
@@ -60,8 +61,14 @@ export default function LeaderboardScreen() {
                                 <Text style={styles.podiumExp}>{leaderboard.users[1].weeklyExp} exp</Text>
                             </View>
                         </View>
-                        <View style={[styles.podiumBar, { height: 150 }]}>
+                        <View style={[styles.podiumBar, { height: 170 }]}>
                             <Text style={styles.podiumText}>2</Text>
+                            <AntDesign
+                                name={leaderboard.users[1].previousLeaderboardRank > 2 ? "caretup" : leaderboard.users[1].previousLeaderboardRank < 2 ? "caretdown" : "minus"}
+                                size={28}
+                                color={leaderboard.users[1].previousLeaderboardRank > 2 ? "green" : leaderboard.users[1].previousLeaderboardRank < 2 ? "red" : "white"}
+                                style={styles.podiumIcon}
+                            />
                         </View>
                     </View>
                     <View style={styles.podiumBarContainer}>
@@ -75,8 +82,14 @@ export default function LeaderboardScreen() {
                                 <Text style={styles.podiumExp}>{leaderboard.users[0].weeklyExp} exp</Text>
                             </View>
                         </View>
-                        <View style={[styles.podiumBar, { height: 220 }]}>
+                        <View style={[styles.podiumBar, { height: 240 }]}>
                             <Text style={styles.podiumText}>1</Text>
+                            <AntDesign
+                                name={leaderboard.users[1].previousLeaderboardRank > 1 ? "caretup" : leaderboard.users[1].previousLeaderboardRank < 1 ? "caretdown" : "minus"}
+                                size={28}
+                                color={leaderboard.users[1].previousLeaderboardRank > 1 ? "lightgreen" : leaderboard.users[1].previousLeaderboardRank < 1 ? "red" : "white"}
+                                style={styles.podiumIcon}
+                            />
                         </View>
                     </View>
                     <View style={styles.podiumBarContainer}>
@@ -90,8 +103,14 @@ export default function LeaderboardScreen() {
                                 <Text style={styles.podiumExp}>{leaderboard.users[2].weeklyExp} exp</Text>
                             </View>
                         </View>
-                        <View style={[styles.podiumBar, { height: 100 }]}>
+                        <View style={[styles.podiumBar, { height: 120 }]}>
                             <Text style={styles.podiumText}>3</Text>
+                            <AntDesign
+                                name={leaderboard.users[1].previousLeaderboardRank > 3 ? "caretup" : leaderboard.users[1].previousLeaderboardRank < 3 ? "caretdown" : "minus"}
+                                size={28}
+                                color={leaderboard.users[1].previousLeaderboardRank > 3 ? "lightgreen" : leaderboard.users[1].previousLeaderboardRank < 3 ? "red" : "white"}
+                                style={styles.podiumIcon}
+                            />
                         </View>
                     </View>
                 </View>
@@ -215,5 +234,8 @@ const styles = StyleSheet.create({
         fontFamily: "Inter-Bold",
         color: 'black',
         marginLeft: 16,
+    },
+    podiumIcon: {
+        marginTop: 8,
     }
 })

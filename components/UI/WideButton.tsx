@@ -12,7 +12,7 @@ interface WideButtonProps {
 export default function WideButton({ onPress, text, color, size, style, disabled, ...props }: WideButtonProps) {
     return (
         <View style={style}>
-            <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed} {...props}>
+            <Pressable onPress={onPress} style={({ pressed }) => pressed && styles.pressed} disabled={disabled} {...props}>
                 <Text style={[styles.text, { color: color, fontSize: size }]}>
                     {text}
                 </Text>

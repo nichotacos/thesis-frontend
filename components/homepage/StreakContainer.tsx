@@ -6,6 +6,7 @@ import claimDailyReward from "../../api/gamifications/claimDailyReward";
 import { useDispatch } from "react-redux";
 import { claimDailyReward as claimDailyRewardReducer } from "../../store/userSlice";
 import { useState } from "react";
+import { grantAchievement } from "../../api/achievements/grantAchievements";
 
 interface StreakContainerProps {
     totalStreak: number;
@@ -32,8 +33,8 @@ export default function StreakContainer({ totalStreak, userData }: StreakContain
     async function handleClaimReward() {
         try {
             setIsClaimed(true);
-            dispatch(claimDailyRewardReducer({ gems: GEMS_AMOUNT }))
-            claimDailyReward(userData._id, GEMS_AMOUNT);
+            dispatch(claimDailyRewardReducer({ gems: GEMS_AMOUNT }));
+            await claimDailyReward(userData._id, GEMS_AMOUNT);
         } catch (error) {
             console.error("Error claiming daily reward:", error);
         }
@@ -63,7 +64,7 @@ export default function StreakContainer({ totalStreak, userData }: StreakContain
                 text="Ambil Hadiahmu!"
                 color={GlobalStyles.colors.whiteFont}
                 size={18}
-                disabled={!userData.isAbleToClaimDailyReward || userData.hasClaimedDailyReward}
+                disabled={userData.isAbleToClaimDailyReward && !userData.hasClaimedDailyReward ? false : true}
                 style={[
                     {
                         backgroundColor: GlobalStyles.colors.accent,

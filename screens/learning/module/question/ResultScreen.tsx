@@ -33,25 +33,28 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo)
 
     // Animation values
-    // const scoreAnim = new Animated.Value(0)
-    // const starScale = new Animated.Value(0)
-    // const fadeAnim = new Animated.Value(0)
-
     const scoreAnim = useRef(new Animated.Value(0)).current
     const starScale = useRef(new Animated.Value(0)).current
     const fadeAnim = useRef(new Animated.Value(0)).current
 
-    const { correct, totalQuestions, module, nextLevel, unCompleteFirstModule } = route.params
+    const { correct, totalQuestions, module, nextLevel, unCompleteFirstModule, isLastModule } = route.params
     const score = Math.round((correct / totalQuestions) * 100);
 
-    const [showModal, setShowModal] = useState(false)
+    const [showModal, setShowModal] = useState(false);
+    const [showUnlockedLevelModal, setShowUnlockedLevelModal] = useState(false);
 
     useEffect(() => {
         // Sequence of animations
         if (unCompleteFirstModule) {
             setTimeout(() => {
                 setShowModal(true)
-            }, 3000)
+            }, 2000)
+        }
+
+        if (nextLevel && !unCompleteFirstModule && isLastModule) {
+            setTimeout(() => {
+                setShowUnlockedLevelModal(true)
+            }, 2000)
         }
 
         Animated.sequence([
@@ -72,7 +75,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                 useNativeDriver: true,
             }),
         ]).start()
-    }, [unCompleteFirstModule]);
+    }, [unCompleteFirstModule, nextLevel]);
 
     console.log("show modal", showModal)
 
@@ -141,6 +144,15 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                 receivedAmount={20}
                 unlockedAchievement="Menyelesaikan Modul Pertama"
             />
+            {showUnlockedLevelModal && (
+                <Modal
+                    isOpen={showUnlockedLevelModal}
+                    onRequestClose={() => setShowUnlockedLevelModal(false)}
+                    type="level"
+                    receivedAmount={20}
+                    unlockedLevel={nextLevel.name}
+                />
+            )}
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
                     <View style={styles.header}>
@@ -191,6 +203,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                             style={[styles.button, styles.nextButton]}
                             onPress={() => navigation?.popTo("ModuleScreen", {
                                 level: module.level,
+                                nextLevel: nextLevel,
                             })}
                         >
                             <Text style={styles.buttonText}>Lanjut ke modul berikutnya</Text>

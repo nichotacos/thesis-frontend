@@ -9,6 +9,7 @@ import { LoginPayload } from "../../api/auth.types";
 import { loginUser } from "../../api/auth.api";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/userSlice";
+import { apiClient } from "../../api/apiClient";
 
 export default function LoginScreen(params) {
     const navigation = useNavigation();
@@ -35,11 +36,12 @@ export default function LoginScreen(params) {
         try {
             setIsLoading(true);
             const data = await loginUser(loginData.username, loginData.password);
-            console.log('data di login', data);
+            const achivements = await apiClient.get('/achievement');
 
             dispatch(login({
                 userInfo: data.user,
                 token: data.accessToken,
+                achivements: achivements.data.achievements,
             }));
 
         } catch (error) {

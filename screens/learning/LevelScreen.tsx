@@ -74,9 +74,15 @@ export default function LevelScreen({
                                 { top: stampPosition.top + 195 * index },
                                 { opacity: userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel ? 0.5 : 1 },
                             ]}
+                            borderStyle={{
+                                borderWidth: 6,
+                                borderColor: userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel ? "grey" : GlobalStyles.colors.primary,
+                                borderRadius: 100,
+                            }}
                             onPress={() => {
                                 navigation.navigate("ModuleScreen", {
                                     level: level,
+                                    nextLevel: levels[index + 1],
                                 })
                             }}
                             disabled={userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel}
@@ -84,12 +90,12 @@ export default function LevelScreen({
                         {userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel && (
                             <Fontisto
                                 name="locked"
-                                size={82}
+                                size={74}
                                 color="grey"
                                 style={{
                                     position: "absolute",
                                     top: stampPosition.top + 195 * index + 35,
-                                    left: index % 2 === 0 ? 50 : undefined,
+                                    left: index % 2 === 0 ? 53 : undefined,
                                     right: index % 2 !== 0 ? 50 : undefined,
                                     zIndex: 2,
                                     opacity: 0.8,

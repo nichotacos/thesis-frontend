@@ -196,6 +196,7 @@ export default function QuestionScreen({
                     module: module,
                     nextLevel: nextLevel,
                     unCompleteFirstModule: unCompleteFirstModule,
+                    isLastModule: isLastModule,
                 });
             } catch (error) {
                 console.error("Error completing module:", error);

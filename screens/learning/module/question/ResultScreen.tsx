@@ -37,7 +37,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
     const starScale = useRef(new Animated.Value(0)).current
     const fadeAnim = useRef(new Animated.Value(0)).current
 
-    const { correct, totalQuestions, module, nextLevel, unCompleteFirstModule, isLastModule } = route.params
+    const { correct, totalQuestions, module, nextLevel, unCompleteFirstModule, isLastModule, timeTaken } = route.params
     const score = Math.round((correct / totalQuestions) * 100);
 
     const [showModal, setShowModal] = useState(false);
@@ -179,7 +179,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                         </View>
                         <View style={styles.statItem}>
                             <Ionicons name="time-outline" size={24} color={GlobalStyles.colors.classicBlue} />
-                            <Text style={styles.statText}>{formatTime(78)} waktu yang diperlukan</Text>
+                            <Text style={styles.statText}>{formatTime(timeTaken)} waktu yang diperlukan</Text>
                         </View>
                         <View style={styles.statItem}>
                             <MaterialCommunityIcons name="fire" size={24} color="#FF5722" />

@@ -6,29 +6,65 @@ import LearningWidget from "../components/homepage/LearningWidget";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { User } from '../types/User'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../components/UI/Modal";
 import TextButton from "../components/UI/TextButton";
+import { CopilotStep, useCopilot, walkthroughable } from "react-native-copilot"
+
+const CopilotText = walkthroughable(Text);
+const WalkthroughableView = walkthroughable(View);
 
 export default function HomeScreen() {
     const navigation = useNavigation();
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { start, copilotEvents } = useCopilot();
 
     console.log('userData:', userData);
 
+    useEffect(() => {
+        start();
+    }, [])
+
+    useEffect(() => {
+        const onStop = () => {
+            console.log("Copilot tutorial finished");
+        };
+
+        copilotEvents.on("stop", onStop);
+        return () => {
+            copilotEvents.off("stop", onStop);
+        };
+    }, []);
+
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContainer}>
-            <UserIdentity
-                profilePicture={userData.profilePicture}
-                userFullName={userData.userFullName}
-                userLevel={userData.currentLevel}
-                totalGems={userData.totalGems}
-            />
-            <StreakContainer
-                totalStreak={userData.streak.streakCount}
-                userData={userData}
-            />
+            <CopilotStep
+                text="Selamat datang di aplikasi kami! Di sini kamu bisa belajar bahasa Inggris dengan cara yang menyenangkan!"
+                order={1}
+                name="user-identity"
+            >
+                <WalkthroughableView style={{}}>
+                    <UserIdentity
+                        profilePicture={userData.profilePicture}
+                        userFullName={userData.userFullName}
+                        userLevel={userData.currentLevel}
+                        totalGems={userData.totalGems}
+                    />
+                </WalkthroughableView>
+            </CopilotStep>
+            <CopilotStep
+                text="Jangan lupa untuk mengklaim hadiah harianmu! Hadiah ini bisa kamu gunakan untuk membeli item di dalam aplikasi."
+                order={2}
+                name="streak-container"
+            >
+                <WalkthroughableView>
+                    <StreakContainer
+                        totalStreak={userData.streak.streakCount}
+                        userData={userData}
+                    />
+                </WalkthroughableView>
+            </CopilotStep>
             <Text style={styles.headerText}>Ayo Belajar!</Text>
             <View style={styles.widgetsContainer}>
                 <LearningWidget
@@ -41,14 +77,6 @@ export default function HomeScreen() {
                         navigation.jumpTo("LevelScreen")
                     }}
                 />
-                {/* <LearningWidget
-                    userSkillLevel={userData.currentLearnLevel.name}
-                    userLatestModule={userData.currentModule ? userData.currentModule.index : 1}
-                    // userLatestModuleName={userData.currentModule.name}
-                    userLatestModuleName={userData.currentModule ? userData.currentModule.name : "Modul Tidak Ditemukan"}
-                    isDictionary={false}
-                    onPress={() => setIsModalOpen(true)}
-                /> */}
                 <LearningWidget
                     wordsLearned={100}
                     isDictionary={true}

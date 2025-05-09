@@ -46,6 +46,7 @@ export default function QuestionScreen({
         optionText: string;
         isCorrect: boolean;
     }[]>([]);
+    const [startTime, setStartTime] = useState<number | null>(null);
 
     console.log("params", {
         module,
@@ -91,7 +92,12 @@ export default function QuestionScreen({
             }
         }
 
+        function startTimer() {
+            setStartTime(Date.now());
+        }
+
         fetchQuestions();
+        startTimer();
     }, [])
 
     if (isLoading || !questions || !currentQuestion || !userData) {
@@ -123,14 +129,6 @@ export default function QuestionScreen({
         await playCheckAnswerSound(selectedAnswer.isCorrect);
     }
 
-    async function handleSubmitAnswer() {
-        try {
-            await addUserExp(userData._id, userAnswers.filter((answer) => answer.isCorrect).length * 5);
-        } catch (error) {
-            console.error("Error submitting answer:", error);
-        }
-    }
-
     async function handleNextQuestionOrResult() {
         setIsChecked(false);
         setSelectedAnswer(null);
@@ -150,7 +148,7 @@ export default function QuestionScreen({
                     const getNextLevelModules = await apiClient.post('/module', {
                         levelIds: [module.level._id],
                     });
-                    console.log("getNextLevelModules", getNextLevelModules.data);
+                    console.log("getNextLevelModules", getNextLevelModules.data.data[module.index]);
                     nextLevelFirstModule = getNextLevelModules.data.data[module.index];
                 }
                 console.log("dispatch value", {
@@ -171,7 +169,7 @@ export default function QuestionScreen({
                     totalAnswers: questions.length,
                     isLastModule: isLastModule,
                     nextLevel: isLastModule ? nextLevel : undefined,
-                    nextLevelFirstModule: isLastModule ? nextLevelFirstModule : undefined,
+                    nextLevelFirstModule: nextLevelFirstModule,
                 }));
 
                 await completeModule({
@@ -189,6 +187,10 @@ export default function QuestionScreen({
                     }));
                 }
 
+                const endTime = Date.now();
+                const durationInSeconds = Math.floor((endTime - startTime!) / 1000);
+                console.log("Duration in seconds:", durationInSeconds);
+
                 navigation.replace("ResultScreen", {
                     correct: userAnswers.filter((answer) => answer.isCorrect).length,
                     totalQuestions: userAnswers.length,
@@ -197,6 +199,7 @@ export default function QuestionScreen({
                     nextLevel: nextLevel,
                     unCompleteFirstModule: unCompleteFirstModule,
                     isLastModule: isLastModule,
+                    timeTaken: durationInSeconds,
                 });
             } catch (error) {
                 console.error("Error completing module:", error);

@@ -1,8 +1,8 @@
-import { FlatList, Image, ImageBackground, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, ImageBackground, RefreshControl, StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 import { User } from "../types/User";
 import { GlobalStyles } from "../constants/styles";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getWeeklyLeaderboard } from "../api/user";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -16,23 +16,30 @@ export default function LeaderboardScreen() {
         },
         message: string;
     }>();
+    const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const fetchLeaderboard = async () => {
+        try {
+            setIsLoading(true);
+            const response = await getWeeklyLeaderboard(userData._id);
+            console.log('Leaderboard data:', response.data);
+            setLeaderboard(response.data);
+        } catch (error) {
+            console.error('Error fetching leaderboard:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        await fetchLeaderboard();
+        setRefreshing(false);
+    }, []);
 
     useEffect(() => {
         if (!userData) return;
-
-        const fetchLeaderboard = async () => {
-            try {
-                setIsLoading(true);
-                const response = await getWeeklyLeaderboard(userData._id);
-                console.log('Leaderboard data:', response.data);
-                setLeaderboard(response.data);
-            } catch (error) {
-                console.error('Error fetching leaderboard:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
 
         fetchLeaderboard();
     }, [userData]);
@@ -48,7 +55,7 @@ export default function LeaderboardScreen() {
     return (
         <View style={{ flex: 1 }}>
             <ImageBackground source={require('../assets/gamification/leaderboard-background.jpg')} style={styles.container} resizeMode="cover">
-                <Text style={styles.title}>Peringkat Mingguan</Text>
+                <Text style={styles.title}>Papan Peringkat Mingguan</Text>
                 <View style={styles.podiumContainer}>
                     <View style={styles.podiumBarContainer}>
                         <View style={[styles.podiumProfile]}>
@@ -66,7 +73,7 @@ export default function LeaderboardScreen() {
                             <AntDesign
                                 name={leaderboard.users[1].previousLeaderboardRank > 2 ? "caretup" : leaderboard.users[1].previousLeaderboardRank < 2 ? "caretdown" : "minus"}
                                 size={28}
-                                color={leaderboard.users[1].previousLeaderboardRank > 2 ? "green" : leaderboard.users[1].previousLeaderboardRank < 2 ? "red" : "white"}
+                                color={leaderboard.users[1].previousLeaderboardRank > 2 ? "lime" : leaderboard.users[1].previousLeaderboardRank < 2 ? "red" : "white"}
                                 style={styles.podiumIcon}
                             />
                         </View>
@@ -87,7 +94,7 @@ export default function LeaderboardScreen() {
                             <AntDesign
                                 name={leaderboard.users[1].previousLeaderboardRank > 1 ? "caretup" : leaderboard.users[1].previousLeaderboardRank < 1 ? "caretdown" : "minus"}
                                 size={28}
-                                color={leaderboard.users[1].previousLeaderboardRank > 1 ? "lightgreen" : leaderboard.users[1].previousLeaderboardRank < 1 ? "red" : "white"}
+                                color={leaderboard.users[1].previousLeaderboardRank > 1 ? "lime" : leaderboard.users[1].previousLeaderboardRank < 1 ? "red" : "white"}
                                 style={styles.podiumIcon}
                             />
                         </View>
@@ -108,7 +115,7 @@ export default function LeaderboardScreen() {
                             <AntDesign
                                 name={leaderboard.users[1].previousLeaderboardRank > 3 ? "caretup" : leaderboard.users[1].previousLeaderboardRank < 3 ? "caretdown" : "minus"}
                                 size={28}
-                                color={leaderboard.users[1].previousLeaderboardRank > 3 ? "lightgreen" : leaderboard.users[1].previousLeaderboardRank < 3 ? "red" : "white"}
+                                color={leaderboard.users[1].previousLeaderboardRank > 3 ? "lime" : leaderboard.users[1].previousLeaderboardRank < 3 ? "red" : "black"}
                                 style={styles.podiumIcon}
                             />
                         </View>
@@ -136,13 +143,24 @@ export default function LeaderboardScreen() {
                                         source={{ uri: item.profilePicture }}
                                         style={styles.listProfileImage}
                                     />
-                                    <Text style={[styles.listName, { marginLeft: 16 }]}>{item.userFullName}</Text>
-                                    <View style={{ backgroundColor: 'white', padding: 4, paddingHorizontal: 8, borderRadius: 12, marginLeft: 'auto' }}>
-                                        <Text style={styles.podiumExp}>{item.weeklyExp} exp</Text>
+                                    <View style={{ flexDirection: "column", alignItems: "flex-start", marginLeft: 16 }}>
+                                        <Text style={[styles.listName]}>{item.userFullName}</Text>
+                                        <View style={{ backgroundColor: 'white', padding: 4, paddingHorizontal: 8, borderRadius: 12 }}>
+                                            <Text style={styles.podiumExp}>{item.weeklyExp} exp</Text>
+                                        </View>
                                     </View>
+                                    <AntDesign
+                                        name={item.previousLeaderboardRank > index + 1 ? "caretup" : item.previousLeaderboardRank < index + 1 ? "caretdown" : "minus"}
+                                        size={28}
+                                        color={item.previousLeaderboardRank > index + 1 ? "lime" : item.previousLeaderboardRank < index + 1 ? "red" : "white"}
+                                        style={[styles.podiumIcon, { marginLeft: 'auto' }]}
+                                    />
                                 </View>
                             )
                         }}
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={GlobalStyles.colors.primary} />
+                        }
                     />
                 </View>
             </ImageBackground>
@@ -209,6 +227,7 @@ const styles = StyleSheet.create({
         color: GlobalStyles.colors.whiteFont,
         marginBottom: 6,
         textAlign: "center",
+        lineHeight: 22,
     },
     podiumExp: {
         fontSize: 14,
@@ -233,7 +252,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: "Inter-Bold",
         color: 'black',
-        marginLeft: 16,
     },
     podiumIcon: {
         marginTop: 8,

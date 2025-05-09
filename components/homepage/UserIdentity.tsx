@@ -7,6 +7,7 @@ interface UserIdentityProps {
     userFullName: string;
     userLevel: number;
     totalGems: number;
+    copilot?: any
 }
 
 export default function UserIdentity({
@@ -14,11 +15,12 @@ export default function UserIdentity({
     userFullName,
     userLevel,
     totalGems,
+    copilot
 }: UserIdentityProps) {
     const name = getFirstName(userFullName);
 
     return (
-        <View style={styles.innerContainer}>
+        <View style={styles.innerContainer} {...copilot}>
             <View style={styles.innerContainer}>
                 <Image
                     source={{ uri: profilePicture }}

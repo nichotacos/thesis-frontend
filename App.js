@@ -18,6 +18,7 @@ import QuestionScreen from './screens/learning/module/question/QuestionScreen';
 import ResultScreen from './screens/learning/module/question/ResultScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import LeaderboardScreen from './screens/LeaderboardScreen';
+import { CopilotProvider } from 'react-native-copilot';
 
 
 const Stack = createNativeStackNavigator();
@@ -191,9 +192,11 @@ export default function App() {
   return (
     <SafeAreaView style={style.container}>
       <Provider store={store}>
-        <NavigationContainer>
-          <RootNavigator />
-        </NavigationContainer>
+        <CopilotProvider style={{ top: 16 }}>
+          <NavigationContainer>
+            <RootNavigator />
+          </NavigationContainer>
+        </CopilotProvider>
       </Provider>
     </SafeAreaView>
   );

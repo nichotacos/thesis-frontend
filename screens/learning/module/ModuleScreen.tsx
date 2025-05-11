@@ -9,6 +9,8 @@ import { Module } from "../../../types/Module";
 import { apiClient } from "../../../api/apiClient";
 import { useNavigation } from "@react-navigation/native";
 import Svg, { Circle, Defs, G, Line, Marker, Path, Polygon } from "react-native-svg";
+import StreakFireSvg from "../../../assets/gamification/streak-fire-svg";
+import HeartSVG from "../../../assets/gamification/heart-svg";
 
 
 interface ModuleScreenProps {
@@ -70,22 +72,11 @@ export default function ModuleScreen({
                     <Text style={styles.gemsOrStreakText}>{userData.totalGems}</Text>
                 </View>
                 <View style={styles.gemsOrStreakContainer}>
-                    <Image
-                        source={require('../../../assets/gamification/streak.png')}
-                        style={{
-                            width: 40,
-                            height: 40,
-                            overflow: "hidden",
-                        }}
-                    />
+                    <StreakFireSvg width={40} height={40} />
                     <Text style={styles.gemsOrStreakText}>{userData.streak.streakCount}</Text>
                 </View>
                 <View style={styles.gemsOrStreakContainer}>
-                    <Ionicons
-                        name="heart"
-                        size={40}
-                        color='red'
-                    />
+                    <HeartSVG width={40} height={40} />
                     <Text style={styles.gemsOrStreakText}>{userData.hearts.current}</Text>
                 </View>
             </View>
@@ -165,7 +156,7 @@ export default function ModuleScreen({
                                     viewBox="0 0 100 100"
                                     style={{
                                         position: "absolute",
-                                        top: 18 + 120 * index,
+                                        top: 58 + 120 * index,
                                         left: index % 2 === 0 && 129,
                                         right: index % 2 !== 0 && 119
                                     }}
@@ -185,7 +176,7 @@ export default function ModuleScreen({
                                         height={255}
                                         style={{
                                             position: "absolute",
-                                            top: 60 + 120 * index,
+                                            top: 95 + 120 * index,
                                             left: index % 2 === 0 && 25,
                                         }}
                                     >
@@ -228,7 +219,7 @@ export default function ModuleScreen({
                                         viewBox="0 0 100 100"
                                         style={{
                                             position: "absolute",
-                                            top: 18 + 120 * index,
+                                            top: 53 + 120 * index,
                                             left: index % 2 === 0 && 129,
                                         }}
                                     >
@@ -248,7 +239,7 @@ export default function ModuleScreen({
                                         height={255}
                                         style={{
                                             position: "absolute",
-                                            top: 60 + 120 * index,
+                                            top: 95 + 120 * index,
                                             right: index % 2 !== 0 && -58,
                                         }}
                                     >
@@ -291,7 +282,7 @@ export default function ModuleScreen({
                                         viewBox="0 0 100 100"
                                         style={{
                                             position: "absolute",
-                                            top: 18 + 120 * index,
+                                            top: 58 + 120 * index,
                                             right: index % 2 !== 0 && 119,
                                         }}
                                     >

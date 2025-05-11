@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Question } from "../../../../types/Question";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { apiClient } from "../../../../api/apiClient";
 import { GlobalStyles } from "../../../../constants/styles";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,6 +19,7 @@ import completeModule from "../../../../api/gamifications/completeModule";
 import { Module } from "../../../../types/Module";
 import { grantAchievement } from "../../../../api/achievements/grantAchievements";
 import { grantAchievement as grantAchievementReducer } from "../../../../store/userSlice";
+import PlayAudioButton from "../../../../components/learning/PlayAudioButton";
 
 interface QuestionScreenProps {
     route: any;
@@ -211,40 +212,20 @@ export default function QuestionScreen({
         return (
             <View style={styles.audioPlayerContainer}>
                 {!isPlaying || isAudioEnded ? (
-                    <WideButton
-                        text="Putar Audio"
+                    <PlayAudioButton
                         onPress={() => {
-                            playAudio(questions[0].media.audioUrl)
+                            playAudio(questions[0].media.audioUrl);
                         }}
-                        color={GlobalStyles.colors.whiteFont}
-                        size={16}
-                        style={{
-                            alignSelf: "center",
-                            marginVertical: 12,
-                            marginHorizontal: 12,
-                            paddingVertical: 8,
-                            paddingHorizontal: 24,
-                            backgroundColor: GlobalStyles.colors.accent,
-                            width: "90%",
-                            borderRadius: 16,
-                        }}
+                        iconName="play"
+                        iconSize={52}
+                        iconColor={GlobalStyles.colors.whiteFont}
                     />
                 ) : (
-                    <WideButton
-                        text="Jeda Audio"
+                    <PlayAudioButton
                         onPress={togglePlayback}
-                        color={GlobalStyles.colors.whiteFont}
-                        size={16}
-                        style={{
-                            alignSelf: "center",
-                            marginVertical: 12,
-                            marginHorizontal: 12,
-                            paddingVertical: 8,
-                            paddingHorizontal: 24,
-                            backgroundColor: GlobalStyles.colors.accent,
-                            width: "90%",
-                            borderRadius: 16,
-                        }}
+                        iconName="stop"
+                        iconSize={52}
+                        iconColor={GlobalStyles.colors.whiteFont}
                     />
                 )}
             </View>
@@ -325,7 +306,7 @@ export default function QuestionScreen({
                                     <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 0 }}>
                                         <Ionicons
                                             name="checkmark-circle-outline"
-                                            size={20}
+                                            size={52}
                                             color="green"
                                             style={{ marginRight: 8 }}
                                         />
@@ -343,7 +324,7 @@ export default function QuestionScreen({
                                     <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 0 }}>
                                         <Ionicons
                                             name="close-circle-outline"
-                                            size={20}
+                                            size={40}
                                             color="red"
                                             style={{ marginRight: 8 }}
                                         />
@@ -423,11 +404,14 @@ const styles = StyleSheet.create({
     },
     audioPlayerContainer: {
         flexDirection: "column",
-        alignItems: "flex-start",
+        alignItems: "center",
         justifyContent: "space-between",
-        paddingVertical: 12,
+        padding: 20,
         backgroundColor: GlobalStyles.colors.primary,
-        borderRadius: 16
+        borderRadius: 16,
+        alignSelf: "center",
+        elevation: 10,
+        shadowColor: "#000",
     },
     audioPlayerText: {
         fontFamily: "Inter-Bold",

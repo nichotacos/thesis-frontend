@@ -3,12 +3,14 @@ import Svg, { Defs, LinearGradient, Stop, G, Path } from "react-native-svg"
 interface StreakFireSvgProps {
     width?: number
     height?: number
+    style?: object
     props?: any
 }
 
 const StreakFireSvg = ({
     width,
     height,
+    style,
     ...props
 }: StreakFireSvgProps) => (
     <Svg
@@ -16,6 +18,7 @@ const StreakFireSvg = ({
         height={height}
         preserveAspectRatio="xMidYMid"
         viewBox="-33 0 255 255"
+        style={style || {}}
         {...props}
     >
         <Defs>

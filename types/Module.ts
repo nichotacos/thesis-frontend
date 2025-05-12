@@ -9,7 +9,8 @@ export type Module = {
         _id: string;
         name: string;
         actualBipaLevel: string;
-    }
+    };
+    isUnitReview: boolean;
     // questions: Question[];
     // createdAt?: Date;
     // updatedAt?: Date;

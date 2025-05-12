@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 interface ModuleStampProps {
     index: number;
@@ -9,6 +9,7 @@ interface ModuleStampProps {
     onPress: () => void;
     disabled: boolean;
     score?: number;
+    isUnitReview?: boolean;
 }
 
 export default function ModuleStamp({
@@ -17,7 +18,8 @@ export default function ModuleStamp({
     name,
     onPress,
     disabled,
-    score
+    score,
+    isUnitReview
 }: ModuleStampProps) {
 
     return (
@@ -29,9 +31,13 @@ export default function ModuleStamp({
             </View>
             <View style={[styles.outerContainer]}>
                 <View style={styles.innerContainer}>
-                    <Text style={styles.text}>
-                        {index}
-                    </Text>
+                    {isUnitReview ? (
+                        <Ionicons name="checkmark" size={50} color={GlobalStyles.colors.whiteFont} />
+                    ) : (
+                        <Text style={styles.text}>
+                            {index}
+                        </Text>
+                    )}
                 </View>
             </View>
         </Pressable>

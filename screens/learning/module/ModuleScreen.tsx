@@ -107,193 +107,228 @@ export default function ModuleScreen({
 
                     return (
                         <View>
-                            <ModuleStamp
-                                index={index + 1}
-                                name={item.name}
-                                style={{
-                                    left: index % 2 === 0 ? 20 : undefined,
-                                    right: index % 2 !== 0 ? 20 : undefined,
-                                    top: 20 + 120 * index,
-                                    opacity,
-                                    zIndex: 1,
-                                }}
-                                onPress={() =>
-                                    navigation.navigate("QuestionScreen", {
-                                        module: item,
-                                        isLastModule: index === (modules.length - 1),
-                                        nextLevel: nextLevel,
-                                        unCompleteFirstModule: !userData.achievements.find(
-                                            (a) => a.achievement.code === "FIRST_MODULE"
-                                        )
-                                    })
-                                }
-                                disabled={isDisabled}
-                                score={
-                                    userData.completedModules.find((m) => m.module === item._id)
-                                        ?.score || 0
-                                }
-                            />
-
-                            {isDisabled && (
-                                <Fontisto
-                                    name="locked"
-                                    size={52}
-                                    color="grey"
-                                    style={{
-                                        position: "absolute",
-                                        top: 20 + 120 * index + 22,
-                                        left: index % 2 === 0 ? 49 : undefined,
-                                        right: index % 2 !== 0 ? 48 : undefined,
-                                        zIndex: 2,
-                                        opacity: 0.8,
-                                    }}
-                                />
-                            )}
-                            {index === modules.length - 1 ? (
-                                <Svg
-                                    width={100}
-                                    height={100}
-                                    viewBox="0 0 100 100"
-                                    style={{
-                                        position: "absolute",
-                                        top: 58 + 120 * index,
-                                        left: index % 2 === 0 && 129,
-                                        right: index % 2 !== 0 && 119
-                                    }}
-                                >
-                                    <Circle
-                                        r={10}
-                                        cx={50}
-                                        cy={50}
-                                        fill={GlobalStyles.colors.primary}
+                            {item.isUnitReview === false && (
+                                <>
+                                    <ModuleStamp
+                                        index={index + 1}
+                                        name={item.name}
+                                        style={{
+                                            left: index % 2 === 0 ? 20 : undefined,
+                                            right: index % 2 !== 0 ? 20 : undefined,
+                                            top: isDisabled ? 55 + 120 * index : 20 + 120 * index,
+                                            opacity,
+                                            zIndex: 1,
+                                        }}
+                                        onPress={() =>
+                                            navigation.navigate("QuestionScreen", {
+                                                module: item,
+                                                isLastModule: index === (modules.length - 1),
+                                                nextLevel: nextLevel,
+                                                unCompleteFirstModule: !userData.achievements.find(
+                                                    (a) => a.achievement.code === "FIRST_MODULE"
+                                                )
+                                            })
+                                        }
+                                        disabled={isDisabled}
+                                        score={
+                                            userData.completedModules.find((m) => m.module === item._id)
+                                                ?.score || 0
+                                        }
                                     />
-                                </Svg>
-                            ) : index % 2 === 0 ? (
-                                <>
-                                    <Svg
-                                        viewBox="0 0 1230 1500"
-                                        width={380}
-                                        height={255}
-                                        style={{
-                                            position: "absolute",
-                                            top: 95 + 120 * index,
-                                            left: index % 2 === 0 && 25,
-                                        }}
-                                    >
-                                        <G
-                                            strokeWidth="40"
-                                            stroke={GlobalStyles.colors.primary}
-                                            fill="none"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeDasharray="23.5 0"
-                                            transform="rotate(45, 400, 400)"
-                                        >
-                                            <Line
-                                                x1="145.5"
-                                                y1="145.5"
-                                                x2="654.5"
-                                                y2="654.5"
-                                                markerEnd="url(#marker)"
-                                            />
-                                        </G>
-                                        <Defs>
-                                            <Marker
-                                                markerWidth="1"
-                                                markerHeight="1"
-                                                refX="0.5"
-                                                refY="0.5"
-                                                viewBox="0 0 1 1"
-                                                orient="auto"
-                                                id="marker"
-                                            >
-                                                <Polygon
-                                                    points="0,1 0,0 1,0.5"
-                                                />
-                                            </Marker>
-                                        </Defs>
-                                    </Svg>
-                                    <Svg
-                                        width={100}
-                                        height={100}
-                                        viewBox="0 0 100 100"
-                                        style={{
-                                            position: "absolute",
-                                            top: 53 + 120 * index,
-                                            left: index % 2 === 0 && 129,
-                                        }}
-                                    >
-                                        <Circle
-                                            r={10}
-                                            cx={50}
-                                            cy={50}
-                                            fill={GlobalStyles.colors.primary}
+
+                                    {isDisabled && (
+                                        <Fontisto
+                                            name="locked"
+                                            size={52}
+                                            color="grey"
+                                            style={{
+                                                position: "absolute",
+                                                top: isDisabled ? 55 + 120 * index + 22 : 20 + 120 * index + 22,
+                                                left: index % 2 === 0 ? 49 : undefined,
+                                                right: index % 2 !== 0 ? 48 : undefined,
+                                                zIndex: 2,
+                                                opacity: 0.8,
+                                            }}
                                         />
-                                    </Svg>
-                                </>
-                            ) : (
-                                <>
-                                    <Svg
-                                        viewBox="0 0 1230 1500"
-                                        width={380}
-                                        height={255}
-                                        style={{
-                                            position: "absolute",
-                                            top: 95 + 120 * index,
-                                            right: index % 2 !== 0 && -58,
-                                        }}
-                                    >
-                                        <G
-                                            strokeWidth="40"
-                                            stroke={GlobalStyles.colors.primary}
-                                            fill="none"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeDasharray="23.5 0"
-                                            transform="rotate(45, 400, 400)"
+                                    )}
+
+                                    {index === modules.length - 2 ? (
+                                        <Svg
+                                            width={100}
+                                            height={100}
+                                            viewBox="0 0 100 100"
+                                            style={{
+                                                position: "absolute",
+                                                top: 58 + 120 * index,
+                                                left: index % 2 === 0 && 129,
+                                                right: index % 2 !== 0 && 119
+                                            }}
                                         >
-                                            <Line
-                                                x1="145.5"
-                                                y1="145.5"
-                                                x2="654.5"
-                                                y2="654.5"
-                                                markerEnd="url(#marker)"
+                                            <Circle
+                                                r={10}
+                                                cx={50}
+                                                cy={50}
+                                                fill={GlobalStyles.colors.primary}
                                             />
-                                        </G>
-                                        <Defs>
-                                            <Marker
-                                                markerWidth="1"
-                                                markerHeight="1"
-                                                refX="0.5"
-                                                refY="0.5"
-                                                viewBox="0 0 1 1"
-                                                orient="auto"
-                                                id="marker"
+                                        </Svg>
+                                    ) : index % 2 === 0 ? (
+                                        <>
+                                            <Svg
+                                                viewBox="0 0 1230 1500"
+                                                width={380}
+                                                height={255}
+                                                style={{
+                                                    position: "absolute",
+                                                    top: 95 + 120 * index,
+                                                    left: index % 2 === 0 && 25,
+                                                }}
                                             >
-                                                <Polygon
-                                                    points="0,1 0,0 1,0.5"
+                                                <G
+                                                    strokeWidth="40"
+                                                    stroke={GlobalStyles.colors.primary}
+                                                    fill="none"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeDasharray="23.5 0"
+                                                    transform="rotate(45, 400, 400)"
+                                                >
+                                                    <Line
+                                                        x1="145.5"
+                                                        y1="145.5"
+                                                        x2="654.5"
+                                                        y2="654.5"
+                                                        markerEnd="url(#marker)"
+                                                    />
+                                                </G>
+                                                <Defs>
+                                                    <Marker
+                                                        markerWidth="1"
+                                                        markerHeight="1"
+                                                        refX="0.5"
+                                                        refY="0.5"
+                                                        viewBox="0 0 1 1"
+                                                        orient="auto"
+                                                        id="marker"
+                                                    >
+                                                        <Polygon
+                                                            points="0,1 0,0 1,0.5"
+                                                        />
+                                                    </Marker>
+                                                </Defs>
+                                            </Svg>
+                                            <Svg
+                                                width={100}
+                                                height={100}
+                                                viewBox="0 0 100 100"
+                                                style={{
+                                                    position: "absolute",
+                                                    top: 53 + 120 * index,
+                                                    left: index % 2 === 0 && 129,
+                                                }}
+                                            >
+                                                <Circle
+                                                    r={10}
+                                                    cx={50}
+                                                    cy={50}
+                                                    fill={GlobalStyles.colors.primary}
                                                 />
-                                            </Marker>
-                                        </Defs>
-                                    </Svg>
-                                    <Svg
-                                        width={100}
-                                        height={100}
-                                        viewBox="0 0 100 100"
-                                        style={{
-                                            position: "absolute",
-                                            top: 58 + 120 * index,
-                                            right: index % 2 !== 0 && 119,
-                                        }}
-                                    >
-                                        <Circle
-                                            r={10}
-                                            cx={50}
-                                            cy={50}
-                                            fill={GlobalStyles.colors.primary}
-                                        />
-                                    </Svg>
+                                            </Svg>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Svg
+                                                viewBox="0 0 1230 1500"
+                                                width={380}
+                                                height={255}
+                                                style={{
+                                                    position: "absolute",
+                                                    top: 95 + 120 * index,
+                                                    right: index % 2 !== 0 && -58,
+                                                }}
+                                            >
+                                                <G
+                                                    strokeWidth="40"
+                                                    stroke={GlobalStyles.colors.primary}
+                                                    fill="none"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeDasharray="23.5 0"
+                                                    transform="rotate(45, 400, 400)"
+                                                >
+                                                    <Line
+                                                        x1="145.5"
+                                                        y1="145.5"
+                                                        x2="654.5"
+                                                        y2="654.5"
+                                                        markerEnd="url(#marker)"
+                                                    />
+                                                </G>
+                                                <Defs>
+                                                    <Marker
+                                                        markerWidth="1"
+                                                        markerHeight="1"
+                                                        refX="0.5"
+                                                        refY="0.5"
+                                                        viewBox="0 0 1 1"
+                                                        orient="auto"
+                                                        id="marker"
+                                                    >
+                                                        <Polygon
+                                                            points="0,1 0,0 1,0.5"
+                                                        />
+                                                    </Marker>
+                                                </Defs>
+                                            </Svg>
+                                            <Svg
+                                                width={100}
+                                                height={100}
+                                                viewBox="0 0 100 100"
+                                                style={{
+                                                    position: "absolute",
+                                                    top: 58 + 120 * index,
+                                                    right: index % 2 !== 0 && 119,
+                                                }}
+                                            >
+                                                <Circle
+                                                    r={10}
+                                                    cx={50}
+                                                    cy={50}
+                                                    fill={GlobalStyles.colors.primary}
+                                                />
+                                            </Svg>
+                                        </>
+                                    )}
                                 </>
+                            )}
+
+                            {item.isUnitReview && (
+                                <ModuleStamp
+                                    index={index + 1}
+                                    name="Ulangan"
+                                    style={{
+                                        left: 0,
+                                        right: 0,
+                                        top: 55 + 120 * index,
+                                        opacity,
+                                        zIndex: 1,
+                                    }}
+                                    onPress={() =>
+                                        navigation.navigate("QuestionScreen", {
+                                            module: item,
+                                            isLastModule: index === (modules.length - 1),
+                                            nextLevel: nextLevel,
+                                            unCompleteFirstModule: !userData.achievements.find(
+                                                (a) => a.achievement.code === "FIRST_MODULE"
+                                            )
+                                        })
+                                    }
+                                    disabled={isDisabled}
+                                    score={
+                                        userData.completedModules.find((m) => m.module === item._id)
+                                            ?.score || 0
+                                    }
+                                    isUnitReview={true}
+                                />
                             )}
                         </View>
                     )

@@ -4,12 +4,14 @@ import getDayDifference from '../utils/getDayDifference';
 import { Level } from '../types/Level';
 import { Achievement } from '../types/Achievement';
 import { Module } from '../types/Module';
+import { ShopItem } from '../types/ShopItem';
 
 interface UserState {
     isAuthenticated: boolean;
     userInfo: Partial<User> | null;
     token: string | null;
     allAchievements: Achievement[];
+    shopItem: ShopItem[];
 }
 
 const initialState: UserState = {
@@ -17,17 +19,24 @@ const initialState: UserState = {
     userInfo: null,
     token: null,
     allAchievements: [],
+    shopItem: [],
 }
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        login(state, action: PayloadAction<{ userInfo: Partial<User>, token: string, achivements: Achievement[] }>) {
+        login(state, action: PayloadAction<{
+            userInfo: Partial<User>,
+            token: string,
+            achivements: Achievement[],
+            shopItems: ShopItem[],
+        }>) {
             state.isAuthenticated = true;
             state.userInfo = action.payload.userInfo;
             state.token = action.payload.token;
             state.allAchievements = action.payload.achivements;
+            state.shopItem = action.payload.shopItems;
         },
         logout(state) {
             state.isAuthenticated = false;

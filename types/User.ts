@@ -26,7 +26,7 @@ export type User = {
         lastActivity: string,
     };
     completedModules: {
-        module: string;
+        module: Module;
         correctCount: number;
         totalAnswers: number;
         score: number;

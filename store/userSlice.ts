@@ -56,7 +56,7 @@ const userSlice = createSlice({
             }
         },
         completeModule(state, action: PayloadAction<{
-            moduleId: string,
+            module: Module,
             exp: number,
             correctCount: number,
             score: number,
@@ -66,7 +66,7 @@ const userSlice = createSlice({
             nextLevelFirstModule?: Module,
         }>) {
             if (state.userInfo) {
-                const alreadyCompleted = state.userInfo.completedModules?.find((m) => m.module === action.payload.moduleId);
+                const alreadyCompleted = state.userInfo.completedModules?.find((m) => m.module._id === action.payload.module._id);
 
                 if (alreadyCompleted) {
                     if (action.payload.score > alreadyCompleted.score) {
@@ -78,7 +78,7 @@ const userSlice = createSlice({
                     alreadyCompleted.totalAnswers = action.payload.totalAnswers;
                 } else {
                     const newCompletedModule = {
-                        module: action.payload.moduleId,
+                        module: action.payload.module,
                         correctCount: action.payload.correctCount,
                         totalAnswers: action.payload.totalAnswers,
                         score: action.payload.score,

@@ -12,6 +12,7 @@ interface UserState {
     token: string | null;
     allAchievements: Achievement[];
     shopItem: ShopItem[];
+    level: Level[];
 }
 
 const initialState: UserState = {
@@ -20,6 +21,7 @@ const initialState: UserState = {
     token: null,
     allAchievements: [],
     shopItem: [],
+    level: [],
 }
 
 const userSlice = createSlice({
@@ -31,17 +33,22 @@ const userSlice = createSlice({
             token: string,
             achivements: Achievement[],
             shopItems: ShopItem[],
+            levels: Level[],
         }>) {
             state.isAuthenticated = true;
             state.userInfo = action.payload.userInfo;
             state.token = action.payload.token;
             state.allAchievements = action.payload.achivements;
             state.shopItem = action.payload.shopItems;
+            state.level = action.payload.levels;
         },
         logout(state) {
             state.isAuthenticated = false;
             state.userInfo = null;
             state.token = null;
+            state.allAchievements = [];
+            state.shopItem = [];
+            state.level = [];
         },
         decrementHp(state, action: PayloadAction<number>) {
             if (state.userInfo) {

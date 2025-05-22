@@ -5,6 +5,7 @@ export type Level = {
     name: string;
     actualBipaLevel: string;
     description: string;
+    level_image: string;
     modules: Module[];
     createdAt?: Date;
     updatedAt?: Date;

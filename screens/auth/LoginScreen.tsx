@@ -37,11 +37,15 @@ export default function LoginScreen(params) {
             setIsLoading(true);
             const data = await loginUser(loginData.username, loginData.password);
             const achivements = await apiClient.get('/achievement');
+            const shopItems = await apiClient.get('/shop-item');
+            const levels = await apiClient.get('/level');
 
             dispatch(login({
                 userInfo: data.user,
                 token: data.accessToken,
                 achivements: achivements.data.achievements,
+                shopItems: shopItems.data.shopItems,
+                levels: levels.data.levels,
             }));
 
         } catch (error) {

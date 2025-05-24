@@ -19,6 +19,7 @@ import ResultScreen from './screens/learning/module/question/ResultScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import LeaderboardScreen from './screens/LeaderboardScreen';
 import { CopilotProvider } from 'react-native-copilot';
+import ShopScreen from './screens/ShopScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -46,6 +47,10 @@ function BottomTabNavigator() {
             iconName = focused
               ? 'trophy'
               : 'trophy-outline';
+          } else if (route.name === 'ShopScreen') {
+            iconName = focused
+              ? 'cart'
+              : 'cart-outline';
           } else if (route.name === 'Profile') {
             iconName = focused
               ? 'person'
@@ -108,6 +113,16 @@ function BottomTabNavigator() {
       <BottomTabs.Screen
         name="LeaderboardScreen"
         component={LeaderboardScreen}
+        options={{
+          tabBarShowLabel: false,
+          tabBarIconStyle: {
+            marginTop: 6,
+          }
+        }}
+      />
+      <BottomTabs.Screen
+        name="ShopScreen"
+        component={ShopScreen}
         options={{
           tabBarShowLabel: false,
           tabBarIconStyle: {

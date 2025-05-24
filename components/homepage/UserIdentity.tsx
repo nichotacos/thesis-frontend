@@ -32,11 +32,11 @@ export default function UserIdentity({
                 </View>
             </View>
             <View style={styles.gemsContainer}>
-                <Text style={styles.gemsCountText}>{totalGems}</Text>
                 <Image
                     source={require("../../assets/gamification/gems.png")}
                     style={styles.gemsImage}
                 />
+                <Text style={styles.gemsCountText}>{totalGems}</Text>
             </View>
         </View>
     )
@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
         paddingVertical: 4
     },
     avatarImage: {
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         borderRadius: 50,
     },
     textContainer: {
@@ -83,12 +83,12 @@ const styles = StyleSheet.create({
         gap: 8,
     },
     gemsCountText: {
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: "Inter-Bold",
         color: "white",
     },
     gemsImage: {
-        width: 30,
-        height: 30,
+        width: 25,
+        height: 25,
     }
 })

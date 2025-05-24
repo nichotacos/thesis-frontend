@@ -48,7 +48,7 @@ export default function StreakContainer({ totalStreak, userData }: StreakContain
                     <View key={i} style={[
                         styles.gemsContainer,
                         i + minimumBoundary < totalStreak && { backgroundColor: GlobalStyles.colors.accent },
-                        i + minimumBoundary === totalStreak && { backgroundColor: isClaimed ? GlobalStyles.colors.accent : GlobalStyles.colors.lighterPrimary, borderColor: 'white', borderWidth: 2 },
+                        i + minimumBoundary === totalStreak && { backgroundColor: isClaimed ? undefined : GlobalStyles.colors.lighterPrimary, borderColor: 'white', borderWidth: 2 },
                         i + minimumBoundary > totalStreak && { backgroundColor: GlobalStyles.colors.lighterPrimary, opacity: 0.4 }
                     ]}>
                         <Image
@@ -62,17 +62,17 @@ export default function StreakContainer({ totalStreak, userData }: StreakContain
             <WideButton
                 onPress={handleClaimReward}
                 text="Ambil Hadiahmu!"
-                color={GlobalStyles.colors.whiteFont}
-                size={18}
+                color={'black'}
+                size={16}
                 disabled={userData.isAbleToClaimDailyReward && !userData.hasClaimedDailyReward ? false : true}
                 style={[
                     {
-                        backgroundColor: GlobalStyles.colors.accent,
+                        backgroundColor: 'white',
                         marginTop: 8,
                         paddingVertical: 12,
                         borderRadius: 16,
                     },
-                    userData.isAbleToClaimDailyReward && !userData.hasClaimedDailyReward ? { opacity: 1 } : { opacity: 0.4 }
+                    userData.isAbleToClaimDailyReward && !userData.hasClaimedDailyReward ? { opacity: 1 } : { opacity: 0.7 }
                 ]}
             />
         </View>
@@ -81,15 +81,16 @@ export default function StreakContainer({ totalStreak, userData }: StreakContain
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: GlobalStyles.colors.primary,
-        paddingHorizontal: 16,
+        backgroundColor: '#d6110e',
+        paddingHorizontal: 20,
         paddingVertical: 16,
-        borderRadius: 12,
+        paddingBottom: 20,
+        borderRadius: 18,
         marginTop: 8
     },
     streakText: {
         fontFamily: "Inter-Bold",
-        fontSize: 22,
+        fontSize: 18,
         color: GlobalStyles.colors.whiteFont,
     },
     dateList: {

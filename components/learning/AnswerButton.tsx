@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         width: "100%",
         alignItems: "center",
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: "gray",
         elevation: 6,
         shadowOffset: { width: 0, height: 4 },
@@ -79,8 +79,7 @@ const styles = StyleSheet.create({
     selected: {
         backgroundColor: GlobalStyles.colors.lighterAccent2,
         borderColor: GlobalStyles.colors.accent,
-        borderWidth: 2,
-
+        borderWidth: 1,
         elevation: 2,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.15,

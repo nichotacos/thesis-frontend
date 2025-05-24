@@ -11,6 +11,8 @@ import { useNavigation } from "@react-navigation/native";
 import Svg, { Circle, Defs, G, Line, Marker, Path, Polygon } from "react-native-svg";
 import StreakFireSvg from "../../../assets/gamification/streak-fire-svg";
 import HeartSVG from "../../../assets/gamification/heart-svg";
+import TrophySVG from "../../../assets/gamification/trophy-svg";
+import LevelModuleHeader from "../../../components/learning/LevelModuleHeader";
 
 
 interface ModuleScreenProps {
@@ -59,27 +61,11 @@ export default function ModuleScreen({
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <View style={styles.gemsOrStreakContainer}>
-                    <Image
-                        source={require('../../../assets/gamification/gems.png')}
-                        style={{
-                            width: 40,
-                            height: 40,
-                            overflow: "hidden",
-                        }}
-                    />
-                    <Text style={styles.gemsOrStreakText}>{userData.totalGems}</Text>
-                </View>
-                <View style={styles.gemsOrStreakContainer}>
-                    <StreakFireSvg width={40} height={40} />
-                    <Text style={styles.gemsOrStreakText}>{userData.streak.streakCount}</Text>
-                </View>
-                <View style={styles.gemsOrStreakContainer}>
-                    <HeartSVG width={40} height={40} />
-                    <Text style={styles.gemsOrStreakText}>{userData.hearts.current}</Text>
-                </View>
-            </View>
+            <LevelModuleHeader
+                heartCount={userData.hearts.current}
+                streakCount={userData.streak.streakCount}
+                totalGems={userData.totalGems}
+            />
             <View style={styles.moduleHeader}>
                 <View style={styles.moduleTitleAndDescriptionContainer}>
                     <Text style={styles.moduleTitle}>{level.name}</Text>
@@ -90,13 +76,13 @@ export default function ModuleScreen({
                 data={modules}
                 keyExtractor={(item) => item._id}
                 renderItem={({ item, index }) => {
-                    const completedModules = userData.completedModules.map((m) => m.module);
+                    const completedModules = userData.completedModules.map((m) => m.module._id);
                     const isCompleted = completedModules.includes(item._id);
 
                     const moduleIndex = modules.findIndex((m) => m._id === item._id);
                     const lastCompletedIndex = Math.max(
                         ...userData.completedModules.map((m) =>
-                            modules.findIndex((mod) => mod._id === m.module)
+                            modules.findIndex((mod) => mod._id === m.module._id)
                         ),
                         -1 // fallback if no modules completed
                     );
@@ -131,7 +117,7 @@ export default function ModuleScreen({
                                         }
                                         disabled={isDisabled}
                                         score={
-                                            userData.completedModules.find((m) => m.module === item._id)
+                                            userData.completedModules.find((m) => m.module._id === item._id)
                                                 ?.score || 0
                                         }
                                     />
@@ -302,13 +288,40 @@ export default function ModuleScreen({
                             )}
 
                             {item.isUnitReview && (
-                                <ModuleStamp
-                                    index={index + 1}
-                                    name="Ulangan"
+                                // <ModuleStamp
+                                //     index={index + 1}
+                                //     name="Ulangan"
+                                //     style={{
+                                //         left: 0,
+                                //         right: 0,
+                                //         top: 55 + 120 * index,
+                                //         opacity,
+                                //         zIndex: 1,
+                                //     }}
+                                //     onPress={() =>
+                                //         navigation.navigate("QuestionScreen", {
+                                //             module: item,
+                                //             isLastModule: index === (modules.length - 1),
+                                //             nextLevel: nextLevel,
+                                //             unCompleteFirstModule: !userData.achievements.find(
+                                //                 (a) => a.achievement.code === "FIRST_MODULE"
+                                //             )
+                                //         })
+                                //     }
+                                //     disabled={isDisabled}
+                                //     score={
+                                //         userData.completedModules.find((m) => m.module === item._id)
+                                //             ?.score || 0
+                                //     }
+                                //     isUnitReview={true}
+                                // />
+                                <TrophySVG
+                                    width={120}
+                                    height={120}
                                     style={{
-                                        left: 0,
-                                        right: 0,
-                                        top: 55 + 120 * index,
+                                        position: "absolute",
+                                        top: 70 + 120 * index,
+                                        left: '35%',
                                         opacity,
                                         zIndex: 1,
                                     }}
@@ -324,7 +337,7 @@ export default function ModuleScreen({
                                     }
                                     disabled={isDisabled}
                                     score={
-                                        userData.completedModules.find((m) => m.module === item._id)
+                                        userData.completedModules.find((m) => m.module._id === item._id)
                                             ?.score || 0
                                     }
                                     isUnitReview={true}
@@ -345,21 +358,6 @@ const styles = StyleSheet.create({
         paddingTop: 16,
         paddingHorizontal: 16,
         backgroundColor: GlobalStyles.colors.lightBackground
-    },
-    header: {
-        flexDirection: "row",
-        gap: 32,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    gemsOrStreakContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    gemsOrStreakText: {
-        fontFamily: "Inter-Bold",
-        fontSize: 20,
-        marginLeft: 8,
     },
     moduleHeader: {
         flexDirection: "row",

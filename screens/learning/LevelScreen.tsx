@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
 import LevelStamp from "../../components/learning/LevelStamp";
 import Svg, { Path } from "react-native-svg";
@@ -10,6 +10,9 @@ import { User } from "../../types/User";
 import { GlobalContents } from "../../constants/contents";
 import { useNavigation } from "@react-navigation/native";
 import { Fontisto } from "@expo/vector-icons";
+import StreakFireSvg from "../../assets/gamification/streak-fire-svg";
+import HeartSVG from "../../assets/gamification/heart-svg";
+import LevelModuleHeader from "../../components/learning/LevelModuleHeader";
 
 interface LevelScreenProps {
     route: any;
@@ -54,20 +57,25 @@ export default function LevelScreen({
     }
 
     console.log('userData:', userData);
+    console.log('user completed modules:', userData.completedModules.map((module) => module.module.level));
 
     return (
         <ScrollView
             style={styles.container}
             contentContainerStyle={[styles.content, { height: levels.length * 195 + 160 }]}
         >
+            <LevelModuleHeader
+                heartCount={userData.hearts.current}
+                streakCount={userData.streak.streakCount}
+                totalGems={userData.totalGems}
+            />
             {levels.map((level, index) => {
-                const imageSource = GlobalContents.levelImages[index].image;
                 return (
                     <View
                         key={index}
                     >
                         <LevelStamp
-                            imageSource={imageSource}
+                            imageSource={{ uri: level.level_image }}
                             name={level.name}
                             style={[
                                 index % 2 === 0 ? { left: 20 } : { right: 20 },
@@ -86,6 +94,8 @@ export default function LevelScreen({
                                 })
                             }}
                             disabled={userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel}
+                            completedModules={userData.completedModules.filter((module) => module.module.level._id === level._id).length}
+                            totalModules={level.modules.length}
                         />
                         {userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel && (
                             <Fontisto
@@ -114,7 +124,7 @@ export default function LevelScreen({
                                 <Path
                                     d="M243.584228515625,102.09318542480469C297.1923522949219,105.64515686035156,469.38470458984375,75.47789255777995,515.2329711914062,103.40501403808594C561.0812377929688,131.33213551839194,526.4336853027344,245.2807642618815,528.673828125,320.6559143066406"
                                     fill="none"
-                                    stroke={GlobalStyles.colors.primary}
+                                    stroke={userData.currentLearnLevel.actualBipaLevel < level.actualBipaLevel ? "grey" : GlobalStyles.colors.primary}
                                     strokeWidth={24}
                                     strokeLinecap="round"
                                     transform={[
@@ -142,12 +152,5 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         position: "relative",
         backgroundColor: GlobalStyles.colors.lightBackground,
-    }
+    },
 })
-
-// TODO:
-// 1. Tambah deskripsi kecil
-// 2. Tambah backsound instrumental lagu daerah
-// 3. Tambah unsur pressable
-// 4. Perbandingan 2 screen level screen
-// 5. Disable conditional rendering pada level atau modul yang belum dibuka

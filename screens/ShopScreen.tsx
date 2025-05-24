@@ -104,18 +104,31 @@ export default function ShopScreen() {
                         />
                         <View style={styles.itemDetails}>
                             <Text style={styles.itemName}>{item.name}</Text>
-                            <Text style={styles.itemDescription}>{item.description}</Text>
+                            <Text style={styles.itemDescription} numberOfLines={3} ellipsizeMode="tail">
+                                {item.description}
+                            </Text>
                             <View style={styles.priceContainer}>
                                 <Image source={require("../assets/gamification/gems.png")} style={styles.priceIcon} />
                                 <Text style={styles.priceText}>{item.price}</Text>
                             </View>
                         </View>
                         <Pressable
-                            style={[styles.buyButton, userData.totalGems < item.price && styles.disabledBuyButton]}
+                            style={[
+                                styles.buyButton,
+                                (userData.totalGems < item.price &&
+                                    userData.purchases.find(
+                                        (purchase) => purchase.item !== item._id
+                                    ))
+                                && styles.disabledBuyButton
+                            ]}
                             onPress={() => handlePurchase(item)}
-                            disabled={userData.totalGems < item.price}
+                            disabled={userData.totalGems < item.price || userData.profilePicture === item.image}
                         >
-                            <Text style={styles.buyButtonText}>Beli</Text>
+                            <Text style={styles.buyButtonText}>
+                                {userData.profilePicture === item.image ? "Sudah dipakai" : (
+                                    userData.purchases.find((purchase) => purchase.item === item._id) ? "Pakai" : "Beli"
+                                )}
+                            </Text>
                         </Pressable>
                     </View>
                 ))}
@@ -300,14 +313,18 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignSelf: "center",
         marginLeft: 8,
+        width: "26%"
     },
     disabledBuyButton: {
         backgroundColor: "#cccccc",
+        width: "auto",
     },
     buyButtonText: {
         color: "#fff",
         fontWeight: "700",
         fontFamily: "Inter-Bold",
+        lineHeight: 20,
+        textAlign: "center",
     },
     modalOverlay: {
         flex: 1,

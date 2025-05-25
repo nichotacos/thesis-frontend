@@ -126,6 +126,8 @@ export default function LoginScreen(params) {
                             paddingVertical: 12,
                             paddingHorizontal: 32,
                         }}
+                        isLoading={isLoading}
+                        disabled={isLoading}
                     />
                 </View>
                 <View style={styles.registerContainer}>

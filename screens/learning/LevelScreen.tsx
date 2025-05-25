@@ -13,6 +13,7 @@ import { Fontisto } from "@expo/vector-icons";
 import StreakFireSvg from "../../assets/gamification/streak-fire-svg";
 import HeartSVG from "../../assets/gamification/heart-svg";
 import LevelModuleHeader from "../../components/learning/LevelModuleHeader";
+import ScreenLoading from "../../components/UI/ScreenLoading";
 
 interface LevelScreenProps {
     route: any;
@@ -51,13 +52,10 @@ export default function LevelScreen({
     if (isLoading || !userData) {
         return (
             <View style={styles.container}>
-                <Text>Loading...</Text>
+                <ScreenLoading />
             </View>
         )
     }
-
-    console.log('userData:', userData);
-    console.log('user completed modules:', userData.completedModules.map((module) => module.module.level));
 
     return (
         <ScrollView

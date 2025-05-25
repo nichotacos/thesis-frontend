@@ -13,6 +13,7 @@ import StreakFireSvg from "../../../assets/gamification/streak-fire-svg";
 import HeartSVG from "../../../assets/gamification/heart-svg";
 import TrophySVG from "../../../assets/gamification/trophy-svg";
 import LevelModuleHeader from "../../../components/learning/LevelModuleHeader";
+import ScreenLoading from "../../../components/UI/ScreenLoading";
 
 
 interface ModuleScreenProps {
@@ -54,7 +55,7 @@ export default function ModuleScreen({
     if (!userData || isLoading) {
         return (
             <View style={styles.container}>
-                <Text>Loading...</Text>
+                <ScreenLoading />
             </View>
         )
     }

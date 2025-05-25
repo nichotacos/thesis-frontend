@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Question } from "../../../../types/Question";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { apiClient } from "../../../../api/apiClient";
 import { GlobalStyles } from "../../../../constants/styles";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,6 +20,9 @@ import { Module } from "../../../../types/Module";
 import { grantAchievement } from "../../../../api/achievements/grantAchievements";
 import { grantAchievement as grantAchievementReducer } from "../../../../store/userSlice";
 import PlayAudioButton from "../../../../components/learning/PlayAudioButton";
+import Svg, { Path } from "react-native-svg";
+import HeartSVG from "../../../../assets/gamification/heart-svg";
+import ScreenLoading from "../../../../components/UI/ScreenLoading";
 
 interface QuestionScreenProps {
     route: any;
@@ -103,8 +106,8 @@ export default function QuestionScreen({
 
     if (isLoading || !questions || !currentQuestion || !userData) {
         return (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <Text>Loading...</Text>
+            <View style={styles.container}>
+                <ScreenLoading />
             </View>
         )
     }
@@ -163,7 +166,7 @@ export default function QuestionScreen({
                     nextLevelFirstModule: nextLevelFirstModule,
                 })
                 dispatch(completeModuleReducer({
-                    moduleId: module._id,
+                    module: module,
                     exp: userAnswers.filter((answer) => answer.isCorrect).length * 5,
                     correctCount: userAnswers.filter((answer) => answer.isCorrect).length,
                     score: Math.floor((userAnswers.filter((answer) => answer.isCorrect).length / questions.length) * 100),
@@ -216,15 +219,15 @@ export default function QuestionScreen({
                         onPress={() => {
                             playAudio(questions[0].media.audioUrl);
                         }}
-                        iconName="play"
-                        iconSize={52}
+                        iconName="volume-high-outline"
+                        iconSize={24}
                         iconColor={GlobalStyles.colors.whiteFont}
                     />
                 ) : (
                     <PlayAudioButton
                         onPress={togglePlayback}
                         iconName="stop"
-                        iconSize={52}
+                        iconSize={24}
                         iconColor={GlobalStyles.colors.whiteFont}
                     />
                 )}
@@ -248,15 +251,15 @@ export default function QuestionScreen({
                     </View>
                 </View>
                 <View style={styles.heartContainer}>
-                    <Ionicons
-                        name="heart"
-                        size={42}
-                        color='red'
+                    <HeartSVG
+                        width={42}
+                        height={42}
                     />
                     <Text style={{
                         fontFamily: "Inter-Bold",
                         fontSize: 20,
-                        marginHorizontal: 2,
+                        marginLeft: 8,
+                        color: 'crimson'
                     }}>
                         {userData.hearts.current}
                     </Text>
@@ -264,9 +267,45 @@ export default function QuestionScreen({
             </View>
             <View style={{ flex: 1 }}>
                 {/* {questions.map((question, index) => ( */}
-                <View>
-                    <AudioPlayer />
-                    <Text style={styles.questionText}>{currentQuestion.questionText}</Text>
+                <Text style={styles.questionText}>{currentQuestion.questionText}</Text>
+                <View style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                }}>
+                    <Image
+                        source={require("../../../../assets/gamification/character-1.png")}
+                        style={{
+                            width: 150,
+                            height: 180,
+                        }}
+                    />
+                    <View style={{
+                        flexDirection: 'row',
+                        width: "100%",
+                        paddingTop: 0,
+                        marginLeft: -20,
+                    }}>
+                        <Svg
+                            width={15}
+                            height={40}
+                            viewBox="0 0 15 20"
+                            style={styles.leftTail}
+                        >
+                            <Path
+                                d="M15 0 C0 30, 0 10, 25 20"
+                                fill="white"
+                            />
+                        </Svg>
+
+                        <View style={[styles.bubble, styles.sender]}>
+                            <Text style={styles.message}>Simak audio di bawah ini</Text>
+                            <AudioPlayer />
+                        </View>
+                    </View>
+                </View>
+                <View style={{ marginTop: 16 }}>
+                    {/* <AudioPlayer /> */}
                     {currentQuestion.options.map((option, index) => (
                         <AnswerButton
                             key={index}
@@ -290,74 +329,59 @@ export default function QuestionScreen({
                 </View>
                 {/* ))} */}
             </View>
-            {selectedAnswer !== null && (
-                <View style={styles.bottomContainer}>
-                    {isChecked ? (
-                        <>
-                            <Text
-                                style={{
-                                    fontFamily: "Inter-Bold",
-                                    fontSize: 16,
-                                    marginBottom: 16,
-                                    color: selectedAnswer.isCorrect ? 'green' : 'red',
-                                }}
-                            >
-                                {selectedAnswer.isCorrect ? (
-                                    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 0 }}>
-                                        <Ionicons
-                                            name="checkmark-circle-outline"
-                                            size={52}
-                                            color="green"
-                                            style={{ marginRight: 8 }}
-                                        />
-                                        <Text
-                                            style={{
-                                                fontFamily: "Inter-Bold",
-                                                fontSize: 20,
-                                                // color: GlobalStyles.colors.whiteFont,
-                                            }}
-                                        >
-                                            Jawaban Benar
-                                        </Text>
-                                    </View>
-                                ) : (
-                                    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 0 }}>
-                                        <Ionicons
-                                            name="close-circle-outline"
-                                            size={40}
-                                            color="red"
-                                            style={{ marginRight: 8 }}
-                                        />
-                                        <Text
-                                            style={{
-                                                fontFamily: "Inter-Bold",
-                                                fontSize: 20,
-                                                // color: GlobalStyles.colors.whiteFont,
-                                            }}
-                                        >
-                                            Jawaban Salah
-                                        </Text>
-                                    </View>
-                                )}
-                            </Text>
-                            <WideButton
-                                text="Lanjut"
-                                onPress={handleNextQuestionOrResult}
-                                color={GlobalStyles.colors.whiteFont}
-                                size={19}
-                                style={{
-                                    paddingVertical: 12,
-                                    paddingHorizontal: 24,
-                                    backgroundColor: GlobalStyles.colors.primary,
-                                    borderRadius: 16,
-                                    width: "100%",
-                                }}
-                            />
-                        </>
-                    ) : (
+            {/* {selectedAnswer !== null && ( */}
+            <View style={[styles.bottomContainer]}>
+                {isChecked ? (
+                    <>
+                        <Text
+                            style={{
+                                fontFamily: "Inter-Bold",
+                                fontSize: 16,
+                                marginBottom: 16,
+                                color: selectedAnswer.isCorrect ? 'green' : 'red',
+                            }}
+                        >
+                            {selectedAnswer.isCorrect ? (
+                                <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 0 }}>
+                                    <Ionicons
+                                        name="checkmark-circle-outline"
+                                        size={52}
+                                        color="green"
+                                        style={{ marginRight: 8 }}
+                                    />
+                                    <Text
+                                        style={{
+                                            fontFamily: "Inter-Bold",
+                                            fontSize: 20,
+                                            // color: GlobalStyles.colors.whiteFont,
+                                        }}
+                                    >
+                                        Jawaban Benar
+                                    </Text>
+                                </View>
+                            ) : (
+                                <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 0 }}>
+                                    <Ionicons
+                                        name="close-circle-outline"
+                                        size={40}
+                                        color="red"
+                                        style={{ marginRight: 8 }}
+                                    />
+                                    <Text
+                                        style={{
+                                            fontFamily: "Inter-Bold",
+                                            fontSize: 20,
+                                            // color: GlobalStyles.colors.whiteFont,
+                                        }}
+                                    >
+                                        Jawaban Salah
+                                    </Text>
+                                </View>
+                            )}
+                        </Text>
                         <WideButton
-                            text="Periksa Jawaban"
-                            onPress={handleCheckAnswer}
+                            text="Lanjut"
+                            onPress={handleNextQuestionOrResult}
                             color={GlobalStyles.colors.whiteFont}
                             size={19}
                             style={{
@@ -368,9 +392,25 @@ export default function QuestionScreen({
                                 width: "100%",
                             }}
                         />
-                    )}
-                </View>
-            )}
+                    </>
+                ) : (
+                    <WideButton
+                        text="Periksa Jawaban"
+                        onPress={handleCheckAnswer}
+                        color={GlobalStyles.colors.whiteFont}
+                        size={19}
+                        style={{
+                            paddingVertical: 12,
+                            paddingHorizontal: 24,
+                            backgroundColor: selectedAnswer ? GlobalStyles.colors.primary : 'gray',
+                            borderRadius: 16,
+                            width: "100%",
+                            opacity: selectedAnswer ? 1 : 0.5,
+                        }}
+                    />
+                )}
+            </View>
+            {/* )} */}
         </View >
     )
 };
@@ -406,12 +446,10 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: 20,
-        backgroundColor: GlobalStyles.colors.primary,
+        padding: 2,
         borderRadius: 16,
-        alignSelf: "center",
-        elevation: 10,
-        shadowColor: "#000",
+        alignSelf: "flex-start",
+        marginTop: 8,
     },
     audioPlayerText: {
         fontFamily: "Inter-Bold",
@@ -423,6 +461,7 @@ const styles = StyleSheet.create({
         fontFamily: "Inter-Bold",
         fontSize: 18,
         marginVertical: 16,
+        textAlign: "center",
     },
     bottomContainer: {
         position: "absolute",
@@ -430,21 +469,38 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         padding: 20,
-        backgroundColor: GlobalStyles.colors.lighterAccent,
+        // backgroundColor: GlobalStyles.colors.lighterAccent,
         borderTopLeftRadius: 16,
         borderTopRightRadius: 16,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 10,
+        // shadowColor: "#000",
+        // shadowOffset: { width: 0, height: -2 },
+        // shadowOpacity: 0.1,
+        // shadowRadius: 8,
+        // elevation: 10,
     },
     heartContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
         padding: 4,
-    }
+    },
+    leftTail: {
+        marginBottom: 0,
+    },
+    bubble: {
+        maxWidth: '70%',
+        padding: 12,
+        borderRadius: 15,
+    },
+    sender: {
+        backgroundColor: 'white',
+        elevation: 6,
+        padding: 16
+    },
+    message: {
+        fontSize: 16,
+        fontFamily: "Inter-Regular",
+    },
 })
 
 

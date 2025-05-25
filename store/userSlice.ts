@@ -157,9 +157,22 @@ const userSlice = createSlice({
                     state.userInfo.achievements?.push(newAchievement);
                 }
             }
+        },
+        buyItem(state, action: PayloadAction<{ itemId: string }>) {
+            if (state.userInfo && state.shopItem) {
+                const item = state.shopItem.find(item => item._id === action.payload.itemId);
+                if (item && state.userInfo.totalGems >= item.price) {
+                    state.userInfo.totalGems -= item.price;
+                    state.userInfo.purchases.push({
+                        _id: item._id,
+                        item: item._id.toString(),
+                        purchasedAt: new Date().toISOString(),
+                    })
+                }
+            }
         }
     }
 });
 
-export const { login, logout, decrementHp, addExp, completeModule, claimDailyReward, grantAchievement } = userSlice.actions;
+export const { login, logout, decrementHp, addExp, completeModule, claimDailyReward, grantAchievement, buyItem } = userSlice.actions;
 export const userReducer = userSlice.reducer;

@@ -170,9 +170,18 @@ const userSlice = createSlice({
                     })
                 }
             }
+        },
+        equipItem(state, action: PayloadAction<{ itemId: string }>) {
+            if (state.userInfo) {
+                const item = state.shopItem.find(item => item._id === action.payload.itemId);
+                if (item) {
+                    // Assuming you have a way to set the equipped item
+                    state.userInfo.profilePicture = item.image; // or however you want to handle equipping
+                }
+            }
         }
     }
 });
 
-export const { login, logout, decrementHp, addExp, completeModule, claimDailyReward, grantAchievement, buyItem } = userSlice.actions;
+export const { login, logout, decrementHp, addExp, completeModule, claimDailyReward, grantAchievement, buyItem, equipItem } = userSlice.actions;
 export const userReducer = userSlice.reducer;

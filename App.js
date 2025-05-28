@@ -22,6 +22,7 @@ import { CopilotProvider } from 'react-native-copilot';
 import ShopScreen from './screens/ShopScreen';
 import Toast from 'react-native-toast-message';
 import ProfileSettingScreen from './screens/ProfileSettingScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -185,6 +186,13 @@ function RootNavigator() {
             component={ProfileSettingScreen}
             options={{
               title: 'Pengaturan Profil',
+            }}
+          />
+          <Stack.Screen
+            name="EditProfileScreen"
+            component={EditProfileScreen}
+            options={{
+              headerShown: false,
             }}
           />
         </>

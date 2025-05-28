@@ -7,12 +7,16 @@ import {
     Image,
     Modal,
 } from "react-native"
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ShopItem } from "../types/ShopItem";
 import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { GlobalStyles } from "../constants/styles";
 import { User } from "../types/User";
+import buyShopItem from "../api/shops/buyShopItem";
+import { buyItem, equipItem } from "../store/userSlice";
+import Toast from "react-native-toast-message";
+import { equipItemToUser } from "../api/user";
 
 
 export default function ShopScreen() {
@@ -21,7 +25,8 @@ export default function ShopScreen() {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState("")
     const [selectedItem, setSelectedItem] = useState<ShopItem | null>(null)
-    const [showPurchaseModal, setShowPurchaseModal] = useState(false)
+    const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setSelectedCategory("Cosmetic")
@@ -42,11 +47,57 @@ export default function ShopScreen() {
         setShowPurchaseModal(true)
     }
 
-    const confirmPurchase = () => {
+    const handleEquipItem = async (item: ShopItem) => {
+        if (userData.profilePicture === item.image) {
+            Toast.show({
+                type: 'info',
+                text1: 'Item Sudah Dipakai',
+                text2: `Anda sudah memakai ${item.name}.`,
+            })
+            return;
+        }
+
+        try {
+            await equipItemToUser(userData._id, item._id);
+            dispatch(equipItem({ itemId: item._id }));
+
+            Toast.show({
+                type: 'success',
+                text1: 'Item Dipakai',
+                text2: `Anda telah memakai ${item.name}.`,
+            })
+        } catch (error) {
+            console.error("Error equipping item:", error);
+            Toast.show({
+                type: 'error',
+                text1: 'Gagal Memakai Item',
+                text2: `Terjadi kesalahan saat memakai ${item.name}. Silakan coba lagi.`,
+            })
+            return;
+        }
+    }
+
+    const confirmPurchase = async () => {
         if (selectedItem && userData.totalGems >= selectedItem.price) {
             // setUserCoins(userCoins - selectedItem.price)
             // Here you would add logic to give the user their purchased item
-            setShowPurchaseModal(false)
+
+            try {
+                await buyShopItem({ userId: userData._id, itemId: selectedItem._id });
+
+                dispatch(buyItem({ itemId: selectedItem._id }));
+
+                Toast.show({
+                    type: 'success',
+                    text1: 'Pembelian Berhasil',
+                    text2: `Anda telah membeli ${selectedItem.name} seharga ${selectedItem.price} koin.`,
+                })
+            } catch (error) {
+                console.error("error message", error);
+
+            } finally {
+                setShowPurchaseModal(false)
+            }
             // Show success message or animation
         }
     }
@@ -97,11 +148,13 @@ export default function ShopScreen() {
             {/* Store Items */}
             <ScrollView style={styles.itemsContainer}>
                 {filteredItems.map((item) => (
-                    <View key={item._id} style={styles.itemCard}>
-                        <Image
-                            source={{ uri: item.image }}
-                            style={styles.itemImage}
-                        />
+                    <View style={styles.itemCard} key={item._id}>
+                        <Pressable key={item._id} onPress={() => handlePurchase(item)}>
+                            <Image
+                                source={{ uri: item.image }}
+                                style={styles.itemImage}
+                            />
+                        </Pressable>
                         <View style={styles.itemDetails}>
                             <Text style={styles.itemName}>{item.name}</Text>
                             <Text style={styles.itemDescription} numberOfLines={3} ellipsizeMode="tail">
@@ -115,14 +168,13 @@ export default function ShopScreen() {
                         <Pressable
                             style={[
                                 styles.buyButton,
-                                (userData.totalGems < item.price &&
-                                    userData.purchases.find(
-                                        (purchase) => purchase.item !== item._id
-                                    ))
-                                && styles.disabledBuyButton
+                                (userData.totalGems < item.price || userData.profilePicture === item.image) && !userData.purchases.find((purchase) => purchase.item === item._id) ? styles.disabledBuyButton : {}
                             ]}
-                            onPress={() => handlePurchase(item)}
-                            disabled={userData.totalGems < item.price || userData.profilePicture === item.image}
+                            onPress={userData.purchases.find((purchase) => purchase.item === item._id) ?
+                                () => handleEquipItem(item) :
+                                () => handlePurchase(item)
+                            }
+                            disabled={(userData.totalGems < item.price || userData.profilePicture === item.image) && !userData.purchases.find((purchase) => purchase.item === item._id)}
                         >
                             <Text style={styles.buyButtonText}>
                                 {userData.profilePicture === item.image ? "Sudah dipakai" : (

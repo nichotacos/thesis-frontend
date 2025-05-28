@@ -57,7 +57,7 @@ export default function LearningWidget({
                                 {`${userSkillLevel} `}
                             </Text>
                             <Text style={styles.subtext}>
-                                {`Modul ${userLatestModule} - ${userLatestModuleName}   `}
+                                {userLatestModuleName === 'Selesai' ? 'Kamu sudah menyelesaikan level ini' : `Modul ${userLatestModule} - ${userLatestModuleName}`}
                             </Text>
                         </>
                     )}

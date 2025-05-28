@@ -8,10 +8,9 @@ import { useSelector } from "react-redux";
 import { User } from '../types/User'
 import { useEffect, useState } from "react";
 import Modal from "../components/UI/Modal";
-import TextButton from "../components/UI/TextButton";
 import { CopilotStep, useCopilot, walkthroughable } from "react-native-copilot"
-import { apiClient } from "../api/apiClient";
 import { Level } from "../types/Level";
+import ScreenLoading from "../components/UI/ScreenLoading";
 
 const CopilotText = walkthroughable(Text);
 const WalkthroughableView = walkthroughable(View);
@@ -22,12 +21,14 @@ export default function HomeScreen() {
     const fetchedLevels = useSelector((state: { user: { level: Level[] } }) => state.user.level);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { start, copilotEvents } = useCopilot();
+    const [selectedLevel, setSelectedLevel] = useState<Level | null>();
 
     console.log('userData:', userData);
 
     useEffect(() => {
         start();
-    }, [])
+        setSelectedLevel(userData.currentLearnLevel);
+    }, [userData]);
 
     useEffect(() => {
         const onStop = () => {
@@ -39,6 +40,14 @@ export default function HomeScreen() {
             copilotEvents.off("stop", onStop);
         };
     }, []);
+
+    if (!userData || !fetchedLevels) {
+        return (
+            <View style={styles.container}>
+                <ScreenLoading />
+            </View>
+        )
+    }
 
     return (
         <View style={styles.container}>
@@ -78,14 +87,23 @@ export default function HomeScreen() {
                             marginRight: 16,
                         }}
                     >
-                        <Pressable onPress={() => { }}>
+                        <Pressable
+                            onPress={() => {
+                                setSelectedLevel(item)
+                            }}
+                            disabled={userData.currentLearnLevel.actualBipaLevel < item.actualBipaLevel}
+                            android_disableSound={true}
+                            style={{
+                                opacity: userData.currentLearnLevel.actualBipaLevel < item.actualBipaLevel ? 0.5 : 1,
+                            }}
+                        >
                             <Image
                                 source={{ uri: item.level_image }}
                                 style={{
                                     width: 60,
                                     height: 60,
                                     borderRadius: 50,
-                                    borderColor: GlobalStyles.colors.primary,
+                                    borderColor: selectedLevel ? selectedLevel._id === item._id ? GlobalStyles.colors.primary : "grey" : "grey",
                                     borderWidth: 3
                                 }}
                             />
@@ -101,20 +119,22 @@ export default function HomeScreen() {
             />
             <View style={styles.widgetsContainer}>
                 <LearningWidget
-                    userSkillLevel={userData.currentLearnLevel.name}
+                    userSkillLevel={selectedLevel ? selectedLevel.name : userData.currentLearnLevel.name}
                     userLatestModule={userData.currentModule ? userData.currentModule.index : 1}
                     // userLatestModuleName={userData.currentModule.name}
-                    userLatestModuleName={userData.currentModule ? userData.currentModule.name : "Modul Tidak Ditemukan"}
+                    userLatestModuleName={
+                        selectedLevel ? (selectedLevel.name === userData.currentLearnLevel.name ? userData.currentModule.name : 'Selesai') : 'Modul Tidak Ditemukan'
+                    }
                     isDictionary={false}
                     onPress={() => {
                         navigation.jumpTo("LevelScreen")
                     }}
                 />
-                <LearningWidget
+                {/* <LearningWidget
                     wordsLearned={100}
                     isDictionary={true}
                     onPress={() => { }}
-                />
+                /> */}
             </View>
             <Modal
                 isOpen={isModalOpen}
@@ -131,7 +151,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         backgroundColor: GlobalStyles.colors.lightBackground,
-        justifyContent: "center",
+        justifyContent: "flex-start",
     },
     headerText: {
         fontSize: 22,

@@ -11,6 +11,7 @@ import fetchAchievements from "../api/achievements/fetchAchievements";
 import { apiClient } from "../api/apiClient";
 import WideButton from "../components/UI/WideButton";
 import { logout } from "../store/userSlice";
+import StreakFireSvg from "../assets/gamification/streak-fire-svg";
 
 interface ProfileScreenProps {
     route: any;
@@ -23,7 +24,6 @@ export default function ProfileScreen({
     const allAchievements = useSelector((state: { user: { allAchievements: Achievement[] } }) => state.user.allAchievements);
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [user, setUser] = useState<Partial<User>>({});
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const dispatch = useDispatch();
 
@@ -39,7 +39,7 @@ export default function ProfileScreen({
         }
     }
 
-    if (isLoading || !user || !allAchievements) {
+    if (isLoading || !userData || !allAchievements) {
         return (
             <View style={styles.container}>
                 <Text>Loading...</Text>
@@ -49,12 +49,17 @@ export default function ProfileScreen({
 
     return (
         <ScrollView style={styles.container}>
+            <View style={{ paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{ fontSize: 22, fontWeight: 'bold', fontFamily: 'Inter-Bold', textAlign: 'center' }}>
+                    Profil
+                </Text>
+            </View>
             <View style={styles.header}>
                 <Pressable
                     style={styles.editButton}
-                    onPress={() => setIsEditing(!isEditing)}
+                    onPress={() => navigation.navigate('ProfileSettingScreen')}
                 >
-                    <Ionicons name={isEditing ? "checkmark-circle" : "pencil"} size={24} color="#A60000" />
+                    <Ionicons name="settings" size={24} color="#A60000" />
                 </Pressable>
 
                 <View style={styles.profileContainer}>
@@ -67,21 +72,21 @@ export default function ProfileScreen({
                     <Text style={styles.username}>{userData.userFullName || "Language Learner"}</Text>
                     <Text style={styles.email}>{userData.username || "learner@example.com"}</Text>
 
-                    <View style={styles.levelContainer}>
-                        <Text style={styles.levelText}>Level {userData.currentLevel}</Text>
-                        {/* <ProgressBar
+                    {/* <View style={styles.levelContainer}> */}
+                    {/* <Text style={styles.levelText}>Level {userData.currentLevel}</Text> */}
+                    {/* <ProgressBar
                             progress={(user.xp % 100) / 100 || 0.75}
                             color="#A60000"
                             width={200}
                         /> */}
-                        <Text style={styles.xpText}>{userData.totalExp} XP</Text>
-                    </View>
+                    {/* </View> */}
                 </View>
                 <View style={styles.statisticsContainer}>
                     <Text style={styles.statisticsHeader}>Statistik</Text>
                     <View style={styles.statisticsContent}>
                         <View style={styles.statisticsItem}>
-                            <FontAwesome5 name="fire" size={24} color="#A60000" style={styles.statisticsIcon} />
+                            {/* <FontAwesome5 name="fire" size={24} color="#A60000" style={styles.statisticsIcon} /> */}
+                            <StreakFireSvg width={32} height={32} style={styles.statisticsIcon} />
                             <View>
                                 <Text style={styles.statisticsItemValue}>{userData.streak.highestStreak}</Text>
                                 <Text style={styles.statisticsItemDescription}>Hari beruntun</Text>
@@ -111,7 +116,10 @@ export default function ProfileScreen({
                     </View>
                 </View>
                 <View style={styles.achievementContainer}>
-                    <Text style={[styles.statisticsHeader, { marginBottom: 10 }]}>Pencapian</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Text style={[styles.statisticsHeader, { marginBottom: 10 }]}>Pencapaian</Text>
+                        <Text>Lihat semua</Text>
+                    </View>
                     {[...allAchievements]
                         .sort((a, b) => {
                             const isAUnlocked = userData.achievements.some((ach) => ach.achievement._id === a._id);
@@ -142,7 +150,7 @@ export default function ProfileScreen({
                         ))}
 
                 </View>
-                <View style={{ marginTop: 20, marginBottom: 100 }}>
+                {/* <View style={{ marginTop: 20, marginBottom: 100 }}>
                     <WideButton
                         text="Keluar"
                         color={GlobalStyles.colors.whiteFont}
@@ -156,7 +164,7 @@ export default function ProfileScreen({
                         }}
                         disabled={false}
                     />
-                </View>
+                </View> */}
             </View>
         </ScrollView>
     );
@@ -263,3 +271,13 @@ const styles = StyleSheet.create({
         marginTop: 12
     }
 })
+
+// register tambahin komitmen untuk reminder mingguan
+// tambah unit review di akhir unit
+// per kaliamt fill the blank
+// pattern icon, warna, text
+// ganti audio salah
+// tambahan info modul selesai di level screen
+// tambahin unlocked achievement
+// buy avatar
+// improve question screen

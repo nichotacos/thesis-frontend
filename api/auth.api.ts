@@ -36,6 +36,8 @@ export const loginUser = async (username: string, password: string) => {
             console.error('Invalid credentials:', response.data.message);
         }
 
+        setAuthToken(response.data.accessToken);
+
         return response.data;
     } catch (error) {
         // return { data: null, error: error.message };

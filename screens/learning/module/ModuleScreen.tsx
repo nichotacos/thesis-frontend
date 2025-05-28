@@ -327,14 +327,16 @@ export default function ModuleScreen({
                                         zIndex: 1,
                                     }}
                                     onPress={() =>
-                                        navigation.navigate("QuestionScreen", {
-                                            module: item,
-                                            isLastModule: index === (modules.length - 1),
-                                            nextLevel: nextLevel,
-                                            unCompleteFirstModule: !userData.achievements.find(
-                                                (a) => a.achievement.code === "FIRST_MODULE"
-                                            )
-                                        })
+                                        userData.completedModules.find((m) => m.module._id === item._id) ?
+                                            () => { } :
+                                            navigation.navigate("QuestionScreen", {
+                                                module: item,
+                                                isLastModule: index === (modules.length - 1),
+                                                nextLevel: nextLevel,
+                                                unCompleteFirstModule: !userData.achievements.find(
+                                                    (a) => a.achievement.code === "FIRST_MODULE"
+                                                )
+                                            })
                                     }
                                     disabled={isDisabled}
                                     score={

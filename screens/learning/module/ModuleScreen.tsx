@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, Image, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../../../constants/styles";
 import { useSelector } from "react-redux";
 import { User } from "../../../types/User";
@@ -59,6 +59,19 @@ export default function ModuleScreen({
             </View>
         )
     }
+
+    const showCompletedReviewAlert = () => {
+        Alert.alert(
+            'Kamu telah menyelesaikan Review ini',
+            'Silakan lanjut ke modul berikutnya.',
+            [
+                { text: 'Tutup', style: 'cancel' }
+            ],
+            { cancelable: true },
+        )
+    }
+
+
 
     return (
         <View style={styles.container}>
@@ -328,7 +341,7 @@ export default function ModuleScreen({
                                     }}
                                     onPress={() =>
                                         userData.completedModules.find((m) => m.module._id === item._id) ?
-                                            () => { } :
+                                            showCompletedReviewAlert() :
                                             navigation.navigate("QuestionScreen", {
                                                 module: item,
                                                 isLastModule: index === (modules.length - 1),

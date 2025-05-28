@@ -32,3 +32,18 @@ export async function getWeeklyLeaderboard(userId: string) {
         throw error; // Rethrow the error for further handling if needed
     }
 }
+
+export async function equipItemToUser(userId: string, itemId: string) {
+    try {
+        const response = await apiClient.post('/user/equip-item', {
+            userId,
+            itemId,
+        });
+
+        console.log('Item equipped successfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error equipping item to user:', error);
+        throw error;
+    }
+}

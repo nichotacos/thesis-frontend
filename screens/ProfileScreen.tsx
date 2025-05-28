@@ -24,19 +24,10 @@ export default function ProfileScreen({
     const allAchievements = useSelector((state: { user: { allAchievements: Achievement[] } }) => state.user.allAchievements);
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isEditing, setIsEditing] = useState<boolean>(false);
     const dispatch = useDispatch();
 
     function handleAvatarUpload() {
 
-    }
-
-    async function handleLogout() {
-        try {
-            dispatch(logout());
-        } catch (error) {
-            console.error(error);
-        }
     }
 
     if (isLoading || !userData || !allAchievements) {
@@ -66,7 +57,6 @@ export default function ProfileScreen({
                     <ProfileAvatar
                         uri={userData.profilePicture || null}
                         size={120}
-                        onPress={isEditing ? handleAvatarUpload : undefined}
                         userFullName={userData.userFullName || "Dummy User"}
                     />
                     <Text style={styles.username}>{userData.userFullName || "Language Learner"}</Text>
@@ -150,21 +140,6 @@ export default function ProfileScreen({
                         ))}
 
                 </View>
-                {/* <View style={{ marginTop: 20, marginBottom: 100 }}>
-                    <WideButton
-                        text="Keluar"
-                        color={GlobalStyles.colors.whiteFont}
-                        size={18}
-                        onPress={handleLogout}
-                        style={{
-                            backgroundColor: GlobalStyles.colors.primary,
-                            paddingVertical: 12,
-                            borderRadius: 50,
-                            marginTop: 8,
-                        }}
-                        disabled={false}
-                    />
-                </View> */}
             </View>
         </ScrollView>
     );

@@ -23,6 +23,7 @@ import ShopScreen from './screens/ShopScreen';
 import Toast from 'react-native-toast-message';
 import ProfileSettingScreen from './screens/ProfileSettingScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
+import AchievementScreen from './screens/AchievementScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -191,6 +192,13 @@ function RootNavigator() {
           <Stack.Screen
             name="EditProfileScreen"
             component={EditProfileScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="AchievementScreen"
+            component={AchievementScreen}
             options={{
               headerShown: false,
             }}

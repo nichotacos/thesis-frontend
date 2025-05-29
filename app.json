@@ -37,6 +37,13 @@
             "./assets/fonts/OpenSans-Medium.ttf"
           ]
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Aplikasi ini memerlukan akses ke foto Anda untuk mengunggah gambar.",
+          "cameraPermission": "Aplikasi ini memerlukan akses ke kamera Anda untuk mengambil foto."
+        }
       ]
     ]
   }

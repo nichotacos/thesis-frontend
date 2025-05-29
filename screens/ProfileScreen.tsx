@@ -108,7 +108,12 @@ export default function ProfileScreen({
                 <View style={styles.achievementContainer}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Text style={[styles.statisticsHeader, { marginBottom: 10 }]}>Pencapaian</Text>
-                        <Text>Lihat semua</Text>
+                        <Pressable
+                            onPress={() => navigation.navigate('AchievementScreen')}
+                            android_disableSound={true}
+                        >
+                            <Text style={{ fontFamily: "Inter-Regular", borderBottomWidth: 1, borderBottomColor: 'black' }}>Lihat semua</Text>
+                        </Pressable>
                     </View>
                     {[...allAchievements]
                         .sort((a, b) => {

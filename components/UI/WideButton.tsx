@@ -101,7 +101,8 @@ export default function WideButton({ onPress, text, buttonColor, textColor, size
                                 ref={animation}
                                 autoPlay
                                 loop
-                                style={{ flex: 1, width: "15%", height: "15%" }}
+                                // style={{ flex: 1, width: "15%", height: "15%" }}
+                                style={{ width: 50, height: 50 }}
                                 resizeMode="cover"
                             />
                         </View>

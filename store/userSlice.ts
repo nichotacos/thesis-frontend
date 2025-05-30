@@ -179,9 +179,35 @@ const userSlice = createSlice({
                     state.userInfo.profilePicture = item.image; // or however you want to handle equipping
                 }
             }
+        },
+        updateUserProfile(state, action: PayloadAction<Partial<User>>) {
+            if (state.userInfo) {
+                state.userInfo = {
+                    ...state.userInfo,
+                    ...action.payload,
+                };
+            }
+        },
+        refillHeart(state) {
+            if (state.userInfo) {
+                state.userInfo.hearts.current += 1;
+                state.userInfo.hearts.lostAt.slice(0, 1);
+            }
         }
     }
 });
 
-export const { login, logout, decrementHp, addExp, completeModule, claimDailyReward, grantAchievement, buyItem, equipItem } = userSlice.actions;
+export const {
+    login,
+    logout,
+    decrementHp,
+    addExp,
+    completeModule,
+    claimDailyReward,
+    grantAchievement,
+    buyItem,
+    equipItem,
+    updateUserProfile,
+    refillHeart
+} = userSlice.actions;
 export const userReducer = userSlice.reducer;

@@ -53,6 +53,7 @@ const userSlice = createSlice({
         decrementHp(state, action: PayloadAction<number>) {
             if (state.userInfo) {
                 state.userInfo.hearts.current = Math.max(0, state.userInfo.hearts.current - action.payload);
+                state.userInfo.hearts.lostAt.push(new Date().toISOString());
             }
         },
         addExp(state, action: PayloadAction<number>) {

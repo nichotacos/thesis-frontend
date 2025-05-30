@@ -40,6 +40,7 @@ export type User = {
         unlockedAt: string;
     }[],
     previousLeaderboardRank?: number;
+    top3Count: number;
     purchases: {
         _id: string;
         item: string;

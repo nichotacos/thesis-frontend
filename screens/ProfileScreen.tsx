@@ -99,15 +99,15 @@ export default function ProfileScreen({
                         <View style={styles.statisticsItem}>
                             <Ionicons name="medal" size={24} color="#ffd900" style={styles.statisticsIcon} />
                             <View>
-                                <Text style={styles.statisticsItemValue}>{userData.streak.highestStreak}</Text>
+                                <Text style={styles.statisticsItemValue}>{userData.top3Count}</Text>
                                 <Text style={styles.statisticsItemDescription}>3 besar</Text>
                             </View>
                         </View>
                     </View>
                 </View>
                 <View style={styles.achievementContainer}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Text style={[styles.statisticsHeader, { marginBottom: 10 }]}>Pencapaian</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                        <Text style={styles.statisticsHeader}>Pencapaian</Text>
                         <Pressable
                             onPress={() => navigation.navigate('AchievementScreen')}
                             android_disableSound={true}

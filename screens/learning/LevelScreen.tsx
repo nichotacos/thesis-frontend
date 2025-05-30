@@ -66,6 +66,7 @@ export default function LevelScreen({
                 heartCount={userData.hearts.current}
                 streakCount={userData.streak.streakCount}
                 totalGems={userData.totalGems}
+                earliestLostHeartTime={userData.hearts.lostAt[0] || null}
             />
             {levels.map((level, index) => {
                 return (

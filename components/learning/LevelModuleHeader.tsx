@@ -3,7 +3,6 @@ import StreakFireSvg from "../../assets/gamification/streak-fire-svg"
 import HeartSVG from "../../assets/gamification/heart-svg"
 import { useState } from "react";
 import BuyHeartModal from "./BuyHeartModal";
-import { useSelector } from "react-redux";
 
 interface LevelModuleHeaderProps {
     totalGems: number;

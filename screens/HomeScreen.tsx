@@ -4,13 +4,14 @@ import UserIdentity from "../components/homepage/UserIdentity";
 import StreakContainer from "../components/homepage/StreakContainer";
 import LearningWidget from "../components/homepage/LearningWidget";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { User } from '../types/User'
 import { useEffect, useState } from "react";
 import Modal from "../components/UI/Modal";
 import { CopilotStep, useCopilot, walkthroughable } from "react-native-copilot"
 import { Level } from "../types/Level";
 import ScreenLoading from "../components/UI/ScreenLoading";
+import { refillHeart } from "../store/userSlice";
 
 const CopilotText = walkthroughable(Text);
 const WalkthroughableView = walkthroughable(View);
@@ -24,6 +25,25 @@ export default function HomeScreen() {
     const [selectedLevel, setSelectedLevel] = useState<Level | null>();
 
     console.log('userData:', userData);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (userData.hearts.lostAt.length === 0) return;
+
+            const now = new Date().getTime();
+            const lastLoss = new Date(userData.hearts.lostAt[0]).getTime();
+            const minutesSinceLoss = Math.floor((now - lastLoss) / 60000);
+
+            if (minutesSinceLoss >= 30) {
+                dispatch(refillHeart());
+            }
+            console.log(`Minutes since last heart loss: ${minutesSinceLoss}`);
+        }, 60000); // check every minute
+
+        return () => clearInterval(interval);
+    }, [userData.hearts.lostAt, dispatch]);
 
     useEffect(() => {
         start();

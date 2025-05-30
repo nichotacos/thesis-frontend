@@ -185,12 +185,12 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "flex-end",
         marginTop: 16,
-        paddingHorizontal: 24,
+        paddingHorizontal: 12,
         height: 400,
-        // gap: 8,
     },
     podiumBarContainer: {
         alignItems: "center",
+        width: "33%",
     },
     podiumBar: {
         width: 100,

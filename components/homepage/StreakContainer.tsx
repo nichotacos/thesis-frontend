@@ -62,17 +62,17 @@ export default function StreakContainer({ totalStreak, userData }: StreakContain
             <WideButton
                 onPress={handleClaimReward}
                 text="Ambil Hadiahmu!"
-                color={'black'}
+                buttonColor="white"
+                textColor="black"
                 size={16}
                 disabled={userData.isAbleToClaimDailyReward && !userData.hasClaimedDailyReward ? false : true}
                 style={[
                     {
-                        backgroundColor: 'white',
                         marginTop: 8,
                         paddingVertical: 12,
                         borderRadius: 16,
                     },
-                    userData.isAbleToClaimDailyReward && !userData.hasClaimedDailyReward ? { opacity: 1 } : { opacity: 0.7 }
+                    userData.isAbleToClaimDailyReward && !userData.hasClaimedDailyReward ? { opacity: 1 } : { opacity: 1 }
                 ]}
             />
         </View>
@@ -81,7 +81,7 @@ export default function StreakContainer({ totalStreak, userData }: StreakContain
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#d6110e',
+        backgroundColor: GlobalStyles.colors.primary,
         paddingHorizontal: 20,
         paddingVertical: 16,
         paddingBottom: 20,

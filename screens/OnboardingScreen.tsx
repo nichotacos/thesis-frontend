@@ -114,11 +114,11 @@ export default function OnboardingScreen() {
                 <WideButton
                     {...props}
                     text="Mulai"
-                    color={GlobalStyles.colors.whiteFont}
+                    buttonColor={GlobalStyles.colors.accent}
+                    textColor={GlobalStyles.colors.whiteFont}
                     size={24}
                     style={{
                         marginRight: 24,
-                        backgroundColor: GlobalStyles.colors.accent,
                         borderRadius: 50,
                         paddingVertical: 16,
                         paddingHorizontal: 24,

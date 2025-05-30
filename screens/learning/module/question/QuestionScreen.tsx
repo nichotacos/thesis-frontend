@@ -382,12 +382,12 @@ export default function QuestionScreen({
                         <WideButton
                             text="Lanjut"
                             onPress={handleNextQuestionOrResult}
-                            color={GlobalStyles.colors.whiteFont}
+                            buttonColor={GlobalStyles.colors.primary}
+                            textColor={GlobalStyles.colors.whiteFont}
                             size={19}
                             style={{
                                 paddingVertical: 12,
                                 paddingHorizontal: 24,
-                                backgroundColor: GlobalStyles.colors.primary,
                                 borderRadius: 16,
                                 width: "100%",
                             }}
@@ -397,16 +397,17 @@ export default function QuestionScreen({
                     <WideButton
                         text="Periksa Jawaban"
                         onPress={handleCheckAnswer}
-                        color={GlobalStyles.colors.whiteFont}
+                        buttonColor={selectedAnswer ? GlobalStyles.colors.primary : 'gray'}
+                        textColor={GlobalStyles.colors.whiteFont}
                         size={19}
                         style={{
                             paddingVertical: 12,
                             paddingHorizontal: 24,
-                            backgroundColor: selectedAnswer ? GlobalStyles.colors.primary : 'gray',
                             borderRadius: 16,
                             width: "100%",
-                            opacity: selectedAnswer ? 1 : 0.5,
+                            opacity: selectedAnswer ? 1 : 1,
                         }}
+                        disabled={!selectedAnswer}
                     />
                 )}
             </View>

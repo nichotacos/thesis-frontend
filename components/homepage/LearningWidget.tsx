@@ -75,11 +75,11 @@ export default function LearningWidget({
                 <View>
                     <WideButton
                         text="Lanjut Belajar"
-                        color={GlobalStyles.colors.whiteFont}
+                        buttonColor={GlobalStyles.colors.lighterPrimary}
+                        textColor={GlobalStyles.colors.whiteFont}
                         size={18}
                         onPress={onPress}
                         style={{
-                            backgroundColor: GlobalStyles.colors.lighterPrimary,
                             paddingVertical: 12,
                             borderRadius: 50,
                             marginTop: 8,

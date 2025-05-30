@@ -118,10 +118,10 @@ export default function LoginScreen(params) {
                     <WideButton
                         onPress={handleSubmit.bind(this, loginData)}
                         text="Masuk"
-                        color={GlobalStyles.colors.whiteFont}
+                        buttonColor={GlobalStyles.colors.accent}
+                        textColor={GlobalStyles.colors.whiteFont}
                         size={24}
                         style={{
-                            backgroundColor: GlobalStyles.colors.accent,
                             borderRadius: 50,
                             paddingVertical: 12,
                             paddingHorizontal: 32,

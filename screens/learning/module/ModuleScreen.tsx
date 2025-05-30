@@ -79,6 +79,7 @@ export default function ModuleScreen({
                 heartCount={userData.hearts.current}
                 streakCount={userData.streak.streakCount}
                 totalGems={userData.totalGems}
+                earliestLostHeartTime={userData.hearts.lostAt[0] || null}
             />
             <View style={styles.moduleHeader}>
                 <View style={styles.moduleTitleAndDescriptionContainer}>

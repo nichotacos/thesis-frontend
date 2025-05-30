@@ -12,34 +12,39 @@ import {
     ScrollView,
     Alert,
 } from "react-native"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import ScreenLoading from "../components/UI/ScreenLoading"
 import { useNavigation } from "@react-navigation/native"
 import { User } from "../types/User"
+import * as ImagePicker from 'expo-image-picker';
+import { updateUserProfile } from "../api/user"
+import { updateUserProfile as updateUserProfileReducer } from "../store/userSlice"
 
 interface ProfileData {
-    name: string
+    userFullName: string
     email: string
-    username?: string
+    username: string
     profileImage: string
 }
 
 export default function EditProfileScreen() {
     const userData = useSelector((state: { user: { userInfo: User } }) => state.user.userInfo)
     const [profile, setProfile] = useState<ProfileData>({
-        name: userData.userFullName || "",
+        userFullName: userData.userFullName || "",
         email: userData.email || "",
         username: userData.username || "",
         profileImage: userData.profilePicture || "https://via.placeholder.com/150",
     })
     const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
+    const [image, setImage] = useState<string | null>(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (userData) {
             setIsLoading(true);
             setProfile({
-                name: userData.userFullName || "",
+                userFullName: userData.userFullName || "",
                 email: userData.email || "",
                 username: userData.username || "",
                 profileImage: userData.profilePicture || "https://via.placeholder.com/150",
@@ -52,18 +57,42 @@ export default function EditProfileScreen() {
     }, [userData]);
 
     const handleSave = async () => {
-        setIsLoading(true)
-        // Simulate API call
-        setTimeout(() => {
+        try {
+            setIsLoading(true)
+            await updateUserProfile(userData._id, profile);
+            dispatch(updateUserProfileReducer(profile));
+            setTimeout(() => {
+                setIsLoading(false)
+                Alert.alert("Berhasil", "Berhasil memperbarui profil!")
+            }, 1000)
+        } catch (error) {
+            console.error("Error saving profile:", error)
+            Alert.alert("Error", "Gagal memperbarui profil. Silakan coba lagi.")
+        } finally {
             setIsLoading(false)
-            Alert.alert("Berhasil", "Berhasil memperbarui profil!")
-        }, 1000)
+        }
     }
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images', 'videos'],
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
+
+        console.log(result);
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    };
 
     const handleImagePicker = () => {
         Alert.alert("Change Profile Picture", "Choose an option", [
             { text: "Camera", onPress: () => console.log("Camera selected") },
-            { text: "Gallery", onPress: () => console.log("Gallery selected") },
+            { text: "Gallery", onPress: pickImage },
             { text: "Cancel", style: "cancel" },
         ])
     }
@@ -110,8 +139,8 @@ export default function EditProfileScreen() {
                         <Text style={styles.label}>Nama Lengkap</Text>
                         <TextInput
                             style={styles.input}
-                            value={profile.name}
-                            onChangeText={(text) => setProfile({ ...profile, name: text })}
+                            value={profile.userFullName}
+                            onChangeText={(text) => setProfile({ ...profile, userFullName: text })}
                             placeholder="Enter your name"
                             placeholderTextColor="#999"
                         />

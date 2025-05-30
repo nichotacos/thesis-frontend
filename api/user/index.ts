@@ -1,12 +1,19 @@
 import { apiClient } from "../apiClient";
 
 interface RegisterPayload {
-    full_name: string;
+    userFullName: string;
     username: string;
     email: string;
     password: string;
     passwordConfirmation: string;
     captchaToken: string;
+}
+
+interface UpdateUserProfilePayload {
+    userFullName: string;
+    username: string;
+    email: string;
+    profilePicture?: string;
 }
 
 export async function registerUser(user: RegisterPayload) {
@@ -15,6 +22,20 @@ export async function registerUser(user: RegisterPayload) {
         return response.data;
     } catch (error) {
         console.error('Error registering user:', error);
+        throw error; // Rethrow the error for further handling if needed
+    }
+}
+
+export async function updateUserProfile(userId: string, payload: UpdateUserProfilePayload) {
+    try {
+        const response = await apiClient.put(`/user/update`, {
+            userId,
+            ...payload,
+        });
+        console.log('User profile updated successfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user profile:', error);
         throw error; // Rethrow the error for further handling if needed
     }
 }

@@ -9,6 +9,7 @@ import {
     SafeAreaView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
 
 const { width } = Dimensions.get('window');
 
@@ -20,53 +21,13 @@ interface Achievement {
     progress: number;
     maxProgress: number;
     isUnlocked: boolean;
-    category: 'daily' | 'learning' | 'mastery' | 'milestone';
+    category: 'learning' | 'mastery' | 'milestone';
     rarity: 'common' | 'rare' | 'epic' | 'legendary';
     xpReward: number;
     unlockedDate?: string;
 }
 
 const achievementsData: Achievement[] = [
-    // Daily Achievements
-    {
-        id: '1',
-        title: 'Early Bird',
-        description: 'Complete a lesson before 9 AM',
-        icon: 'sunny-outline',
-        progress: 1,
-        maxProgress: 1,
-        isUnlocked: true,
-        category: 'daily',
-        rarity: 'common',
-        xpReward: 50,
-        unlockedDate: '2024-01-15',
-    },
-    {
-        id: '2',
-        title: 'Week Warrior',
-        description: 'Maintain a 7-day streak',
-        icon: 'flame-outline',
-        progress: 7,
-        maxProgress: 7,
-        isUnlocked: true,
-        category: 'daily',
-        rarity: 'rare',
-        xpReward: 200,
-        unlockedDate: '2024-01-20',
-    },
-    {
-        id: '3',
-        title: 'Month Master',
-        description: 'Complete 30 consecutive days',
-        icon: 'trophy-outline',
-        progress: 23,
-        maxProgress: 30,
-        isUnlocked: false,
-        category: 'daily',
-        rarity: 'epic',
-        xpReward: 500,
-    },
-
     // Learning Achievements
     {
         id: '4',
@@ -162,7 +123,6 @@ const achievementsData: Achievement[] = [
 ];
 
 const categoryColors = {
-    daily: '#FF6B6B',
     learning: '#4ECDC4',
     mastery: '#45B7D1',
     milestone: '#FFEAA7',
@@ -176,7 +136,6 @@ const rarityColors = {
 };
 
 const categoryIcons = {
-    daily: 'calendar-outline' as keyof typeof Ionicons.glyphMap,
     learning: 'book-outline' as keyof typeof Ionicons.glyphMap,
     mastery: 'trophy-outline' as keyof typeof Ionicons.glyphMap,
     milestone: 'flag-outline' as keyof typeof Ionicons.glyphMap,
@@ -184,6 +143,9 @@ const categoryIcons = {
 
 export default function AchievementScreen() {
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
+    const achievements = useSelector((state: { user: { allAchievements: Achievement } }) => state.user.allAchievements);
+
+    console.log('Achievements:', achievements);
 
     const filteredAchievements = selectedCategory === 'all'
         ? achievementsData

@@ -3,11 +3,11 @@ export type Achievement = {
     code: string;
     title: string;
     description: string;
-    reward: {
-        type: {
-            gems: number;
-        }
-    },
+    category: string;
+    rarity: string;
+    maxProgress: number,
+    badge: string,
+    reward: number,
     createdAt?: Date;
     updatedAt?: Date;
 }

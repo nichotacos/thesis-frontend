@@ -7,152 +7,148 @@ import {
     TouchableOpacity,
     Dimensions,
     SafeAreaView,
+    Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
+import { Achievement } from '../types/Achievement';
+import { User } from '../types/User';
+import ScreenLoading from '../components/UI/ScreenLoading';
 
 const { width } = Dimensions.get('window');
 
-interface Achievement {
-    id: string;
-    title: string;
-    description: string;
-    icon: keyof typeof Ionicons.glyphMap;
-    progress: number;
-    maxProgress: number;
-    isUnlocked: boolean;
-    category: 'learning' | 'mastery' | 'milestone';
-    rarity: 'common' | 'rare' | 'epic' | 'legendary';
-    xpReward: number;
-    unlockedDate?: string;
-}
+// const achievementsData: Achievement[] = [
+//     // Learning Achievements
+//     {
+//         id: '4',
+//         title: 'First Words',
+//         description: 'Learn your first 10 words',
+//         icon: 'book-outline',
+//         progress: 10,
+//         maxProgress: 10,
+//         isUnlocked: true,
+//         category: 'learning',
+//         rarity: 'common',
+//         xpReward: 25,
+//         unlockedDate: '2024-01-10',
+//     },
+//     {
+//         id: '5',
+//         title: 'Vocabulary Builder',
+//         description: 'Learn 100 new words',
+//         icon: 'library-outline',
+//         progress: 87,
+//         maxProgress: 100,
+//         isUnlocked: false,
+//         category: 'learning',
+//         rarity: 'rare',
+//         xpReward: 300,
+//     },
+//     {
+//         id: '6',
+//         title: 'Grammar Guru',
+//         description: 'Complete all grammar lessons',
+//         icon: 'school-outline',
+//         progress: 15,
+//         maxProgress: 20,
+//         isUnlocked: false,
+//         category: 'learning',
+//         rarity: 'epic',
+//         xpReward: 400,
+//     },
 
-const achievementsData: Achievement[] = [
-    // Learning Achievements
-    {
-        id: '4',
-        title: 'First Words',
-        description: 'Learn your first 10 words',
-        icon: 'book-outline',
-        progress: 10,
-        maxProgress: 10,
-        isUnlocked: true,
-        category: 'learning',
-        rarity: 'common',
-        xpReward: 25,
-        unlockedDate: '2024-01-10',
-    },
-    {
-        id: '5',
-        title: 'Vocabulary Builder',
-        description: 'Learn 100 new words',
-        icon: 'library-outline',
-        progress: 87,
-        maxProgress: 100,
-        isUnlocked: false,
-        category: 'learning',
-        rarity: 'rare',
-        xpReward: 300,
-    },
-    {
-        id: '6',
-        title: 'Grammar Guru',
-        description: 'Complete all grammar lessons',
-        icon: 'school-outline',
-        progress: 15,
-        maxProgress: 20,
-        isUnlocked: false,
-        category: 'learning',
-        rarity: 'epic',
-        xpReward: 400,
-    },
+//     // Mastery Achievements
+//     {
+//         id: '7',
+//         title: 'Perfect Score',
+//         description: 'Get 100% on any lesson',
+//         icon: 'star-outline',
+//         progress: 1,
+//         maxProgress: 1,
+//         isUnlocked: true,
+//         category: 'mastery',
+//         rarity: 'rare',
+//         xpReward: 150,
+//         unlockedDate: '2024-01-18',
+//     },
+//     {
+//         id: '8',
+//         title: 'Speed Demon',
+//         description: 'Complete a lesson in under 2 minutes',
+//         icon: 'flash-outline',
+//         progress: 0,
+//         maxProgress: 1,
+//         isUnlocked: false,
+//         category: 'mastery',
+//         rarity: 'epic',
+//         xpReward: 250,
+//     },
 
-    // Mastery Achievements
-    {
-        id: '7',
-        title: 'Perfect Score',
-        description: 'Get 100% on any lesson',
-        icon: 'star-outline',
-        progress: 1,
-        maxProgress: 1,
-        isUnlocked: true,
-        category: 'mastery',
-        rarity: 'rare',
-        xpReward: 150,
-        unlockedDate: '2024-01-18',
-    },
-    {
-        id: '8',
-        title: 'Speed Demon',
-        description: 'Complete a lesson in under 2 minutes',
-        icon: 'flash-outline',
-        progress: 0,
-        maxProgress: 1,
-        isUnlocked: false,
-        category: 'mastery',
-        rarity: 'epic',
-        xpReward: 250,
-    },
-
-    // Milestone Achievements
-    {
-        id: '11',
-        title: 'Beginner Graduate',
-        description: 'Complete the beginner course',
-        icon: 'ribbon-outline',
-        progress: 1,
-        maxProgress: 1,
-        isUnlocked: true,
-        category: 'milestone',
-        rarity: 'epic',
-        xpReward: 1000,
-        unlockedDate: '2024-01-25',
-    },
-    {
-        id: '12',
-        title: 'Language Legend',
-        description: 'Reach fluency level',
-        icon: 'medal-outline',
-        progress: 0,
-        maxProgress: 1,
-        isUnlocked: false,
-        category: 'milestone',
-        rarity: 'legendary',
-        xpReward: 5000,
-    },
-];
+//     // Milestone Achievements
+//     {
+//         id: '11',
+//         title: 'Beginner Graduate',
+//         description: 'Complete the beginner course',
+//         icon: 'ribbon-outline',
+//         progress: 1,
+//         maxProgress: 1,
+//         isUnlocked: true,
+//         category: 'milestone',
+//         rarity: 'epic',
+//         xpReward: 1000,
+//         unlockedDate: '2024-01-25',
+//     },
+//     {
+//         id: '12',
+//         title: 'Language Legend',
+//         description: 'Reach fluency level',
+//         icon: 'medal-outline',
+//         progress: 0,
+//         maxProgress: 1,
+//         isUnlocked: false,
+//         category: 'milestone',
+//         rarity: 'legendary',
+//         xpReward: 5000,
+//     },
+// ];
 
 const categoryColors = {
-    learning: '#4ECDC4',
-    mastery: '#45B7D1',
-    milestone: '#FFEAA7',
+    pembelajaran: '#4ECDC4',
+    penguasaan: '#45B7D1',
+    pencapaian: '#FFEAA7',
 };
 
 const rarityColors = {
-    common: '#95A5A6',
-    rare: '#3498DB',
-    epic: '#9B59B6',
-    legendary: '#F39C12',
+    umum: '#95A5A6',
+    langka: '#3498DB',
+    epik: '#9B59B6',
+    legendaris: '#F39C12',
 };
 
 const categoryIcons = {
-    learning: 'book-outline' as keyof typeof Ionicons.glyphMap,
-    mastery: 'trophy-outline' as keyof typeof Ionicons.glyphMap,
-    milestone: 'flag-outline' as keyof typeof Ionicons.glyphMap,
+    pembelajaran: 'book-outline' as keyof typeof Ionicons.glyphMap,
+    penguasaan: 'trophy-outline' as keyof typeof Ionicons.glyphMap,
+    pencapaian: 'flag-outline' as keyof typeof Ionicons.glyphMap,
 };
 
 export default function AchievementScreen() {
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
-    const achievements = useSelector((state: { user: { allAchievements: Achievement } }) => state.user.allAchievements);
+    const achievements = useSelector((state: { user: { allAchievements: Achievement[] } }) => state.user.allAchievements);
+    const userData = useSelector((state: { user: { userInfo: User } }) => state.user.userInfo);
+
+    if (!achievements || !userData) {
+        return (
+            <SafeAreaView style={styles.container}>
+                <ScreenLoading />
+            </SafeAreaView>
+        )
+    }
 
     console.log('Achievements:', achievements);
 
     const filteredAchievements = selectedCategory === 'all'
-        ? achievementsData
-        : achievementsData.filter(achievement => achievement.category === selectedCategory);
-
-    const unlockedCount = achievementsData.filter(a => a.isUnlocked).length;
-    const totalXP = achievementsData.filter(a => a.isUnlocked).reduce((sum, a) => sum + a.xpReward, 0);
+        ? achievements
+        : achievements.filter(achievement => achievement.category === selectedCategory);
 
     const renderProgressBar = (progress: number, maxProgress: number, isUnlocked: boolean) => {
         const percentage = (progress / maxProgress) * 100;
@@ -178,11 +174,16 @@ export default function AchievementScreen() {
     };
 
     const renderAchievementCard = (achievement: Achievement) => {
-        const isLocked = !achievement.isUnlocked;
+        const userAchievement = userData.achievements.find(a => a.achievement.code === achievement.code);
+        console.log()
+        const isLocked = !userAchievement || !userAchievement.unlockedAt;
+        const unlockedDate = userAchievement?.unlockedAt
+            ? new Date(userAchievement.unlockedAt).toLocaleDateString()
+            : null;
 
         return (
             <TouchableOpacity
-                key={achievement.id}
+                key={achievement._id}
                 style={[
                     styles.achievementCard,
                     { borderLeftColor: categoryColors[achievement.category] },
@@ -190,16 +191,16 @@ export default function AchievementScreen() {
                 ]}
             >
                 <View style={styles.cardHeader}>
-                    <View style={[
-                        styles.iconContainer,
-                        { backgroundColor: isLocked ? '#BDC3C7' : categoryColors[achievement.category] }
-                    ]}>
-                        <Ionicons
-                            name={achievement.icon}
-                            size={24}
-                            color={isLocked ? '#7F8C8D' : '#FFFFFF'}
-                        />
-                    </View>
+                    <Image
+                        source={achievement.badge ? { uri: achievement.badge } : require('../assets/icons/studying-person.png')}
+                        style={{
+                            width: 60,
+                            height: 60,
+                            resizeMode: "contain",
+                            borderRadius: 30,
+                            marginRight: 8,
+                        }}
+                    />
 
                     <View style={styles.achievementInfo}>
                         <Text style={[styles.achievementTitle, isLocked && styles.lockedText]}>
@@ -217,17 +218,31 @@ export default function AchievementScreen() {
                         ]}>
                             <Text style={styles.rarityText}>{achievement.rarity.toUpperCase()}</Text>
                         </View>
-                        <Text style={[styles.xpReward, isLocked && styles.lockedText]}>
-                            +{achievement.xpReward} XP
-                        </Text>
+                        <View
+                            style={{
+                                flexDirection: 'row'
+                            }}
+                        >
+                            <Text style={[styles.xpReward, isLocked && styles.lockedText]}>
+                                +{achievement.reward}
+                            </Text>
+                            <Image
+                                source={require('../assets/gamification/gems.png')}
+                                style={{
+                                    width: 20,
+                                    height: 20,
+                                    marginLeft: 6
+                                }}
+                            />
+                        </View>
                     </View>
                 </View>
 
-                {renderProgressBar(achievement.progress, achievement.maxProgress, achievement.isUnlocked)}
+                {renderProgressBar(userAchievement.progress, achievement.maxProgress, !isLocked)}
 
-                {achievement.isUnlocked && achievement.unlockedDate && (
+                {!isLocked && unlockedDate && (
                     <Text style={styles.unlockedDate}>
-                        Unlocked on {achievement.unlockedDate}
+                        Dibuka pada tanggal {unlockedDate}
                     </Text>
                 )}
 
@@ -244,17 +259,6 @@ export default function AchievementScreen() {
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>Achievements</Text>
-                <View style={styles.statsContainer}>
-                    <View style={styles.statItem}>
-                        <Text style={styles.statNumber}>{unlockedCount}</Text>
-                        <Text style={styles.statLabel}>Unlocked</Text>
-                    </View>
-                    <View style={styles.statDivider} />
-                    <View style={styles.statItem}>
-                        <Text style={styles.statNumber}>{totalXP}</Text>
-                        <Text style={styles.statLabel}>Total XP</Text>
-                    </View>
-                </View>
             </View>
 
             <ScrollView

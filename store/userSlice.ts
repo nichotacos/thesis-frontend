@@ -143,16 +143,29 @@ const userSlice = createSlice({
         },
         grantAchievement(state, action: PayloadAction<{ achievementCode: string }>) {
             if (state.userInfo) {
-                const alreadyUnlocked = state.userInfo.achievements?.find((a) => a.achievement.code === action.payload.achievementCode);
+                const achievement = state.allAchievements.find((a) => a.code === action.payload.achievementCode);
+                const grantedAchievement = state.userInfo.achievements?.find((a) => a.achievement.code === achievement.code);
 
-                if (!alreadyUnlocked) {
-                    const findAchievement = state.allAchievements.find(
-                        (a) => a.code === action.payload.achievementCode
-                    )
+                if (grantedAchievement) {
+                    if (grantedAchievement.unlockedAt) return;
 
+                    grantedAchievement.progress += 1;
+
+                    if (grantedAchievement.progress >= achievement.maxProgress) {
+                        grantedAchievement.progress = achievement.maxProgress;
+                        grantedAchievement.unlockedAt = new Date().toISOString(),
+
+                            state.userInfo.totalGems += achievement.reward || 0;
+                    }
+                } else {
                     const newAchievement = {
-                        achievement: findAchievement,
-                        unlockedAt: new Date().toISOString(),
+                        achievement: achievement,
+                        progress: 1,
+                        unlockedAt: 1 >= achievement.maxProgress ? new Date().toISOString() : null,
+                    }
+
+                    if (newAchievement.unlockedAt) {
+                        state.userInfo.totalGems += achievement.reward || 0;
                     }
 
                     state.userInfo.achievements?.push(newAchievement);

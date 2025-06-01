@@ -3,6 +3,7 @@ import StreakFireSvg from "../../assets/gamification/streak-fire-svg"
 import HeartSVG from "../../assets/gamification/heart-svg"
 import { useState } from "react";
 import BuyHeartModal from "./BuyHeartModal";
+import { GlobalStyles } from "../../constants/styles";
 
 interface LevelModuleHeaderProps {
     totalGems: number;
@@ -77,5 +78,6 @@ const styles = StyleSheet.create({
         fontFamily: "Inter-Bold",
         fontSize: 20,
         marginLeft: 8,
+        color: GlobalStyles.colors.whiteFont
     },
 }) 

@@ -67,7 +67,8 @@ const styles = StyleSheet.create({
         fontFamily: "Inter-Bold",
         textAlign: "center",
         fontSize: 20,
-        marginTop: 6
+        marginTop: 6,
+        color: GlobalStyles.colors.whiteFont,
     },
     glowEffect: {
         elevation: 30,
@@ -79,5 +80,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: "center",
         marginTop: 4,
+        color: GlobalStyles.colors.whiteFont,
     }
 })

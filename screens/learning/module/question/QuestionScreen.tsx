@@ -185,9 +185,9 @@ export default function QuestionScreen({
                 });
 
                 if (unCompleteFirstModule) {
-                    await grantAchievement(userData._id, "FIRST_MODULE");
+                    await grantAchievement(userData._id, "MODUL_PERTAMA");
                     dispatch(grantAchievementReducer({
-                        achievementCode: "FIRST_MODULE",
+                        achievementCode: "MODUL_PERTAMA",
                     }));
                 }
 

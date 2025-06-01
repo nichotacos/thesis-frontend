@@ -37,6 +37,7 @@ export type User = {
     hasClaimedDailyReward: boolean;
     achievements: {
         achievement: Achievement;
+        progress: number;
         unlockedAt: string;
     }[],
     previousLeaderboardRank?: number;

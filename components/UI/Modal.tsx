@@ -63,7 +63,8 @@ export default function Modal({
                         )}
                     </View>
                     <WideButton
-                        color="white"
+                        buttonColor={GlobalStyles.colors.accent}
+                        textColor="white"
                         onPress={onRequestClose}
                         style={styles.button}
                         text="Tutup"
@@ -105,7 +106,6 @@ const styles = StyleSheet.create({
         color: GlobalStyles.colors.accent
     },
     button: {
-        backgroundColor: GlobalStyles.colors.accent,
         borderRadius: 20,
         width: "100%",
         paddingVertical: 10

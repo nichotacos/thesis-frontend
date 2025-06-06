@@ -16,13 +16,6 @@ export default async function completeModule({
     totalAnswers,
 }: CompleteModuleProps) {
     try {
-        console.log('request data:', {
-            moduleId,
-            userId,
-            correctCount,
-            score,
-            totalAnswers,
-        })
         const response = await apiClient.post('/module/complete', {
             moduleId,
             userId,

@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { Achievement } from '../types/Achievement';
 import { User } from '../types/User';
 import ScreenLoading from '../components/UI/ScreenLoading';
+import { GlobalStyles } from '../constants/styles';
 
 const { width } = Dimensions.get('window');
 
@@ -144,8 +145,6 @@ export default function AchievementScreen() {
         )
     }
 
-    console.log('Achievements:', achievements);
-
     const filteredAchievements = selectedCategory === 'all'
         ? achievements
         : achievements.filter(achievement => achievement.category === selectedCategory);
@@ -258,7 +257,7 @@ export default function AchievementScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>Achievements</Text>
+                <Text style={styles.headerTitle}>Pencapaian</Text>
             </View>
 
             <ScrollView
@@ -318,7 +317,7 @@ export default function AchievementScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F8F9FA',
+        backgroundColor: GlobalStyles.colors.lightBackground,
     },
     header: {
         backgroundColor: '#FFFFFF',

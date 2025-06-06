@@ -31,7 +31,7 @@ interface QuestionScreenProps {
 export default function QuestionScreen({
     route
 }: QuestionScreenProps) {
-    const { module, isLastModule, nextLevel, unCompleteFirstModule } = route.params;
+    const { module, isLastModule, nextLevel } = route.params;
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
     const dispatch = useDispatch();
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -51,12 +51,14 @@ export default function QuestionScreen({
         isCorrect: boolean;
     }[]>([]);
     const [startTime, setStartTime] = useState<number | null>(null);
+    const unCompleteFirstModule = !userData.achievements.find(
+        (a) => a.achievement.code === "MODUL_PERTAMA"
+    );
 
     console.log("params", {
         module,
         isLastModule,
         nextLevel,
-        unCompleteFirstModule
     });
 
 
@@ -152,19 +154,8 @@ export default function QuestionScreen({
                     const getNextLevelModules = await apiClient.post('/module', {
                         levelIds: [module.level._id],
                     });
-                    console.log("getNextLevelModules", getNextLevelModules.data.data[module.index]);
                     nextLevelFirstModule = getNextLevelModules.data.data[module.index];
                 }
-                console.log("dispatch value", {
-                    moduleId: module._id,
-                    exp: userAnswers.filter((answer) => answer.isCorrect).length * 5,
-                    correctCount: userAnswers.filter((answer) => answer.isCorrect).length,
-                    score: Math.floor((userAnswers.filter((answer) => answer.isCorrect).length / questions.length) * 100),
-                    totalAnswers: questions.length,
-                    isLastModule: isLastModule,
-                    nextLevel: isLastModule ? nextLevel : undefined,
-                    nextLevelFirstModule: nextLevelFirstModule,
-                })
                 dispatch(completeModuleReducer({
                     module: module,
                     exp: userAnswers.filter((answer) => answer.isCorrect).length * 5,
@@ -175,7 +166,6 @@ export default function QuestionScreen({
                     nextLevel: isLastModule ? nextLevel : undefined,
                     nextLevelFirstModule: nextLevelFirstModule,
                 }));
-
                 await completeModule({
                     moduleId: module._id,
                     userId: userData._id,
@@ -193,7 +183,6 @@ export default function QuestionScreen({
 
                 const endTime = Date.now();
                 const durationInSeconds = Math.floor((endTime - startTime!) / 1000);
-                console.log("Duration in seconds:", durationInSeconds);
 
                 navigation.replace("ResultScreen", {
                     correct: userAnswers.filter((answer) => answer.isCorrect).length,
@@ -217,7 +206,7 @@ export default function QuestionScreen({
                 {!isPlaying || isAudioEnded ? (
                     <PlayAudioButton
                         onPress={() => {
-                            playAudio(questions[0].media.audioUrl);
+                            playAudio(questions[userAnswers.length].media.audioUrl);
                         }}
                         iconName="volume-high-outline"
                         iconSize={24}
@@ -287,14 +276,16 @@ export default function QuestionScreen({
                         marginLeft: -20,
                     }}>
                         <Svg
-                            width={15}
+                            width={25}
                             height={40}
-                            viewBox="0 0 15 20"
+                            viewBox="0 0 25 20"
                             style={styles.leftTail}
                         >
                             <Path
-                                d="M15 0 C0 30, 0 10, 25 20"
+                                d="M25 0 L25 25 Q15 18 0 25 Z"
                                 fill="white"
+                                strokeWidth={1}
+                                stroke="lightgray"
                             />
                         </Svg>
 

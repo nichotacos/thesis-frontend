@@ -1,4 +1,4 @@
-import { Alert, FlatList, Image, ImageBackground, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, Image, ImageBackground, ImageSourcePropType, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../../../constants/styles";
 import { useSelector } from "react-redux";
 import { User } from "../../../types/User";
@@ -15,9 +15,28 @@ import TrophySVG from "../../../assets/gamification/trophy-svg";
 import LevelModuleHeader from "../../../components/learning/LevelModuleHeader";
 import ScreenLoading from "../../../components/UI/ScreenLoading";
 
-
 interface ModuleScreenProps {
     route: any;
+}
+
+const getLevelBackground = (levelName: string): ImageSourcePropType => {
+    switch (levelName) {
+        case "Bali":
+            return require("../../../assets/background/bali-background.png");
+        case "Jakarta":
+            return require("../../../assets/background/jakarta-background.png");
+        case "Surabaya":
+            return require("../../../assets/background/surabaya-background.png");
+        case "Aceh":
+            return require("../../../assets/background/aceh-background.png");
+        // case "Yogyakarta":
+        //     return require("../../../assets/background/yogyakarta-background.png");
+        // case "Padang":
+        //     return require("../../../assets/background/padang-background.png");
+        default:
+            return require("../../../assets/background/bali-background.png");
+
+    }
 }
 
 export default function ModuleScreen({
@@ -75,7 +94,7 @@ export default function ModuleScreen({
 
     return (
         <ImageBackground
-            source={require('../../../assets/background/bali-background.png')}
+            source={getLevelBackground(level.name)}
             style={{
                 flex: 1,
             }}
@@ -131,9 +150,6 @@ export default function ModuleScreen({
                                                     module: item,
                                                     isLastModule: index === (modules.length - 1),
                                                     nextLevel: nextLevel,
-                                                    unCompleteFirstModule: !userData.achievements.find(
-                                                        (a) => a.achievement.code === "FIRST_MODULE"
-                                                    )
                                                 })
                                             }
                                             disabled={isDisabled}
@@ -309,33 +325,6 @@ export default function ModuleScreen({
                                 )}
 
                                 {item.isUnitReview && (
-                                    // <ModuleStamp
-                                    //     index={index + 1}
-                                    //     name="Ulangan"
-                                    //     style={{
-                                    //         left: 0,
-                                    //         right: 0,
-                                    //         top: 55 + 120 * index,
-                                    //         opacity,
-                                    //         zIndex: 1,
-                                    //     }}
-                                    //     onPress={() =>
-                                    //         navigation.navigate("QuestionScreen", {
-                                    //             module: item,
-                                    //             isLastModule: index === (modules.length - 1),
-                                    //             nextLevel: nextLevel,
-                                    //             unCompleteFirstModule: !userData.achievements.find(
-                                    //                 (a) => a.achievement.code === "FIRST_MODULE"
-                                    //             )
-                                    //         })
-                                    //     }
-                                    //     disabled={isDisabled}
-                                    //     score={
-                                    //         userData.completedModules.find((m) => m.module === item._id)
-                                    //             ?.score || 0
-                                    //     }
-                                    //     isUnitReview={true}
-                                    // />
                                     <TrophySVG
                                         width={120}
                                         height={120}
@@ -353,9 +342,6 @@ export default function ModuleScreen({
                                                     module: item,
                                                     isLastModule: index === (modules.length - 1),
                                                     nextLevel: nextLevel,
-                                                    unCompleteFirstModule: !userData.achievements.find(
-                                                        (a) => a.achievement.code === "FIRST_MODULE"
-                                                    )
                                                 })
                                         }
                                         disabled={isDisabled}

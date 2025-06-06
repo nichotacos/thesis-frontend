@@ -47,7 +47,7 @@ export const loginUser = async (username: string, password: string) => {
 
 export const registerUser = async (username: string, userFullName: string, email: string, password: string, passwordConfirmation: string) => {
     try {
-        const response = await apiClient.post('/user', {
+        const response = await apiClient.post('/auth/register', {
             username,
             userFullName,
             email,

@@ -176,12 +176,12 @@ export default function RegisterScreen(params) {
                         </View>
                     )}
                     <WideButton
+                        buttonColor={GlobalStyles.colors.accent}
                         onPress={handleSubmit.bind(this, registerData)}
                         text="Daftar"
-                        color={GlobalStyles.colors.whiteFont}
+                        textColor={GlobalStyles.colors.whiteFont}
                         size={24}
                         style={{
-                            backgroundColor: GlobalStyles.colors.accent,
                             borderRadius: 50,
                             paddingVertical: 12,
                             paddingHorizontal: 32,

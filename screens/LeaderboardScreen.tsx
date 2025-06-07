@@ -58,25 +58,31 @@ export default function LeaderboardScreen() {
                 <Text style={styles.title}>Papan Peringkat Mingguan</Text>
                 <View style={styles.podiumContainer}>
                     <View style={styles.podiumBarContainer}>
-                        <View style={[styles.podiumProfile]}>
-                            <Image
-                                source={{ uri: leaderboard.users[1].profilePicture }}
-                                style={styles.podiumProfileImage}
-                            />
-                            <Text style={styles.podiumName}>{leaderboard.users[1].userFullName}</Text>
-                            <View style={{ backgroundColor: 'white', padding: 4, paddingHorizontal: 8, borderRadius: 12 }}>
-                                <Text style={styles.podiumExp}>{leaderboard.users[1].weeklyExp} exp</Text>
-                            </View>
-                        </View>
-                        <View style={[styles.podiumBar, { height: 170 }]}>
-                            <Text style={styles.podiumText}>2</Text>
-                            <AntDesign
-                                name={leaderboard.users[1].previousLeaderboardRank > 2 ? "caretup" : leaderboard.users[1].previousLeaderboardRank < 2 ? "caretdown" : "minus"}
-                                size={28}
-                                color={leaderboard.users[1].previousLeaderboardRank > 2 ? "lime" : leaderboard.users[1].previousLeaderboardRank < 2 ? "red" : "white"}
-                                style={styles.podiumIcon}
-                            />
-                        </View>
+                        {leaderboard.users[1] && (
+                            <>
+                                <View style={[styles.podiumProfile]}>
+                                    <Image
+                                        source={{ uri: leaderboard.users[1].profilePicture }}
+                                        style={styles.podiumProfileImage}
+                                    />
+                                    <Text style={styles.podiumName}>{leaderboard.users[1].userFullName}</Text>
+                                    <View style={{ backgroundColor: 'white', padding: 4, paddingHorizontal: 8, borderRadius: 12 }}>
+                                        <Text style={styles.podiumExp}>{leaderboard.users[1].weeklyExp} exp</Text>
+                                    </View>
+                                </View>
+                                <View style={[styles.podiumBar, { height: 170 }]}>
+                                    <Text style={styles.podiumText}>2</Text>
+                                    {leaderboard.users[1].previousLeaderboardRank !== null && (
+                                        <AntDesign
+                                            name={leaderboard.users[1].previousLeaderboardRank ? (leaderboard.users[1].previousLeaderboardRank > 2 ? "caretup" : leaderboard.users[1].previousLeaderboardRank < 2 ? "caretdown" : "minus") : undefined}
+                                            size={28}
+                                            color={leaderboard.users[1].previousLeaderboardRank ? (leaderboard.users[1].previousLeaderboardRank > 2 ? "lime" : leaderboard.users[1].previousLeaderboardRank < 2 ? "red" : "white") : "white"}
+                                            style={styles.podiumIcon}
+                                        />
+                                    )}
+                                </View>
+                            </>
+                        )}
                     </View>
                     <View style={styles.podiumBarContainer}>
                         <View style={[styles.podiumProfile]}>
@@ -91,34 +97,42 @@ export default function LeaderboardScreen() {
                         </View>
                         <View style={[styles.podiumBar, { height: 240 }]}>
                             <Text style={styles.podiumText}>1</Text>
-                            <AntDesign
-                                name={leaderboard.users[1].previousLeaderboardRank > 1 ? "caretup" : leaderboard.users[1].previousLeaderboardRank < 1 ? "caretdown" : "minus"}
-                                size={28}
-                                color={leaderboard.users[1].previousLeaderboardRank > 1 ? "lime" : leaderboard.users[1].previousLeaderboardRank < 1 ? "red" : "white"}
-                                style={styles.podiumIcon}
-                            />
+                            {leaderboard.users[0].previousLeaderboardRank !== null && (
+                                <AntDesign
+                                    name={leaderboard.users[0].previousLeaderboardRank ? (leaderboard.users[0].previousLeaderboardRank > 1 ? "caretup" : leaderboard.users[0].previousLeaderboardRank < 1 ? "caretdown" : "minus") : undefined}
+                                    size={28}
+                                    color={leaderboard.users[0].previousLeaderboardRank ? (leaderboard.users[0].previousLeaderboardRank > 1 ? "lime" : leaderboard.users[0].previousLeaderboardRank < 1 ? "red" : "white") : "white"}
+                                    style={styles.podiumIcon}
+                                />
+                            )}
                         </View>
                     </View>
                     <View style={styles.podiumBarContainer}>
-                        <View style={[styles.podiumProfile]}>
-                            <Image
-                                source={{ uri: leaderboard.users[2].profilePicture }}
-                                style={styles.podiumProfileImage}
-                            />
-                            <Text style={styles.podiumName}>{leaderboard.users[2].userFullName}</Text>
-                            <View style={{ backgroundColor: 'white', padding: 4, paddingHorizontal: 8, borderRadius: 12 }}>
-                                <Text style={styles.podiumExp}>{leaderboard.users[2].weeklyExp} exp</Text>
-                            </View>
-                        </View>
-                        <View style={[styles.podiumBar, { height: 120 }]}>
-                            <Text style={styles.podiumText}>3</Text>
-                            <AntDesign
-                                name={leaderboard.users[1].previousLeaderboardRank > 3 ? "caretup" : leaderboard.users[1].previousLeaderboardRank < 3 ? "caretdown" : "minus"}
-                                size={28}
-                                color={leaderboard.users[1].previousLeaderboardRank > 3 ? "lime" : leaderboard.users[1].previousLeaderboardRank < 3 ? "red" : "black"}
-                                style={styles.podiumIcon}
-                            />
-                        </View>
+                        {leaderboard.users[2] && (
+                            <>
+                                <View style={[styles.podiumProfile]}>
+                                    <Image
+                                        source={{ uri: leaderboard.users[2].profilePicture }}
+                                        style={styles.podiumProfileImage}
+                                    />
+                                    <Text style={styles.podiumName}>{leaderboard.users[2].userFullName}</Text>
+                                    <View style={{ backgroundColor: 'white', padding: 4, paddingHorizontal: 8, borderRadius: 12 }}>
+                                        <Text style={styles.podiumExp}>{leaderboard.users[2].weeklyExp} exp</Text>
+                                    </View>
+                                </View>
+                                <View style={[styles.podiumBar, { height: 120 }]}>
+                                    <Text style={styles.podiumText}>3</Text>
+                                    {leaderboard.users[2].previousLeaderboardRank !== null && (
+                                        <AntDesign
+                                            name={leaderboard.users[2].previousLeaderboardRank ? (leaderboard.users[2].previousLeaderboardRank > 3 ? "caretup" : leaderboard.users[2].previousLeaderboardRank < 3 ? "caretdown" : "minus") : undefined}
+                                            size={28}
+                                            color={leaderboard.users[2].previousLeaderboardRank ? (leaderboard.users[2].previousLeaderboardRank > 3 ? "lime" : leaderboard.users[2].previousLeaderboardRank < 3 ? "red" : "white") : "white"}
+                                            style={styles.podiumIcon}
+                                        />
+                                    )}
+                                </View>
+                            </>
+                        )}
                     </View>
                 </View>
                 <View style={styles.listContainer}>

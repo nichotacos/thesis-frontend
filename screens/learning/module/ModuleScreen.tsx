@@ -29,10 +29,10 @@ const getLevelBackground = (levelName: string): ImageSourcePropType => {
             return require("../../../assets/background/surabaya-background.png");
         case "Aceh":
             return require("../../../assets/background/aceh-background.png");
-        // case "Yogyakarta":
-        //     return require("../../../assets/background/yogyakarta-background.png");
-        // case "Padang":
-        //     return require("../../../assets/background/padang-background.png");
+        case "Yogyakarta":
+            return require("../../../assets/background/yogyakarta-background.png");
+        case "Padang":
+            return require("../../../assets/background/padang-background.png");
         default:
             return require("../../../assets/background/bali-background.png");
 

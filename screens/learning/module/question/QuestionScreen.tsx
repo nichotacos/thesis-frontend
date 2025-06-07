@@ -116,6 +116,7 @@ export default function QuestionScreen({
 
     async function handleCheckAnswer() {
         setIsChecked(true);
+        togglePlayback();
         setUserAnswers((prev) => [
             ...prev,
             {

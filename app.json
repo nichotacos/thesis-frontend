@@ -44,6 +44,12 @@
           "photosPermission": "Aplikasi ini memerlukan akses ke foto Anda untuk mengunggah gambar.",
           "cameraPermission": "Aplikasi ini memerlukan akses ke kamera Anda untuk mengambil foto."
         }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+        }
       ]
     ]
   }

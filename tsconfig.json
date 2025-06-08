@@ -6,7 +6,7 @@
       "react-native"
     ],
     "moduleResolution": "nodenext",
-    "module": "NodeNext",
+    "module": "NodeNext"
   },
   "extends": "expo/tsconfig.base"
 }

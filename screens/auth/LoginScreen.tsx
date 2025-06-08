@@ -16,6 +16,7 @@ export default function LoginScreen(params) {
     const dispatch = useDispatch();
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const [loginData, setLoginData] = useState<LoginPayload>({
         username: "",
@@ -30,8 +31,6 @@ export default function LoginScreen(params) {
     }
 
     async function handleSubmit(loginData: LoginPayload) {
-        console.log("Login button pressed")
-        console.log(loginData);
 
         try {
             setIsLoading(true);
@@ -95,12 +94,13 @@ export default function LoginScreen(params) {
                             placeholder="Masukkan password"
                             value={loginData.password}
                             onChangeText={handleInputChange.bind(this, "password")}
-                            secureTextEntry={true}
                             textInputConfig={{
                                 keyboardType: "default",
                                 autoCapitalize: "none",
                                 autoCorrect: false,
                             }}
+                            isVisible={isPasswordVisible}
+                            onVisiblePress={() => setIsPasswordVisible(!isPasswordVisible)}
                         />
                     </View>
                     {error && (
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
         marginTop: 64
     },
     title: {
-        fontSize: 24,
+        fontSize: 22,
         fontFamily: "Inter-Bold",
     },
     subtitleContainer: {

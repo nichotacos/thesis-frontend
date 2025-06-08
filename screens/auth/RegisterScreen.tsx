@@ -22,6 +22,8 @@ export default function RegisterScreen(params) {
     const [captchaToken, setCaptchaToken] = useState<string>('');
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isConfirmationPasswordVisible, setIsConfirmationPasswordVisible] = useState(false);
 
     const [registerData, setRegisterData] = useState<RegisterPayload>({
         full_name: "",
@@ -135,24 +137,26 @@ export default function RegisterScreen(params) {
                             placeholder="Masukkan kata sandi"
                             value={registerData.password}
                             onChangeText={handleInputChange.bind(this, "password")}
-                            secureTextEntry={true}
                             textInputConfig={{
                                 keyboardType: "default",
                                 autoCapitalize: "none",
                                 autoCorrect: false,
                             }}
+                            isVisible={isPasswordVisible}
+                            onVisiblePress={() => setIsPasswordVisible(!isPasswordVisible)}
                         />
                         <Input
                             label="Konfirmasi Kata Sandi"
                             placeholder="Masukkan konfirmasi kata sandi"
                             value={registerData.passwordConfirmation}
                             onChangeText={handleInputChange.bind(this, "passwordConfirmation")}
-                            secureTextEntry={true}
                             textInputConfig={{
                                 keyboardType: "default",
                                 autoCapitalize: "none",
                                 autoCorrect: false,
                             }}
+                            isVisible={isConfirmationPasswordVisible}
+                            onVisiblePress={() => setIsConfirmationPasswordVisible(!isConfirmationPasswordVisible)}
                         />
 
                         {/* <Recaptcha

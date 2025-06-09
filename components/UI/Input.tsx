@@ -1,13 +1,15 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { GlobalStyles } from "../../constants/styles";
+import { Ionicons } from "@expo/vector-icons";
 
 interface InputProps {
     label: string;
     placeholder: string;
     value: string;
     onChangeText: (text: string) => void;
-    secureTextEntry?: boolean;
     textInputConfig: object;
+    isVisible?: boolean;
+    onVisiblePress?: () => void;
 }
 
 export default function Input({
@@ -15,20 +17,32 @@ export default function Input({
     placeholder,
     value,
     onChangeText,
-    secureTextEntry,
-    textInputConfig
+    textInputConfig,
+    isVisible,
+    onVisiblePress
 }: InputProps) {
     return (
         <View style={styles.inputContainer}>
             <Text style={styles.label}>{label}</Text>
-            <TextInput
-                placeholder={placeholder}
-                value={value}
-                onChangeText={onChangeText}
-                secureTextEntry={secureTextEntry}
-                style={styles.input}
-                {...textInputConfig}
-            />
+            <View>
+                <TextInput
+                    placeholder={placeholder}
+                    value={value}
+                    onChangeText={onChangeText}
+                    secureTextEntry={isVisible === undefined ? false : !isVisible}
+                    style={styles.input}
+                    {...textInputConfig}
+                />
+                {isVisible !== undefined && (
+                    <Ionicons
+                        name={isVisible ? "eye-off" : "eye"}
+                        size={24}
+                        color='grey'
+                        style={{ position: "absolute", right: 10, top: 10 }}
+                        onPress={onVisiblePress}
+                    />
+                )}
+            </View>
         </View>
     );
 }

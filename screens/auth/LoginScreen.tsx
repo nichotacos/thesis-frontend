@@ -90,8 +90,8 @@ export default function LoginScreen(params) {
                             }}
                         />
                         <Input
-                            label="Password"
-                            placeholder="Masukkan password"
+                            label="Kata Sandi"
+                            placeholder="Masukkan kata sandi"
                             value={loginData.password}
                             onChangeText={handleInputChange.bind(this, "password")}
                             textInputConfig={{

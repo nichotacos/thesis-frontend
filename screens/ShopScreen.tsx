@@ -205,7 +205,7 @@ export default function ShopScreen() {
                                 </View>
 
                                 {userData.totalGems < selectedItem.price ? (
-                                    <Text style={styles.insufficientFunds}>Insufficient coins</Text>
+                                    <Text style={styles.insufficientFunds}>Gems tidak mencukupi</Text>
                                 ) : null}
 
                                 <View style={styles.modalButtons}>
@@ -233,7 +233,7 @@ export default function ShopScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        // padding: 20,
         backgroundColor: "#f0f0f0",
     },
     title: {
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingHorizontal: 16,
+        paddingHorizontal: 20,
         paddingVertical: 12,
         backgroundColor: "#fff",
         borderBottomWidth: 1,
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     },
     headerTitle: {
         fontSize: 20,
-        fontWeight: "700",
+        fontFamily: "Inter-Bold",
         color: "#333",
     },
     coinContainer: {
@@ -306,10 +306,12 @@ const styles = StyleSheet.create({
     },
     itemsContainer: {
         flex: 1,
-        padding: 16,
+        paddingVertical: 16,
+        paddingHorizontal: 20,
     },
     itemCard: {
         flexDirection: "row",
+        alignItems: "center",
         backgroundColor: "#fff",
         borderRadius: 12,
         padding: 16,
@@ -333,13 +335,12 @@ const styles = StyleSheet.create({
     },
     itemName: {
         fontSize: 16,
-        fontWeight: "700",
         color: "#333",
         marginBottom: 4,
-        fontFamily: "Inter-Bold",
+        fontFamily: "Inter-Medium",
     },
     itemDescription: {
-        fontSize: 14,
+        fontSize: 13,
         color: "#666",
         marginBottom: 8,
         fontFamily: "Inter-Regular",
@@ -347,6 +348,7 @@ const styles = StyleSheet.create({
     priceContainer: {
         flexDirection: "row",
         alignItems: "center",
+        marginTop: 4
     },
     priceIcon: {
         width: 16,
@@ -414,11 +416,12 @@ const styles = StyleSheet.create({
         color: "#666",
         marginBottom: 16,
         textAlign: "center",
+        lineHeight: 20,
     },
     modalPriceContainer: {
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 24,
+        marginBottom: 16,
     },
     modalPriceText: {
         fontSize: 18,

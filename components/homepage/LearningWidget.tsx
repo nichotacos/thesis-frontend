@@ -77,7 +77,7 @@ export default function LearningWidget({
                         text="Lanjut Belajar"
                         buttonColor={GlobalStyles.colors.lighterPrimary}
                         textColor={GlobalStyles.colors.whiteFont}
-                        size={18}
+                        size={17}
                         onPress={onPress}
                         style={{
                             paddingVertical: 12,
@@ -126,12 +126,12 @@ const styles = StyleSheet.create({
         // you can style this if needed
     },
     text: {
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: "Inter-Bold",
         color: GlobalStyles.colors.whiteFont,
     },
     subtext: {
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: "Inter-Regular",
         color: GlobalStyles.colors.whiteFont,
         marginTop: 4,

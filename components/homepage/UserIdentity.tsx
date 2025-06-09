@@ -60,16 +60,16 @@ const styles = StyleSheet.create({
         marginLeft: 16,
     },
     haloText: {
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: "Inter-Bold",
     },
     nameText: {
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: "Inter-Bold",
         color: GlobalStyles.colors.primary,
     },
     levelText: {
-        fontSize: 14,
+        fontSize: 12,
         fontFamily: "Inter-Regular",
     },
     gemsContainer: {

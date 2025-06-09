@@ -59,13 +59,13 @@ export default function LevelScreen({
 
     return (
         <ImageBackground
-            source={require("../../assets/background/indonesia-background.png")}
+            source={require("../../assets/background/indonesia-background (2).png")}
             style={{ flex: 1, width: "100%", height: "100%" }}
             resizeMode="cover"
         >
             <ScrollView
                 style={styles.container}
-                contentContainerStyle={[styles.content, { height: levels.length * 195 + 160 }]}
+                contentContainerStyle={[styles.content, { height: levels.length * 195 + 220 }]}
             >
                 <LevelModuleHeader
                     heartCount={userData.hearts.current}

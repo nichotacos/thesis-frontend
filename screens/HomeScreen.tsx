@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
     },
     headerText: {
-        fontSize: 22,
+        fontSize: 20,
         fontFamily: "Inter-Bold",
         marginVertical: 16
     },

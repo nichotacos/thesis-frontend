@@ -70,7 +70,7 @@ export default function LeaderboardScreen() {
                                         <Text style={styles.podiumExp}>{leaderboard.users[1].weeklyExp} exp</Text>
                                     </View>
                                 </View>
-                                <View style={[styles.podiumBar, { height: 170 }]}>
+                                <View style={[styles.podiumBar, { height: 160 }]}>
                                     <Text style={styles.podiumText}>2</Text>
                                     {leaderboard.users[1].previousLeaderboardRank !== null && (
                                         <AntDesign
@@ -95,7 +95,7 @@ export default function LeaderboardScreen() {
                                 <Text style={styles.podiumExp}>{leaderboard.users[0].weeklyExp} exp</Text>
                             </View>
                         </View>
-                        <View style={[styles.podiumBar, { height: 240 }]}>
+                        <View style={[styles.podiumBar, { height: 210 }]}>
                             <Text style={styles.podiumText}>1</Text>
                             {leaderboard.users[0].previousLeaderboardRank !== null && (
                                 <AntDesign

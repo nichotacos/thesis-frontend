@@ -56,15 +56,6 @@ export default function OnboardingScreen() {
 
     return (
         <Onboarding
-            skipToPage={2}
-            onDone={() => {
-                navigation.navigate("LoginScreen");
-            }}
-            bottomBarHeight={150}
-            bottomBarColor={GlobalStyles.colors.primary}
-            pageIndexCallback={(page) => {
-                setCurrentPage(page);
-            }}
             pages={[
                 {
                     backgroundColor: GlobalStyles.colors.primary,
@@ -85,6 +76,15 @@ export default function OnboardingScreen() {
                     image: <ImageComponent source={GlobalContents.onboardingContents[2].image} />,
                 }
             ]}
+            skipToPage={2}
+            onDone={() => {
+                navigation.navigate("LoginScreen");
+            }}
+            bottomBarHeight={150}
+            bottomBarColor={GlobalStyles.colors.primary}
+            pageIndexCallback={(page) => {
+                setCurrentPage(page);
+            }}
             showSkip={true}
             containerStyles={{
                 flex: 1,
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontFamily: "Inter-Bold",
-        fontSize: 36,
+        fontSize: 32,
         textAlign: "left",
         color: GlobalStyles.colors.whiteFont,
     },
@@ -190,9 +190,9 @@ const styles = StyleSheet.create({
     },
     subtitleText: {
         fontFamily: "Inter-Medium",
-        fontSize: 16,
+        fontSize: 14,
         textAlign: "left",
         color: GlobalStyles.colors.whiteFont,
-        lineHeight: 30,
+        lineHeight: 28,
     }
 })

@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     },
     streakText: {
         fontFamily: "Inter-Bold",
-        fontSize: 18,
+        fontSize: 17,
         color: GlobalStyles.colors.whiteFont,
     },
     dateList: {

@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { User } from "../../../../types/User";
 import loseHp from "../../../../api/gamifications/loseHp";
 import { decrementHp, completeModule as completeModuleReducer } from "../../../../store/userSlice";
-import addUserExp from "../../../../api/gamifications/addUserExp";
 import completeModule from "../../../../api/gamifications/completeModule";
 import { Module } from "../../../../types/Module";
 import { grantAchievement } from "../../../../api/achievements/grantAchievements";
@@ -54,13 +53,6 @@ export default function QuestionScreen({
     const unCompleteFirstModule = !userData.achievements.find(
         (a) => a.achievement.code === "MODUL_PERTAMA"
     );
-
-    console.log("params", {
-        module,
-        isLastModule,
-        nextLevel,
-    });
-
 
     function handleShuffleAnswers(question: Question) {
         const options = question.options.map((option) => {
@@ -491,7 +483,7 @@ const styles = StyleSheet.create({
         padding: 16
     },
     message: {
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: "Inter-Regular",
     },
 })

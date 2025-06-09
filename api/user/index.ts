@@ -1,4 +1,5 @@
 import { apiClient } from "../apiClient";
+import mime from "mime";
 
 interface RegisterPayload {
     userFullName: string;
@@ -13,7 +14,6 @@ interface UpdateUserProfilePayload {
     userFullName: string;
     username: string;
     email: string;
-    profilePicture?: string;
 }
 
 export async function registerUser(user: RegisterPayload) {
@@ -36,7 +36,38 @@ export async function updateUserProfile(userId: string, payload: UpdateUserProfi
         return response.data;
     } catch (error) {
         console.error('Error updating user profile:', error);
-        throw error; // Rethrow the error for further handling if needed
+        throw error;
+    }
+}
+
+export async function updateUserProfilePicture(userId: string, file: {
+    uri: string;
+    name: string;
+    type: string;
+}) {
+    try {
+        const formData = new FormData();
+        const newImageUri = "file:///" + file.uri.split("file:/").join("");
+
+        formData.append('userId', userId);
+        formData.append('profilePicture', {
+            uri: newImageUri,
+            name: newImageUri.split("/").pop(),
+            type: mime.getType(newImageUri)
+        } as any)
+        // success update user profile using mime and parse image uri
+
+        const response = await apiClient.post(`/user/update-profile-picture`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+
+        console.log('User profile picture updated successfully:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error updating user profile picture:', error);
+        throw error;
     }
 }
 

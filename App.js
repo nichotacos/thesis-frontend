@@ -186,7 +186,7 @@ function RootNavigator() {
             name="ProfileSettingScreen"
             component={ProfileSettingScreen}
             options={{
-              title: 'Pengaturan Profil',
+              headerShown: false,
             }}
           />
           <Stack.Screen

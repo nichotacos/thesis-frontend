@@ -42,11 +42,11 @@ export default function LevelStamp({
                     source={imageSource}
                     style={[styles.stamp, borderStyle, !disabled && styles.glowEffect]}
                 />
-                <Text style={styles.text}>{name}</Text>
-                {!disabled && (
-                    <Text style={styles.completedModuleText}>{`${completedModules}/${totalModules}`}</Text>
-                )}
             </Pressable>
+            <Text style={styles.text}>{name}</Text>
+            {!disabled && (
+                <Text style={styles.completedModuleText}>{`${completedModules}/${totalModules}`}</Text>
+            )}
         </View>
     )
 };

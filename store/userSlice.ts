@@ -204,6 +204,11 @@ const userSlice = createSlice({
                 state.userInfo.hearts.current += 1;
                 state.userInfo.hearts.lostAt.slice(0, 1);
             }
+        },
+        updateUserProfilePicture(state, action: PayloadAction<string>) {
+            if (state.userInfo) {
+                state.userInfo.profilePicture = action.payload;
+            }
         }
     }
 });
@@ -219,6 +224,7 @@ export const {
     buyItem,
     equipItem,
     updateUserProfile,
-    refillHeart
+    refillHeart,
+    updateUserProfilePicture
 } = userSlice.actions;
 export const userReducer = userSlice.reducer;

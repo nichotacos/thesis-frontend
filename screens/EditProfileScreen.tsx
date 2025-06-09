@@ -17,14 +17,15 @@ import ScreenLoading from "../components/UI/ScreenLoading"
 import { useNavigation } from "@react-navigation/native"
 import { User } from "../types/User"
 import * as ImagePicker from 'expo-image-picker';
-import { updateUserProfile } from "../api/user"
+import { updateUserProfile, updateUserProfilePicture } from "../api/user"
 import { updateUserProfile as updateUserProfileReducer } from "../store/userSlice"
+import { updateUserProfilePicture as updateUserProfilePictureReducer } from "../store/userSlice"
+import { GlobalStyles } from "../constants/styles"
 
 interface ProfileData {
     userFullName: string
     email: string
     username: string
-    profileImage: string
 }
 
 export default function EditProfileScreen() {
@@ -33,12 +34,16 @@ export default function EditProfileScreen() {
         userFullName: userData.userFullName || "",
         email: userData.email || "",
         username: userData.username || "",
-        profileImage: userData.profilePicture || "https://via.placeholder.com/150",
     })
     const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
     const [image, setImage] = useState<string | null>(null);
     const dispatch = useDispatch();
+    const [imageFile, setImageFile] = useState<{
+        uri: string;
+        name: string;
+        type: string;
+    } | null>(null);
 
     useEffect(() => {
         if (userData) {
@@ -47,7 +52,6 @@ export default function EditProfileScreen() {
                 userFullName: userData.userFullName || "",
                 email: userData.email || "",
                 username: userData.username || "",
-                profileImage: userData.profilePicture || "https://via.placeholder.com/150",
             });
             setIsLoading(false);
         }
@@ -59,7 +63,24 @@ export default function EditProfileScreen() {
     const handleSave = async () => {
         try {
             setIsLoading(true)
-            await updateUserProfile(userData._id, profile);
+            console.log("Saving profile with data:", profile);
+            if (!profile.userFullName || !profile.username || !profile.email) {
+                Alert.alert("Error", "Semua field harus diisi.")
+                setIsLoading(false)
+                return;
+            }
+            console.log("Saving profile with image file:", imageFile);
+            const updatedProfile = {
+                userFullName: profile.userFullName,
+                email: profile.email,
+                username: profile.username,
+            };
+            await updateUserProfile(userData._id, updatedProfile);
+            if (imageFile) {
+                const response = await updateUserProfilePicture(userData._id, imageFile);
+                console.log("Profile picture updated successfully:", response.user.profilePicture);
+                dispatch(updateUserProfilePictureReducer(response.user.profilePicture));
+            }
             dispatch(updateUserProfileReducer(profile));
             setTimeout(() => {
                 setIsLoading(false)
@@ -74,26 +95,29 @@ export default function EditProfileScreen() {
     }
 
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ['images', 'videos'],
+            mediaTypes: ['images'],
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
         });
 
-        console.log(result);
-
         if (!result.canceled) {
+            const file = {
+                uri: result.assets[0].uri,
+                name: result.assets[0].fileName || `profile-${Date.now()}-${userData._id}.${result.assets[0].uri.split('.').pop()}`,
+                type: result.assets[0].type || 'image/jpeg',
+            }
+
+            setImageFile(file);
             setImage(result.assets[0].uri);
         }
     };
 
     const handleImagePicker = () => {
-        Alert.alert("Change Profile Picture", "Choose an option", [
-            { text: "Camera", onPress: () => console.log("Camera selected") },
-            { text: "Gallery", onPress: pickImage },
-            { text: "Cancel", style: "cancel" },
+        Alert.alert("Ubah Foto Profil", "Pilih opsi di bawah", [
+            { text: "Galeri", onPress: pickImage },
+            { text: "Batal", style: "cancel" },
         ])
     }
 
@@ -115,18 +139,24 @@ export default function EditProfileScreen() {
                     </TouchableOpacity>
                     <Text style={styles.headerTitle}>Edit Profil</Text>
                     <TouchableOpacity
-                        style={[styles.saveButton, isLoading && styles.saveButtonDisabled]}
+                        style={[
+                            styles.saveButton,
+                            (isLoading || (!profile.userFullName && !profile.username && !profile.email && profile.userFullName.length < 3 && profile.username.length < 3 && (profile.email && !/\S+@\S+\.\S+/.test(profile.email)))) && styles.saveButtonDisabled
+                        ]}
                         onPress={handleSave}
-                        disabled={isLoading}
+                        disabled={isLoading || (!profile.userFullName && !profile.username && !profile.email && profile.userFullName.length < 3 && profile.username.length < 3 && (profile.email && !/\S+@\S+\.\S+/.test(profile.email)))}
                     >
-                        <Text style={styles.saveText}>{isLoading ? "Saving..." : "Save"}</Text>
+                        <Text style={styles.saveText}>{isLoading ? "Menyimpan..." : "Simpan"}</Text>
                     </TouchableOpacity>
                 </View>
 
                 {/* Profile Picture */}
                 <View style={styles.profileImageContainer}>
                     <TouchableOpacity onPress={handleImagePicker}>
-                        <Image source={{ uri: profile.profileImage }} style={styles.profileImage} />
+                        <Image
+                            source={image ? { uri: image } : { uri: userData.profilePicture || "https://via.placeholder.com/120" }}
+                            style={styles.profileImage}
+                        />
                         <View style={styles.editImageOverlay}>
                             <Text style={styles.editImageText}>Edit</Text>
                         </View>
@@ -144,6 +174,11 @@ export default function EditProfileScreen() {
                             placeholder="Enter your name"
                             placeholderTextColor="#999"
                         />
+                        {profile.userFullName.length < 3 && (
+                            <Text style={{ color: "red", marginTop: 4 }}>
+                                Nama lengkap harus terdiri dari minimal 3 karakter.
+                            </Text>
+                        )}
                     </View>
 
                     <View style={styles.inputGroup}>
@@ -155,6 +190,11 @@ export default function EditProfileScreen() {
                             placeholder="Enter your username"
                             placeholderTextColor="#999"
                         />
+                        {profile.username.length < 3 && (
+                            <Text style={{ color: "red", marginTop: 4 }}>
+                                Username harus terdiri dari minimal 3 karakter.
+                            </Text>
+                        )}
                     </View>
 
                     <View style={styles.inputGroup}>
@@ -168,6 +208,11 @@ export default function EditProfileScreen() {
                             keyboardType="email-address"
                             autoCapitalize="none"
                         />
+                        {profile.email && !/\S+@\S+\.\S+/.test(profile.email) && (
+                            <Text style={{ color: "red", marginTop: 4 }}>
+                                Masukkan alamat email yang valid.
+                            </Text>
+                        )}
                     </View>
                 </View>
             </ScrollView>
@@ -178,7 +223,7 @@ export default function EditProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: GlobalStyles.colors.lightBackground,
     },
     scrollContent: {
         flexGrow: 1,

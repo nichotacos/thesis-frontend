@@ -3,7 +3,7 @@ import WideButton from "../components/UI/WideButton";
 import { GlobalStyles } from "../constants/styles";
 import { useDispatch } from "react-redux";
 import { logout } from "../store/userSlice";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 export default function ProfileSettingScreen(params) {
@@ -20,6 +20,10 @@ export default function ProfileSettingScreen(params) {
 
     return (
         <View style={{ flex: 1, padding: 20, backgroundColor: GlobalStyles.colors.lightBackground }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20, marginBottom: 20, }}>
+                <Ionicons name="arrow-back" size={24} color="black" onPress={() => navigation.goBack()} />
+                <Text style={{ fontSize: 22, fontFamily: 'Inter-Bold' }}>Pengaturan Profil</Text>
+            </View>
             <View>
                 <Pressable
                     style={{
@@ -34,25 +38,12 @@ export default function ProfileSettingScreen(params) {
                     onPress={() => navigation.navigate('EditProfileScreen')}
                     android_disableSound={true}
                 >
-                    <FontAwesome name="pencil-square-o" size={24} />
+                    <Ionicons name="pencil-outline" size={24} />
                     <Text style={{ fontSize: 18, fontFamily: 'Inter-Regular' }}>Edit Profil</Text>
                 </Pressable>
             </View>
 
             <View style={{ marginTop: 20, marginBottom: 100 }}>
-                {/* <WideButton
-                    text="Keluar"
-                    color={GlobalStyles.colors.whiteFont}
-                    size={18}
-                    onPress={handleLogout}
-                    style={{
-                        backgroundColor: GlobalStyles.colors.primary,
-                        paddingVertical: 12,
-                        borderRadius: 50,
-                        marginTop: 8,
-                    }}
-                    disabled={false}
-                /> */}
                 <Pressable
                     style={{
                         flexDirection: 'row',
@@ -66,7 +57,7 @@ export default function ProfileSettingScreen(params) {
                     onPress={handleLogout}
                     android_disableSound={true}
                 >
-                    <FontAwesome name="sign-out" size={24} color='crimson' />
+                    <Ionicons name="exit-outline" size={24} color='crimson' />
                     <Text style={{ fontSize: 18, fontFamily: 'Inter-Regular', color: 'crimson' }}>Keluar</Text>
                 </Pressable>
             </View>

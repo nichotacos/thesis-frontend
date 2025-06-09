@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { User } from "../types/User";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../constants/styles";
 import { Ionicons, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import ProfileAvatar from "../components/UI/ProfileAvatar";
@@ -41,7 +41,7 @@ export default function ProfileScreen({
     return (
         <ScrollView style={styles.container}>
             <View style={{ paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ fontSize: 22, fontWeight: 'bold', fontFamily: 'Inter-Bold', textAlign: 'center' }}>
+                <Text style={{ fontSize: 22, fontFamily: 'Inter-Bold', textAlign: 'center' }}>
                     Profil
                 </Text>
             </View>
@@ -121,27 +121,33 @@ export default function ProfileScreen({
                             const isBUnlocked = userData.achievements.some((ach) => ach.achievement._id === b._id);
                             return (isBUnlocked ? 1 : 0) - (isAUnlocked ? 1 : 0);
                         })
-                        .map((achievement) => (
-                            <View
-                                key={achievement._id}
-                                style={[
-                                    styles.statisticsItem,
-                                    {
-                                        opacity: userData.achievements.some((a) => a.achievement._id === achievement._id) ? 1 : 0.5,
-                                        marginBottom: 8,
-                                    },
-                                ]}
-                            >
-                                {achievement.code.includes("MODULE") ? (
-                                    <FontAwesome5 name="book" size={24} color="#A60000" style={styles.statisticsIcon} />
-                                ) : (
-                                    <FontAwesome5 name="trophy" size={24} color="#A60000" style={styles.statisticsIcon} />
-                                )}
-                                <View>
-                                    <Text style={styles.statisticsItemValue}>{achievement.title}</Text>
-                                    <Text style={styles.statisticsItemDescription}>{achievement.description}</Text>
+                        .map((achievement, index) => (
+                            index < 3 && (
+                                <View
+                                    key={achievement._id}
+                                    style={[
+                                        styles.statisticsItem,
+                                        {
+                                            opacity: userData.achievements.some((a) => a.achievement._id === achievement._id) ? 1 : 0.5,
+                                            marginBottom: 8,
+                                        },
+                                    ]}
+                                >
+                                    <Image
+                                        source={{ uri: achievement.badge || 'https://via.placeholder.com/50' }}
+                                        style={{
+                                            width: 50,
+                                            height: 50,
+                                            borderRadius: 25,
+                                            marginRight: 12,
+                                        }}
+                                    />
+                                    <View>
+                                        <Text style={styles.statisticsItemValue}>{achievement.title}</Text>
+                                        <Text style={styles.statisticsItemDescription}>{achievement.description}</Text>
+                                    </View>
                                 </View>
-                            </View>
+                            )
                         ))}
 
                 </View>
@@ -182,7 +188,6 @@ const styles = StyleSheet.create({
     },
     username: {
         fontSize: 24,
-        fontWeight: 'bold',
         marginTop: 10,
         fontFamily: 'Inter-Bold',
     },
@@ -228,7 +233,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         flex: 1,
-        padding: 10,
+        padding: 14,
         flexBasis: '45%',
         borderWidth: 1,
         borderColor: '#ddd',
@@ -236,13 +241,12 @@ const styles = StyleSheet.create({
     },
     statisticsItemValue: {
         fontSize: 18,
-        marginTop: 5,
         fontFamily: 'Inter-Bold',
     },
     statisticsItemDescription: {
         fontSize: 12,
-        color: '#999',
-        marginTop: 5,
+        marginTop: 2,
+        color: '#7F8C8D',
     },
     statisticsIcon: {
         marginRight: 12,

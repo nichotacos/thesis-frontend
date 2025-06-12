@@ -53,6 +53,8 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 50,
+        borderWidth: 2,
+        borderColor: GlobalStyles.colors.primary,
     },
     textContainer: {
         flexDirection: "column",

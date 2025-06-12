@@ -45,7 +45,7 @@ export const loginUser = async (username: string, password: string) => {
     }
 }
 
-export const registerUser = async (username: string, userFullName: string, email: string, password: string, passwordConfirmation: string) => {
+export const registerUser = async (username: string, userFullName: string, email: string, password: string, passwordConfirmation: string, role: string) => {
     try {
         const response = await apiClient.post('/auth/register', {
             username,
@@ -53,9 +53,30 @@ export const registerUser = async (username: string, userFullName: string, email
             email,
             password,
             passwordConfirmation,
+            role
         });
         return response.data;
     } catch (error) {
         throw error;
     }
 }
+
+export const sendOtp = async (email: string) => {
+    try {
+        const response = await apiClient.post('/auth/send-otp', { email });
+        return response.data;
+    } catch (error) {
+        console.error('Error sending OTP:', error);
+        throw error;
+    }
+}
+
+export const verifyOtp = async (email: string, code: string) => {
+    try {
+        const response = await apiClient.post('/auth/verify-otp', { email, code });
+        return response.data;
+    } catch (error) {
+        console.error('Error verifying OTP:', error);
+        throw error;
+    }
+}   

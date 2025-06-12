@@ -292,6 +292,7 @@ export default function App() {
 
 const style = StyleSheet.create({
   container: {
-    flex: 1.
+    flex: 1,
+    backgroundColor: GlobalStyles.colors.lightBackground,
   }
 })

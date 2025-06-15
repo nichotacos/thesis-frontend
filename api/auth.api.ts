@@ -45,7 +45,7 @@ export const loginUser = async (username: string, password: string) => {
     }
 }
 
-export const registerUser = async (username: string, userFullName: string, email: string, password: string, passwordConfirmation: string, role: string) => {
+export const registerUser = async (username: string, userFullName: string, email: string, password: string, passwordConfirmation: string, role: string, isVerified: boolean) => {
     try {
         const response = await apiClient.post('/auth/register', {
             username,
@@ -53,7 +53,8 @@ export const registerUser = async (username: string, userFullName: string, email
             email,
             password,
             passwordConfirmation,
-            role
+            role,
+            isVerified
         });
         return response.data;
     } catch (error) {

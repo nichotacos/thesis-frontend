@@ -1,22 +1,38 @@
-import { Audio } from 'expo-av';
+import { AudioSource, createAudioPlayer, AudioPlayer } from 'expo-audio';
 
-const correctSound = require('../assets/audio/correct.wav');
-const incorrectSound = require('../assets/audio/incorrect.wav');
+const correctSound = require('../assets/audio/correct.mp3') as AudioSource;
+const incorrectSound = require('../assets/audio/incorrect.mp3') as AudioSource;
 
-export default async function playCheckAnswerSound(isCorrect: boolean) {
-    const soundObject = new Audio.Sound();
+let correctPlayer: AudioPlayer | null = null;
+let incorrectPlayer: AudioPlayer | null = null;
 
+const initializePlayers = async () => {
+    if (!correctPlayer) {
+        correctPlayer = createAudioPlayer(correctSound);
+    }
+    if (!incorrectPlayer) {
+        incorrectPlayer = createAudioPlayer(incorrectSound);
+    }
+};
+
+export async function playCheckAnswerSound(isCorrect: boolean) {
     try {
-        const source = isCorrect ? correctSound : incorrectSound;
-        await soundObject.loadAsync(source);
-        await soundObject.playAsync();
+        await initializePlayers();
 
-        soundObject.setOnPlaybackStatusUpdate((status) => {
-            if (status.isLoaded && status.didJustFinish) {
-                soundObject.unloadAsync();
-            }
-        });
+        const player = isCorrect ? correctPlayer : incorrectPlayer;
+
+        if (player) {
+            await player.seekTo(0);
+            player.play();
+        }
     } catch (error) {
         console.error('Error playing sound:', error);
     }
 }
+
+export const cleanupAudioPlayers = () => {
+    correctPlayer?.remove();
+    incorrectPlayer?.remove();
+    correctPlayer = null;
+    incorrectPlayer = null;
+};

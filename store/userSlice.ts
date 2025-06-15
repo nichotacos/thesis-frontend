@@ -182,6 +182,21 @@ const userSlice = createSlice({
                 }
             }
         },
+        buyBoost(state, action: PayloadAction<{ itemId: string, boostType: string, startedAt: string, expiresAt: string }>) {
+            if (state.userInfo) {
+                const boost = {
+                    boostType: action.payload.boostType,
+                    startedAt: action.payload.startedAt,
+                    expiresAt: action.payload.expiresAt,
+                };
+                state.userInfo.activeBoost = boost;
+
+                const item = state.shopItem.find(item => item._id === action.payload.itemId);
+                if (item && state.userInfo.totalGems >= item.price) {
+                    state.userInfo.totalGems -= item.price;
+                }
+            }
+        },
         equipItem(state, action: PayloadAction<{ itemId: string }>) {
             if (state.userInfo) {
                 const item = state.shopItem.find(item => item._id === action.payload.itemId);
@@ -222,6 +237,7 @@ export const {
     claimDailyReward,
     grantAchievement,
     buyItem,
+    buyBoost,
     equipItem,
     updateUserProfile,
     refillHeart,

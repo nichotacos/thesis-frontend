@@ -47,6 +47,11 @@ export type User = {
         item: string;
         purchasedAt: string
     }[];
+    activeBoost: {
+        boostType: string;
+        startedAt: string;
+        expiresAt: string;
+    }
     createdAt?: string;
     updatedAt?: string;
 }

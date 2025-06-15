@@ -120,7 +120,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({
                             },
                         ]}
                     >
-                        <AntDesign name="star" size={40} color={i <= stars ? "#FFD700" : "#D3D3D3"} />
+                        <Ionicons name="star" size={48} color={i <= stars ? "#FFD700" : "#D3D3D3"} />
                     </Animated.View>
                 ))}
             </View>
@@ -267,14 +267,15 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     headerText: {
-        fontSize: 28,
-        fontWeight: "bold",
+        fontSize: 24,
+        fontFamily: "Inter-Bold",
         color: "#333",
         marginBottom: 5,
     },
     moduleTitle: {
-        fontSize: 18,
+        fontSize: 16,
         color: "#666",
+        fontFamily: "Inter-Regular",
     },
     scoreContainer: {
         alignItems: "center",
@@ -319,7 +320,7 @@ const styles = StyleSheet.create({
     statText: {
         fontFamily: "Inter-Regular",
         marginLeft: 10,
-        fontSize: 16,
+        fontSize: 14,
         color: "#333",
     },
     feedbackContainer: {
@@ -331,14 +332,15 @@ const styles = StyleSheet.create({
     },
     feedbackTitle: {
         fontSize: 18,
-        fontWeight: "bold",
+        fontFamily: "Inter-Bold",
         color: "#333",
         marginBottom: 5,
     },
     feedbackText: {
-        fontSize: 16,
+        fontSize: 14,
         color: "#555",
-        lineHeight: 24,
+        lineHeight: 21,
+        fontFamily: "Inter-Regular",
     },
     buttonContainer: {
         width: "100%",
@@ -366,8 +368,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: "white",
-        fontSize: 16,
-        fontWeight: "bold",
+        fontSize: 14,
+        fontFamily: "Inter-Bold",
         marginRight: 8,
     },
     achievementContainer: {

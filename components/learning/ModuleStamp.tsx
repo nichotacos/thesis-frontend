@@ -25,9 +25,9 @@ export default function ModuleStamp({
     return (
         <Pressable style={[styles.mainContainer, style]} onPress={onPress} disabled={disabled}>
             <View style={[styles.starsContainer, { display: disabled ? "none" : "flex" }]}>
-                <AntDesign name="star" size={28} color={score > 0 ? '#FFD700' : 'gray'} style={{ transform: [{ rotate: "-15deg" }], position: 'absolute', left: -30, top: 8 }} />
-                <AntDesign name="star" size={28} color={score > 60 ? '#FFD700' : 'gray'} />
-                <AntDesign name="star" size={28} color={score > 80 ? '#FFD700' : 'gray'} style={{ transform: [{ rotate: "15deg" }], position: 'absolute', right: -30, top: 8 }} />
+                <Ionicons name="star" size={32} color={score > 0 ? '#FFD700' : 'gray'} style={{ transform: [{ rotate: "-15deg" }], position: 'absolute', left: -34, top: 12 }} />
+                <Ionicons name="star" size={32} color={score > 60 ? '#FFD700' : 'gray'} />
+                <Ionicons name="star" size={32} color={score > 80 ? '#FFD700' : 'gray'} style={{ transform: [{ rotate: "15deg" }], position: 'absolute', right: -34, top: 12 }} />
             </View>
             <View style={[styles.outerContainer]}>
                 <View style={styles.innerContainer}>
@@ -88,6 +88,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        marginBottom: 8,
+        marginBottom: 12,
     }
 })

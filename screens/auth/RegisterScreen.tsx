@@ -6,7 +6,8 @@ import WideButton from "../../components/UI/WideButton";
 import TextButton from "../../components/UI/TextButton";
 import { useNavigation } from "@react-navigation/native";
 import Recaptcha, { RecaptchaRef } from "react-native-recaptcha-that-works";
-import { registerUser } from "../../api/auth.api";
+import { registerUser, sendOtp } from "../../api/auth.api";
+import Toast from "react-native-toast-message";
 
 interface RegisterPayload {
     full_name: string;
@@ -14,6 +15,8 @@ interface RegisterPayload {
     email: string;
     password: string;
     passwordConfirmation: string;
+    role: string;
+    isVerified: boolean;
 }
 
 export default function RegisterScreen(params) {
@@ -31,11 +34,25 @@ export default function RegisterScreen(params) {
         email: "",
         password: "",
         passwordConfirmation: "",
+        role: "Student",
+        isVerified: false,
     });
 
-    const onVerifyCaptcha = (token: string) => {
-        console.log("Captcha token:", token);
-        setCaptchaToken(token);
+    async function resendOtp() {
+        try {
+            await sendOtp(registerData.email);
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                // If error comes from axios with a structured response
+                setError(error.response.data.message);
+            } else if (error.message) {
+                // If error is a standard Error object
+                setError(error.message);
+            } else {
+                // Fallback error message
+                setError('Failed to resend OTP. Please try again.');
+            }
+        }
     }
 
     function handleInputChange(name: string, value: string) {
@@ -45,18 +62,28 @@ export default function RegisterScreen(params) {
         }))
     }
 
-    async function handleSubmit(data: RegisterPayload) {
+    async function handleSubmit() {
         try {
+            console.log("Registering user with data:", registerData);
             setIsLoading(true);
-            const data = await registerUser(
+            const response = await registerUser(
                 registerData.username,
                 registerData.full_name,
                 registerData.email,
                 registerData.password,
                 registerData.passwordConfirmation,
+                registerData.role,
+                registerData.isVerified,
             );
 
-            navigation.navigate("LoginScreen");
+            console.log("Registration response:", response);
+
+            if (!registerData.isVerified) {
+                navigation.navigate("VerifyOTPScreen", {
+                    data: registerData,
+                    onResendOTP: resendOtp.bind(this, registerData.email),
+                });
+            }
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
                 // If error comes from axios with a structured response
@@ -71,16 +98,6 @@ export default function RegisterScreen(params) {
         } finally {
             setIsLoading(false);
         }
-    }
-
-    const send = () => {
-        console.log('send!');
-        console.log('tung tung sahur', process.env.RECAPTCHA_SITE_KEY);
-        recaptcha.current?.open();
-    }
-
-    const onExpire = () => {
-        console.warn('expired!');
     }
 
     return (
@@ -158,19 +175,6 @@ export default function RegisterScreen(params) {
                             isVisible={isConfirmationPasswordVisible}
                             onVisiblePress={() => setIsConfirmationPasswordVisible(!isConfirmationPasswordVisible)}
                         />
-
-                        {/* <Recaptcha
-                            ref={recaptcha}
-                            siteKey={process.env.RECAPTCHA_SITE_KEY}
-                            baseUrl='https://bb58-125-160-96-140.ngrok-free.app'
-                            onVerify={onVerifyCaptcha}
-                            onExpire={onExpire}
-                            onError={(err) => console.error('Recaptcha error:', err)}
-                        />
-
-                        <Button title="Open reCAPTCHA" onPress={send}/> */}
-
-                        {captchaToken && <Text style={{ marginTop: 20 }}>captchaToken: {captchaToken}</Text>}
                     </View>
                     {error && (
                         <View style={styles.errorContainer}>
@@ -181,7 +185,7 @@ export default function RegisterScreen(params) {
                     )}
                     <WideButton
                         buttonColor={GlobalStyles.colors.accent}
-                        onPress={handleSubmit.bind(this, registerData)}
+                        onPress={handleSubmit.bind(this)}
                         text="Daftar"
                         textColor={GlobalStyles.colors.whiteFont}
                         size={24}
@@ -191,6 +195,8 @@ export default function RegisterScreen(params) {
                             paddingHorizontal: 32,
                             marginTop: 8,
                         }}
+                        isLoading={isLoading}
+                        disabled={isLoading}
                     />
                 </View>
                 <View style={styles.registerContainer}>

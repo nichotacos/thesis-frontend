@@ -1,17 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { User } from "../types/User";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { GlobalStyles } from "../constants/styles";
 import { Ionicons, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
 import ProfileAvatar from "../components/UI/ProfileAvatar";
 import { Achievement } from "../types/Achievement";
-import fetchAchievements from "../api/achievements/fetchAchievements";
-import { apiClient } from "../api/apiClient";
-import WideButton from "../components/UI/WideButton";
-import { logout } from "../store/userSlice";
 import StreakFireSvg from "../assets/gamification/streak-fire-svg";
+import XPSVG from "../assets/gamification/xp-svg";
 
 interface ProfileScreenProps {
     route: any;
@@ -23,25 +19,11 @@ export default function ProfileScreen({
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
     const allAchievements = useSelector((state: { user: { allAchievements: Achievement[] } }) => state.user.allAchievements);
     const navigation = useNavigation();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const dispatch = useDispatch();
-
-    function handleAvatarUpload() {
-
-    }
-
-    if (isLoading || !userData || !allAchievements) {
-        return (
-            <View style={styles.container}>
-                <Text>Loading...</Text>
-            </View>
-        )
-    }
 
     return (
         <ScrollView style={styles.container}>
             <View style={{ paddingBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ fontSize: 22, fontFamily: 'Inter-Bold', textAlign: 'center' }}>
+                <Text style={{ fontSize: 20, fontFamily: 'Inter-Bold', textAlign: 'center' }}>
                     Profil
                 </Text>
             </View>
@@ -76,14 +58,14 @@ export default function ProfileScreen({
                     <View style={styles.statisticsContent}>
                         <View style={styles.statisticsItem}>
                             {/* <FontAwesome5 name="fire" size={24} color="#A60000" style={styles.statisticsIcon} /> */}
-                            <StreakFireSvg width={32} height={32} style={styles.statisticsIcon} />
+                            <StreakFireSvg width={24} height={24} style={styles.statisticsIcon} />
                             <View>
                                 <Text style={styles.statisticsItemValue}>{userData.streak.highestStreak}</Text>
                                 <Text style={styles.statisticsItemDescription}>Hari beruntun</Text>
                             </View>
                         </View>
                         <View style={styles.statisticsItem}>
-                            <FontAwesome6 name="bolt" size={24} color="#ffd900" style={styles.statisticsIcon} />
+                            <XPSVG width={24} height={24} style={styles.statisticsIcon} />
                             <View>
                                 <Text style={styles.statisticsItemValue}>{userData.totalExp}</Text>
                                 <Text style={styles.statisticsItemDescription}>XP</Text>
@@ -149,7 +131,6 @@ export default function ProfileScreen({
                                 </View>
                             )
                         ))}
-
                 </View>
             </View>
         </ScrollView>
@@ -187,7 +168,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     username: {
-        fontSize: 24,
+        fontSize: 20,
         marginTop: 10,
         fontFamily: 'Inter-Bold',
     },
@@ -240,7 +221,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     statisticsItemValue: {
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: 'Inter-Bold',
     },
     statisticsItemDescription: {

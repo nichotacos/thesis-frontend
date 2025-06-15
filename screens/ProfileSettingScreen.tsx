@@ -22,7 +22,7 @@ export default function ProfileSettingScreen(params) {
         <View style={{ flex: 1, padding: 20, backgroundColor: GlobalStyles.colors.lightBackground }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20, marginBottom: 20, }}>
                 <Ionicons name="arrow-back" size={24} color="black" onPress={() => navigation.goBack()} />
-                <Text style={{ fontSize: 22, fontFamily: 'Inter-Bold' }}>Pengaturan Profil</Text>
+                <Text style={{ fontSize: 20, fontFamily: 'Inter-Bold' }}>Pengaturan Profil</Text>
             </View>
             <View>
                 <Pressable
@@ -39,7 +39,7 @@ export default function ProfileSettingScreen(params) {
                     android_disableSound={true}
                 >
                     <Ionicons name="pencil-outline" size={24} />
-                    <Text style={{ fontSize: 18, fontFamily: 'Inter-Regular' }}>Edit Profil</Text>
+                    <Text style={{ fontSize: 16, fontFamily: 'Inter-Regular' }}>Edit Profil</Text>
                 </Pressable>
             </View>
 
@@ -58,7 +58,7 @@ export default function ProfileSettingScreen(params) {
                     android_disableSound={true}
                 >
                     <Ionicons name="exit-outline" size={24} color='crimson' />
-                    <Text style={{ fontSize: 18, fontFamily: 'Inter-Regular', color: 'crimson' }}>Keluar</Text>
+                    <Text style={{ fontSize: 16, fontFamily: 'Inter-Regular', color: 'crimson' }}>Keluar</Text>
                 </Pressable>
             </View>
         </View>

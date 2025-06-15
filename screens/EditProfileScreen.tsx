@@ -141,10 +141,9 @@ export default function EditProfileScreen() {
                     <TouchableOpacity
                         style={[
                             styles.saveButton,
-                            (isLoading || (!profile.userFullName && !profile.username && !profile.email && profile.userFullName.length < 3 && profile.username.length < 3 && (profile.email && !/\S+@\S+\.\S+/.test(profile.email)))) && styles.saveButtonDisabled
                         ]}
                         onPress={handleSave}
-                        disabled={isLoading || (!profile.userFullName && !profile.username && !profile.email && profile.userFullName.length < 3 && profile.username.length < 3 && (profile.email && !/\S+@\S+\.\S+/.test(profile.email)))}
+                        disabled={isLoading}
                     >
                         <Text style={styles.saveText}>{isLoading ? "Menyimpan..." : "Simpan"}</Text>
                     </TouchableOpacity>
@@ -246,7 +245,7 @@ const styles = StyleSheet.create({
     },
     headerTitle: {
         fontSize: 18,
-        fontWeight: "600",
+        fontFamily: "Inter-Bold",
         color: "#000",
     },
     saveButton: {

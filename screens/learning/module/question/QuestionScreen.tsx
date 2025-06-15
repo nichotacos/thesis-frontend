@@ -9,7 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import AnswerButton from "../../../../components/learning/AnswerButton";
 import useAudio from "../../../../hooks/useAudio";
 import { formatMillis } from "../../../../utils/formatMillisAudio";
-import playCheckAnswerSound from "../../../../utils/playCheckAnswerSound";
+import { playCheckAnswerSound } from "../../../../utils/playCheckAnswerSound";
 import { useDispatch, useSelector } from "react-redux";
 import { User } from "../../../../types/User";
 import loseHp from "../../../../api/gamifications/loseHp";
@@ -36,7 +36,7 @@ export default function QuestionScreen({
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigation = useNavigation();
-    const { playAudio, togglePlayback, isPlaying, duration, isAudioEnded } = useAudio();
+    const { playAudio, togglePlayback, isPlaying, duration, isAudioEnded, playLocalAudio } = useAudio();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -53,6 +53,7 @@ export default function QuestionScreen({
     const unCompleteFirstModule = !userData.achievements.find(
         (a) => a.achievement.code === "MODUL_PERTAMA"
     );
+    const [countPlayed, setCountPlayed] = useState(0);
 
     function handleShuffleAnswers(question: Question) {
         const options = question.options.map((option) => {
@@ -117,6 +118,7 @@ export default function QuestionScreen({
                 isCorrect: selectedAnswer?.isCorrect ?? false,
             },
         ]);
+        console.log("Selected Answer:", selectedAnswer);
         if (selectedAnswer.isCorrect === false) {
             try {
                 await loseHp(userData._id);
@@ -125,6 +127,11 @@ export default function QuestionScreen({
                 console.error("Failed to reduce HP:", error);
             }
         }
+        console.log("User Answers:", userAnswers);
+        // playLocalAudio(
+        //     selectedAnswer.isCorrect ? require("../../../../assets/audio/correct.mp3") : require("../../../../assets/audio/incorrect.mp3")
+        // );
+
         await playCheckAnswerSound(selectedAnswer.isCorrect);
     }
 
@@ -137,7 +144,6 @@ export default function QuestionScreen({
         } else {
             try {
                 let nextLevelFirstModule: Module | null = null;
-                // Check if the module has been completed then do not update the current module
                 if (isLastModule) {
                     const getNextLevelModules = await apiClient.post('/module', {
                         levelIds: [nextLevel._id],
@@ -199,6 +205,12 @@ export default function QuestionScreen({
                 {!isPlaying || isAudioEnded ? (
                     <PlayAudioButton
                         onPress={() => {
+                            if (module.isReview) {
+                                setCountPlayed((prev) => prev + 1);
+                                if (countPlayed >= 1) {
+                                    return;
+                                }
+                            }
                             playAudio(questions[userAnswers.length].media.audioUrl);
                         }}
                         iconName="volume-high-outline"

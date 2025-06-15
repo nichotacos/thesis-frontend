@@ -293,8 +293,8 @@ const styles = StyleSheet.create({
         borderColor: GlobalStyles.colors.primary,
     },
     scoreText: {
-        fontSize: 32,
-        fontWeight: "bold",
+        fontSize: 28,
+        fontFamily: "Inter-Bold",
         color: GlobalStyles.colors.primary,
     },
     starsContainer: {

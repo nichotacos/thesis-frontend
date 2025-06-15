@@ -7,6 +7,7 @@ interface PlayAudioButtonProps {
     iconName: keyof typeof Ionicons.glyphMap;
     iconSize: number;
     iconColor: string;
+    disabled?: boolean;
 }
 
 export default function PlayAudioButton({
@@ -14,11 +15,13 @@ export default function PlayAudioButton({
     iconName,
     iconSize = 42,
     iconColor = GlobalStyles.colors.whiteFont,
+    disabled
 }: PlayAudioButtonProps) {
     return (
         <View style={styles.container}>
             <Pressable
                 onPress={onPress}
+                disabled={disabled ? true : false}
             >
                 <Ionicons
                     name={iconName}

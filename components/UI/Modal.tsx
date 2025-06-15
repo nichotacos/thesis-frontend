@@ -44,7 +44,7 @@ export default function Modal({
                     />
                     <View>
                         <Text style={{ fontFamily: "Inter-Bold", fontSize: 18, color: GlobalStyles.colors.primary }}>
-                            {type === "gems" ? `Kamu mendapatkan gems!` : type === "level" ? "Level baru telah dibuka!" : "Kamu mendapat penghargaan baru!"}
+                            {type === "gems" ? `Kamu mendapatkan gems!` : type === "level" ? "Unit baru telah dibuka!" : "Kamu mendapat pencapaian baru!"}
                         </Text>
                     </View>
                     <View style={styles.gemsContainer}>

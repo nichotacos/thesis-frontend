@@ -83,14 +83,16 @@ export default function WideButton({ onPress, text, buttonColor, textColor, size
             <Animated.View
                 style={[
                     styles.buttonShadow,
-                    { backgroundColor: getDarkerColor(buttonColor) },
+                    { backgroundColor: disabled ? "gray" : getDarkerColor(buttonColor) },
+                    { shadowColor: "black", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 3.5 },
+                    { elevation: 5 },
                     shadowAnimatedStyle
                 ]}
             >
                 <Animated.View
                     style={[
                         styles.buttonTop,
-                        { backgroundColor: buttonColor },
+                        { backgroundColor: disabled ? "lightgray" : buttonColor },
                         animatedStyle
                     ]}
                 >
@@ -107,7 +109,7 @@ export default function WideButton({ onPress, text, buttonColor, textColor, size
                             />
                         </View>
                     ) : (
-                        <Text style={[styles.text, { color: textColor, fontSize: size }, isLoading && { opacity: 0.5 }]}>
+                        <Text style={[styles.text, { color: textColor, fontSize: size }, (isLoading || disabled) && { opacity: 0.5 }]}>
                             {text}
                         </Text>
                     )}

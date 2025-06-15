@@ -307,9 +307,15 @@ export default function AchievementScreen() {
                 ))}
             </ScrollView>
 
-            <ScrollView style={styles.achievementsList} showsVerticalScrollIndicator={false}>
-                {filteredAchievements.map(renderAchievementCard)}
-            </ScrollView>
+            {userData.achievements.length === 0 ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+                    <Text style={{ fontSize: 18, color: '#7F8C8D' }}>Belum ada pencapaian yang diperoleh.</Text>
+                </View>
+            ) : (
+                <ScrollView contentContainerStyle={styles.achievementsList}>
+                    {filteredAchievements.map(achievement => renderAchievementCard(achievement))}
+                </ScrollView>
+            )}
         </SafeAreaView>
     );
 }
@@ -327,10 +333,9 @@ const styles = StyleSheet.create({
         borderBottomColor: '#E9ECEF',
     },
     headerTitle: {
-        fontSize: 28,
-        fontWeight: 'bold',
+        fontSize: 24,
+        fontFamily: 'Inter-Bold',
         color: '#2C3E50',
-        marginBottom: 15,
     },
     statsContainer: {
         flexDirection: 'row',
@@ -371,7 +376,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 16,
-        paddingVertical: 28,
+        paddingVertical: 18,
         marginRight: 12,
         borderRadius: 20,
         backgroundColor: '#F8F9FA',

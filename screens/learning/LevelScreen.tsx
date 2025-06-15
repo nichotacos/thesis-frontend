@@ -14,6 +14,7 @@ import StreakFireSvg from "../../assets/gamification/streak-fire-svg";
 import HeartSVG from "../../assets/gamification/heart-svg";
 import LevelModuleHeader from "../../components/learning/LevelModuleHeader";
 import ScreenLoading from "../../components/UI/ScreenLoading";
+import RemainingBoostTime from "../../components/learning/RemainingBoostTime";
 
 interface LevelScreenProps {
     route: any;
@@ -49,6 +50,10 @@ export default function LevelScreen({
         fetchLevels();
     }, []);
 
+    setTimeout(() => {
+
+    })
+
     if (isLoading || !userData) {
         return (
             <View style={styles.container}>
@@ -73,6 +78,11 @@ export default function LevelScreen({
                     totalGems={userData.totalGems}
                     earliestLostHeartTime={userData.hearts.lostAt[0] || null}
                 />
+                {userData.activeBoost.boostType !== null && (
+                    <RemainingBoostTime
+                        expiresAt={userData.activeBoost.expiresAt}
+                    />
+                )}
                 {levels.map((level, index) => {
                     return (
                         <View

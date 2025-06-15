@@ -17,6 +17,8 @@ import buyShopItem from "../api/shops/buyShopItem";
 import { buyItem, equipItem } from "../store/userSlice";
 import Toast from "react-native-toast-message";
 import { equipItemToUser } from "../api/user";
+import buyBoost from "../api/shops/buyBoost";
+import { buyBoost as buyBoostReducer } from "../store/userSlice";
 
 
 export default function ShopScreen() {
@@ -99,6 +101,36 @@ export default function ShopScreen() {
                 setShowPurchaseModal(false)
             }
             // Show success message or animation
+        }
+    }
+
+    const confirmPurchaseBoost = async () => {
+        if (selectedItem && userData.totalGems >= selectedItem.price) {
+            try {
+                const response = await buyBoost({ userId: userData._id, itemId: selectedItem._id });
+                console.log("Boost response:", response.user.activeBoost);
+                dispatch(buyBoostReducer({
+                    boostType: response.user.activeBoost.boostType,
+                    startedAt: response.user.activeBoost.startedAt,
+                    expiresAt: response.user.activeBoost.expiresAt,
+                    itemId: selectedItem._id,
+                }))
+
+                Toast.show({
+                    type: 'success',
+                    text1: 'Pembelian Boost Berhasil',
+                    text2: `Anda dapat menikmati 2x XP selama 15 menit.`,
+                })
+            } catch (error) {
+                console.error("Error buying boost:", error);
+                Toast.show({
+                    type: 'error',
+                    text1: 'Gagal Membeli Boost',
+                    text2: `Terjadi kesalahan saat membeli boost. Silakan coba lagi.`,
+                })
+            } finally {
+                setShowPurchaseModal(false);
+            }
         }
     }
 
@@ -204,8 +236,10 @@ export default function ShopScreen() {
                                     <Text style={styles.modalPriceText}>{selectedItem.price}</Text>
                                 </View>
 
-                                {userData.totalGems < selectedItem.price ? (
-                                    <Text style={styles.insufficientFunds}>Gems tidak mencukupi</Text>
+                                {userData.purchases.find((purchase) => purchase.item === selectedItem._id.toString()) ? (
+                                    <Text style={styles.purchasedItem}>Anda sudah membeli item ini</Text>
+                                ) : userData.totalGems < selectedItem.price ? (
+                                    <Text style={styles.insufficientFunds}>Koin tidak cukup</Text>
                                 ) : null}
 
                                 <View style={styles.modalButtons}>
@@ -215,7 +249,7 @@ export default function ShopScreen() {
 
                                     <Pressable
                                         style={[styles.confirmButton, userData.totalGems < selectedItem.price && styles.disabledConfirmButton]}
-                                        onPress={confirmPurchase}
+                                        onPress={selectedItem.category === "Boost" ? confirmPurchaseBoost : confirmPurchase}
                                         disabled={userData.totalGems < selectedItem.price}
                                     >
                                         <Text style={styles.confirmButtonText}>Beli</Text>
@@ -268,12 +302,13 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
     coinIcon: {
-        width: 20,
-        height: 20,
-        marginRight: 4,
+        width: 30,
+        height: 30,
+        marginRight: 8,
     },
     coinText: {
-        fontWeight: "600",
+        fontFamily: "Inter-Bold",
+        fontSize: 16,
         color: "#333",
     },
     categoryTabs: {
@@ -356,7 +391,7 @@ const styles = StyleSheet.create({
         marginRight: 4,
     },
     priceText: {
-        fontWeight: "600",
+        fontFamily: "Inter-Medium",
         color: "#333",
     },
     buyButton: {
@@ -375,8 +410,7 @@ const styles = StyleSheet.create({
     },
     buyButtonText: {
         color: "#fff",
-        fontWeight: "700",
-        fontFamily: "Inter-Bold",
+        fontFamily: "Inter-Medium",
         lineHeight: 20,
         textAlign: "center",
     },
@@ -395,7 +429,7 @@ const styles = StyleSheet.create({
     },
     modalTitle: {
         fontSize: 20,
-        fontWeight: "700",
+        fontFamily: "Inter-Bold",
         marginBottom: 16,
         color: "#333",
     },
@@ -407,13 +441,14 @@ const styles = StyleSheet.create({
     },
     modalItemName: {
         fontSize: 18,
-        fontWeight: "700",
+        fontFamily: "Inter-Bold",
         marginBottom: 8,
         color: "#333",
     },
     modalItemDescription: {
         fontSize: 14,
         color: "#666",
+        fontFamily: "Inter-Regular",
         marginBottom: 16,
         textAlign: "center",
         lineHeight: 20,
@@ -425,13 +460,26 @@ const styles = StyleSheet.create({
     },
     modalPriceText: {
         fontSize: 18,
-        fontWeight: "700",
+        fontFamily: "Inter-Medium",
         color: "#333",
+    },
+    purchasedItem: {
+        color: "#58cc02",
+        marginBottom: 16,
+        fontFamily: "Inter-Medium",
+        backgroundColor: "#e6ffe6",
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 8,
     },
     insufficientFunds: {
         color: "#e74c3c",
         marginBottom: 16,
-        fontWeight: "600",
+        fontFamily: "Inter-Medium",
+        backgroundColor: "#ffe6e6",
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 8,
     },
     modalButtons: {
         flexDirection: "row",
@@ -449,7 +497,7 @@ const styles = StyleSheet.create({
     },
     cancelButtonText: {
         color: "#333",
-        fontWeight: "600",
+        fontFamily: "Inter-Medium"
     },
     confirmButton: {
         backgroundColor: "#58cc02",
@@ -465,6 +513,6 @@ const styles = StyleSheet.create({
     },
     confirmButtonText: {
         color: "#fff",
-        fontWeight: "600",
+        fontFamily: "Inter-Medium"
     },
 })

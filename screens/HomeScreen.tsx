@@ -76,26 +76,26 @@ export default function HomeScreen() {
                 order={1}
                 name="user-identity"
             > */}
-            <WalkthroughableView style={{}}>
-                <UserIdentity
-                    profilePicture={userData.profilePicture}
-                    userFullName={userData.userFullName}
-                    userLevel={userData.currentLevel}
-                    totalGems={userData.totalGems}
-                />
-            </WalkthroughableView>
+            {/* <WalkthroughableView style={{}}> */}
+            <UserIdentity
+                profilePicture={userData.profilePicture}
+                userFullName={userData.userFullName}
+                userLevel={userData.currentLevel}
+                totalGems={userData.totalGems}
+            />
+            {/* </WalkthroughableView> */}
             {/* </CopilotStep> */}
             {/* <CopilotStep
                 text="Jangan lupa untuk mengklaim hadiah harianmu! Hadiah ini bisa kamu gunakan untuk membeli item di dalam aplikasi."
                 order={2}
                 name="streak-container"
             > */}
-            <WalkthroughableView>
-                <StreakContainer
-                    totalStreak={userData.streak.streakCount}
-                    userData={userData}
-                />
-            </WalkthroughableView>
+            {/* <WalkthroughableView> */}
+            <StreakContainer
+                totalStreak={userData.streak.streakCount}
+                userData={userData}
+            />
+            {/* </WalkthroughableView> */}
             {/* </CopilotStep> */}
             <Text style={styles.headerText}>Ayo Belajar!</Text>
             <FlatList
@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        paddingTop: 8,
         backgroundColor: GlobalStyles.colors.lightBackground,
         justifyContent: "flex-start",
     },

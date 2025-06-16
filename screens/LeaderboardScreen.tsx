@@ -5,6 +5,7 @@ import { GlobalStyles } from "../constants/styles";
 import { useCallback, useEffect, useState } from "react";
 import { getWeeklyLeaderboard } from "../api/user";
 import { AntDesign } from "@expo/vector-icons";
+import ScreenLoading from "../components/UI/ScreenLoading";
 
 export default function LeaderboardScreen() {
     const userData = useSelector((state: { user: { userInfo: Partial<User> } }) => state.user.userInfo);
@@ -47,7 +48,7 @@ export default function LeaderboardScreen() {
     if (isLoading || !userData || !leaderboard) {
         return (
             <View style={styles.container}>
-                <Text style={styles.title}>Loading...</Text>
+                <ScreenLoading />
             </View>
         )
     }

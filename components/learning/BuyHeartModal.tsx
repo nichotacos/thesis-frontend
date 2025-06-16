@@ -9,7 +9,8 @@ import {
     Image
 } from 'react-native';
 import HeartSVG from '../../assets/gamification/heart-svg';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
 
 interface BuyHeartModalProps {
     isVisible: boolean;
@@ -49,7 +50,7 @@ export default function BuyHeartModal({
                 <View style={styles.modalContent}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                         <Text style={styles.title}>Beli Hati</Text>
-                        <AntDesign
+                        <Ionicons
                             name="close"
                             size={24}
                             color="black"
@@ -57,7 +58,16 @@ export default function BuyHeartModal({
                             style={{ alignSelf: 'flex-start' }}
                         />
                     </View>
-                    <HeartSVG width={100} height={100} />
+                    {/* <HeartSVG width={100} height={100} /> */}
+                    <View style={{ overflow: 'hidden', height: 120, width: 120, justifyContent: "center", alignItems: "center" }}>
+                        <LottieView
+                            autoPlay
+                            loop
+                            style={{ width: 240, height: 240, }}
+                            source={require('../../assets/lottie/heart.json')}
+                            resizeMode='cover'
+                        />
+                    </View>
                     {availableHearts < 5 ? (
                         <View>
                             <View style={{ alignItems: 'center' }}>
@@ -95,7 +105,7 @@ export default function BuyHeartModal({
                         </View>
                     ) : (
                         <Text style={[styles.description, { marginHorizontal: 24, lineHeight: 24, marginTop: 12 }]}>
-                            Kamu sudah memiliki cukup hati untuk melanjutkan belajar.
+                            Kamu sudah memiliki cukup hati untuk melanjutkan pembelajaran.
                         </Text>
                     )}
                 </View>

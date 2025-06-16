@@ -8,7 +8,6 @@ import WideButton from "../../../../components/UI/WideButton";
 import { useNavigation } from "@react-navigation/native";
 import AnswerButton from "../../../../components/learning/AnswerButton";
 import useAudio from "../../../../hooks/useAudio";
-import { formatMillis } from "../../../../utils/formatMillisAudio";
 import { playCheckAnswerSound } from "../../../../utils/playCheckAnswerSound";
 import { useDispatch, useSelector } from "react-redux";
 import { User } from "../../../../types/User";
@@ -36,7 +35,7 @@ export default function QuestionScreen({
     const [questions, setQuestions] = useState<Question[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const navigation = useNavigation();
-    const { playAudio, togglePlayback, isPlaying, duration, isAudioEnded, playLocalAudio } = useAudio();
+    const { playAudio, togglePlayback, isPlaying, duration, isAudioEnded } = useAudio();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
     const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
     const [isChecked, setIsChecked] = useState<boolean>(false);

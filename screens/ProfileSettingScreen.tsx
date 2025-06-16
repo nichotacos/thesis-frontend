@@ -6,7 +6,7 @@ import { logout } from "../store/userSlice";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ProfileSettingScreen(params) {
+export default function ProfileSettingScreen() {
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
